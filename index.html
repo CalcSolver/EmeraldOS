@@ -6,7 +6,7 @@
   <title>EmeraldOS</title>
   <style>
     :root {
-      --bg-color: #0b1912;
+      --bg-gradient: radial-gradient(circle at center, #064e3b 0%, #022c22 100%);
       --accent-color: #10b981;
       --accent-hover: #059669;
       --panel-bg: rgba(16, 24, 20, 0.85);
@@ -24,12 +24,14 @@
     }
 
     body {
-      background: radial-gradient(circle at center, #064e3b 0%, #022c22 100%);
+      background: var(--bg-gradient);
       height: 100vh;
       overflow: hidden;
       color: var(--text-color);
+      transition: background 0.3s ease;
     }
 
+    /* Desktop Area */
     #desktop {
       width: 100vw;
       height: calc(100vh - 48px);
@@ -43,7 +45,7 @@
     }
 
     .icon {
-      width: 80px;
+      width: 84px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -52,16 +54,17 @@
       cursor: pointer;
       padding: 10px;
       border-radius: 8px;
-      transition: background 0.2s;
+      transition: background 0.2s, transform 0.1s;
     }
 
     .icon:hover {
       background: rgba(255, 255, 255, 0.1);
+      transform: translateY(-2px);
     }
 
     .icon-svg {
-      width: 48px;
-      height: 48px;
+      width: 44px;
+      height: 44px;
       fill: var(--accent-color);
     }
 
@@ -71,26 +74,27 @@
       text-shadow: 0 1px 3px rgba(0,0,0,0.8);
     }
 
+    /* Window System */
     .window {
       position: absolute;
-      width: 800px;
+      width: 820px;
       height: 520px;
       background: var(--window-bg);
       border: 1px solid var(--border-color);
       border-radius: 10px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-      backdrop-filter: blur(10px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(12px);
       display: flex;
       flex-direction: column;
       overflow: hidden;
-      min-width: 320px;
-      min-height: 200px;
+      min-width: 340px;
+      min-height: 220px;
       z-index: 10;
     }
 
     .window-header {
       height: 38px;
-      background: rgba(0, 0, 0, 0.3);
+      background: rgba(0, 0, 0, 0.35);
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -113,8 +117,8 @@
     }
 
     .control-btn {
-      width: 14px;
-      height: 14px;
+      width: 13px;
+      height: 13px;
       border-radius: 50%;
       border: none;
       cursor: pointer;
@@ -122,7 +126,7 @@
 
     .btn-close { background: #ef4444; }
     .btn-min { background: #f59e0b; }
-    .btn-max { background: #10b981; }
+    .btn-max { background: var(--accent-color); }
 
     .window-content {
       flex: 1;
@@ -130,15 +134,17 @@
       flex-direction: column;
       overflow: hidden;
       background: #000;
+      position: relative;
     }
 
-    /* Browser Bar */
+    /* Browser UI */
     .browser-bar {
       display: flex;
       gap: 8px;
       padding: 8px;
       background: #111827;
       border-bottom: 1px solid #374151;
+      align-items: center;
     }
 
     .browser-btn {
@@ -150,9 +156,7 @@
       cursor: pointer;
     }
 
-    .browser-btn:hover {
-      background: #374151;
-    }
+    .browser-btn:hover { background: #374151; }
 
     .browser-input {
       flex: 1;
@@ -161,18 +165,154 @@
       color: #fff;
       padding: 6px 12px;
       border-radius: 6px;
-      font-size: 14px;
+      font-size: 13px;
       outline: none;
+    }
+
+    .browser-viewport {
+      flex: 1;
+      position: relative;
+      width: 100%;
+      height: 100%;
     }
 
     .browser-frame {
       width: 100%;
-      flex: 1;
+      height: 100%;
       border: none;
       background: #ffffff;
     }
 
-    /* App Store Styles */
+    .browser-home {
+      width: 100%;
+      height: 100%;
+      background: #0f172a;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      gap: 20px;
+    }
+
+    .home-logo {
+      font-size: 42px;
+      font-weight: 700;
+      color: var(--accent-color);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .home-search-box {
+      display: flex;
+      width: 100%;
+      max-width: 550px;
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 30px;
+      padding: 6px 16px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+
+    .home-search-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: #fff;
+      font-size: 15px;
+      padding: 8px;
+    }
+
+    .home-search-btn {
+      background: var(--accent-color);
+      border: none;
+      color: #000;
+      font-weight: bold;
+      padding: 8px 18px;
+      border-radius: 20px;
+      cursor: pointer;
+    }
+
+    /* Terminal Application */
+    .terminal-container {
+      background: #090d16;
+      color: #38bdf8;
+      font-family: 'Consolas', 'Courier New', monospace;
+      padding: 14px;
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      font-size: 13px;
+    }
+
+    .terminal-output {
+      white-space: pre-wrap;
+      line-height: 1.4;
+    }
+
+    .terminal-input-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .terminal-prompt {
+      color: var(--accent-color);
+      font-weight: bold;
+    }
+
+    .terminal-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: #fff;
+      font-family: inherit;
+      font-size: inherit;
+    }
+
+    /* Settings UI */
+    .settings-container {
+      padding: 24px;
+      background: #0f172a;
+      height: 100%;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .settings-section {
+      background: #1e293b;
+      border: 1px solid #334155;
+      padding: 16px;
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .settings-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .settings-btn {
+      background: var(--accent-color);
+      color: #000;
+      border: none;
+      padding: 6px 14px;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    /* Store UI */
     .store-grid {
       padding: 20px;
       display: grid;
@@ -193,24 +333,6 @@
       align-items: center;
       text-align: center;
       gap: 10px;
-    }
-
-    .store-card-icon {
-      font-size: 36px;
-    }
-
-    .store-card-btn {
-      background: var(--accent-color);
-      color: #000;
-      border: none;
-      padding: 6px 14px;
-      border-radius: 6px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    .store-card-btn:hover {
-      background: var(--accent-hover);
     }
 
     /* Taskbar */
@@ -265,9 +387,7 @@
       cursor: pointer;
     }
 
-    .menu-item:hover {
-      background: rgba(16, 185, 129, 0.15);
-    }
+    .menu-item:hover { background: rgba(16, 185, 129, 0.15); }
   </style>
 </head>
 <body>
@@ -277,6 +397,14 @@
       <svg class="icon-svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
       <span class="icon-label">Emerald Browser</span>
     </div>
+    <div class="icon" onclick="openApp('terminal')">
+      <svg class="icon-svg" viewBox="0 0 24 24"><path d="M20 4H4c-1.11 0-2 .89-2 2v12c0 1.1.89 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.11-.9-2-2-2zm0 14H4V8h16v10zm-2-1h-6v-2h6v2zm-9.41-1.41L11.17 13l-2.58-2.59L10 9l4 4-4 4-1.41-1.41z"/></svg>
+      <span class="icon-label">Terminal</span>
+    </div>
+    <div class="icon" onclick="openApp('settings')">
+      <svg class="icon-svg" viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+      <span class="icon-label">Settings</span>
+    </div>
     <div class="icon" onclick="openApp('store')">
       <svg class="icon-svg" viewBox="0 0 24 24"><path d="M19 6h-2c0-2.76-2.24-5-5-5S7 3.24 7 6H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-7-3c1.66 0 3 1.34 3 3H9c0-1.66 1.34-3 3-3zm7 17H5V8h14v12z"/></svg>
       <span class="icon-label">App Store</span>
@@ -285,6 +413,8 @@
 
   <div id="start-menu">
     <div class="menu-item" onclick="openApp('browser'); toggleStartMenu();">🌐 Emerald Browser</div>
+    <div class="menu-item" onclick="openApp('terminal'); toggleStartMenu();">💻 Terminal</div>
+    <div class="menu-item" onclick="openApp('settings'); toggleStartMenu();">⚙️ Settings</div>
     <div class="menu-item" onclick="openApp('store'); toggleStartMenu();">🛍️ App Store</div>
   </div>
 
@@ -310,44 +440,69 @@
 
     function openApp(appType, customUrl) {
       const windowId = 'win-' + Date.now();
-      let title = 'App';
+      let title = 'Application';
       let content = '';
 
       if (appType === 'browser') {
         title = 'Emerald Browser';
-        const initialUrl = customUrl || 'https://wikipedia.org';
         content = `
           <div class="browser-bar">
-            <button class="browser-btn" onclick="document.getElementById('frame-${windowId}').contentWindow.history.back()">◄</button>
-            <button class="browser-btn" onclick="document.getElementById('frame-${windowId}').contentWindow.history.forward()">►</button>
+            <button class="browser-btn" onclick="goHome('${windowId}')">🏠</button>
             <button class="browser-btn" onclick="reloadFrame('${windowId}')">↻</button>
-            <input type="text" class="browser-input" id="url-${windowId}" value="${initialUrl}" onkeydown="if(event.key==='Enter') navigateFrame('${windowId}')">
+            <input type="text" class="browser-input" id="url-${windowId}" value="emerald://home" onkeydown="if(event.key==='Enter') navigateFrame('${windowId}')">
             <button class="browser-btn" onclick="navigateFrame('${windowId}')">Go</button>
-            <button class="browser-btn" title="Open in new tab if blocked" onclick="openExternal('${windowId}')">↗ Open External</button>
           </div>
-          <iframe id="frame-${windowId}" class="browser-frame" src="${initialUrl}"></iframe>
+          <div class="browser-viewport" id="viewport-${windowId}">
+            ${getHomeMarkup(windowId)}
+          </div>
+        `;
+      } else if (appType === 'terminal') {
+        title = 'Terminal';
+        content = `
+          <div class="terminal-container" id="term-container-${windowId}">
+            <div class="terminal-output" id="term-out-${windowId}">EmeraldOS Terminal v1.0.0\nType "help" for available commands.\n</div>
+            <div class="terminal-input-row">
+              <span class="terminal-prompt">emerald@user:~$</span>
+              <input type="text" class="terminal-input" id="term-in-${windowId}" onkeydown="handleTerminalKey(event, '${windowId}')" autofocus>
+            </div>
+          </div>
+        `;
+      } else if (appType === 'settings') {
+        title = 'Settings';
+        content = `
+          <div class="settings-container">
+            <h2>System Settings</h2>
+            <div class="settings-section">
+              <h3>Appearance</h3>
+              <div class="settings-row">
+                <span>Theme Preset</span>
+                <button class="settings-btn" onclick="setTheme('emerald')">Emerald Green</button>
+                <button class="settings-btn" onclick="setTheme('sapphire')">Sapphire Blue</button>
+                <button class="settings-btn" onclick="setTheme('ruby')">Ruby Red</button>
+              </div>
+            </div>
+            <div class="settings-section">
+              <h3>System Information</h3>
+              <p>OS: EmeraldOS Web Edition</p>
+              <p>Kernel: JavaScript Browser Runtime</p>
+            </div>
+          </div>
         `;
       } else if (appType === 'store') {
         title = 'App Store';
         content = `
           <div class="store-grid">
             <div class="store-card">
-              <div class="store-card-icon">📚</div>
+              <div style="font-size:36px">📚</div>
               <h3>Wikipedia</h3>
-              <p>Free online encyclopedia.</p>
-              <button class="store-card-btn" onclick="openApp('browser', 'https://wikipedia.org')">Launch</button>
+              <p>Free Encyclopedia</p>
+              <button class="settings-btn" onclick="openApp('browser', 'https://wikipedia.org')">Launch</button>
             </div>
             <div class="store-card">
-              <div class="store-card-icon">🎮</div>
+              <div style="font-size:36px">🎮</div>
               <h3>2048 Game</h3>
-              <p>Play the 2048 puzzle app.</p>
-              <button class="store-card-btn" onclick="openApp('browser', 'https://play2048.co')">Launch</button>
-            </div>
-            <div class="store-card">
-              <div class="store-card-icon">🎨</div>
-              <h3>Excalidraw</h3>
-              <p>Virtual whiteboard tool.</p>
-              <button class="store-card-btn" onclick="openApp('browser', 'https://excalidraw.com')">Launch</button>
+              <p>Puzzle Game</p>
+              <button class="settings-btn" onclick="openApp('browser', 'https://play2048.co')">Launch</button>
             </div>
           </div>
         `;
@@ -374,6 +529,11 @@
 
       win.addEventListener('mousedown', () => win.style.zIndex = ++activeZIndex);
       document.body.appendChild(win);
+
+      if (customUrl && appType === 'browser') {
+        document.getElementById(`url-${windowId}`).value = customUrl;
+        navigateFrame(windowId);
+      }
     }
 
     function closeWindow(id) { document.getElementById(id).remove(); }
@@ -382,7 +542,7 @@
     function maximizeWindow(id) {
       const win = document.getElementById(id);
       if (win.style.width === '100vw') {
-        win.style.width = '800px';
+        win.style.width = '820px';
         win.style.height = '520px';
         win.style.top = '70px';
         win.style.left = '90px';
@@ -412,26 +572,135 @@
       };
     }
 
-    function navigateFrame(id) {
-      const input = document.getElementById(`url-${id}`);
-      const frame = document.getElementById(`frame-${id}`);
+    /* Browser Engine */
+    function getHomeMarkup(winId) {
+      return `
+        <div class="browser-home">
+          <div class="home-logo">💎 Emerald Search</div>
+          <div class="home-search-box">
+            <input type="text" class="home-search-input" id="home-input-${winId}" placeholder="Search the web or type a URL..." onkeydown="if(event.key==='Enter') executeHomeSearch('${winId}')">
+            <button class="home-search-btn" onclick="executeHomeSearch('${winId}')">Search</button>
+          </div>
+        </div>
+      `;
+    }
+
+    function goHome(winId) {
+      const viewport = document.getElementById(`viewport-${winId}`);
+      const input = document.getElementById(`url-${winId}`);
+      input.value = "emerald://home";
+      viewport.innerHTML = getHomeMarkup(winId);
+    }
+
+    function executeHomeSearch(winId) {
+      const query = document.getElementById(`home-input-${winId}`).value.trim();
+      if (!query) return;
+
+      const urlInput = document.getElementById(`url-${winId}`);
+      if (query.includes('.') && !query.includes(' ')) {
+        urlInput.value = query;
+      } else {
+        urlInput.value = `https://duckduckgo.com/?q=${encodeURIComponent(query)}`;
+      }
+      navigateFrame(winId);
+    }
+
+    function navigateFrame(winId) {
+      const input = document.getElementById(`url-${winId}`);
+      const viewport = document.getElementById(`viewport-${winId}`);
       let url = input.value.trim();
+
+      if (url === 'emerald://home' || url === 'home') {
+        goHome(winId);
+        return;
+      }
 
       if (!url.startsWith('http://') && !url.startsWith('https://')) {
         url = 'https://' + url;
       }
-      frame.src = url;
+
       input.value = url;
+      viewport.innerHTML = `<iframe id="frame-${winId}" class="browser-frame" src="${url}"></iframe>`;
     }
 
-    function reloadFrame(id) {
-      const frame = document.getElementById(`frame-${id}`);
-      frame.src = frame.src;
+    function reloadFrame(winId) {
+      const input = document.getElementById(`url-${winId}`);
+      if (input.value === 'emerald://home') {
+        goHome(winId);
+      } else {
+        navigateFrame(winId);
+      }
     }
 
-    function openExternal(id) {
-      const input = document.getElementById(`url-${id}`);
-      window.open(input.value, '_blank');
+    /* Terminal Logic */
+    function handleTerminalKey(event, winId) {
+      if (event.key === 'Enter') {
+        const inputElem = document.getElementById(`term-in-${winId}`);
+        const outputElem = document.getElementById(`term-out-${winId}`);
+        const command = inputElem.value.trim();
+        inputElem.value = '';
+
+        outputElem.innerText += `\nemerald@user:~$ ${command}\n`;
+
+        const args = command.split(' ');
+        const cmd = args[0].toLowerCase();
+
+        switch (cmd) {
+          case 'help':
+            outputElem.innerText += `Available commands:\n  help     - Show list of commands\n  clear    - Clear terminal screen\n  echo     - Print text\n  date     - Display current date/time\n  ver      - Display OS version\n  fetch    - Get Wikipedia summary (e.g. fetch JavaScript)\n`;
+            break;
+          case 'clear':
+            outputElem.innerText = '';
+            break;
+          case 'echo':
+            outputElem.innerText += `${args.slice(1).join(' ')}\n`;
+            break;
+          case 'date':
+            outputElem.innerText += `${new Date().toString()}\n`;
+            break;
+          case 'ver':
+            outputElem.innerText += `EmeraldOS v1.0.0 (Web Edition)\n`;
+            break;
+          case 'fetch':
+            const topic = args.slice(1).join(' ');
+            if (!topic) {
+              outputElem.innerText += `Usage: fetch <topic>\n`;
+            } else {
+              outputElem.innerText += `Fetching summary for "${topic}"...\n`;
+              fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(topic)}`)
+                .then(res => res.json())
+                .then(data => {
+                  outputElem.innerText += data.extract ? `${data.extract}\n` : `No entry found for "${topic}".\n`;
+                })
+                .catch(() => {
+                  outputElem.innerText += `Failed to fetch API data.\n`;
+                });
+            }
+            break;
+          default:
+            if (cmd !== '') {
+              outputElem.innerText += `Command not found: ${cmd}. Type "help" for commands.\n`;
+            }
+        }
+
+        const container = document.getElementById(`term-container-${winId}`);
+        container.scrollTop = container.scrollHeight;
+      }
+    }
+
+    /* Settings Theme Switcher */
+    function setTheme(theme) {
+      const root = document.documentElement;
+      if (theme === 'emerald') {
+        root.style.setProperty('--bg-gradient', 'radial-gradient(circle at center, #064e3b 0%, #022c22 100%)');
+        root.style.setProperty('--accent-color', '#10b981');
+      } else if (theme === 'sapphire') {
+        root.style.setProperty('--bg-gradient', 'radial-gradient(circle at center, #1e3a8a 0%, #0f172a 100%)');
+        root.style.setProperty('--accent-color', '#3b82f6');
+      } else if (theme === 'ruby') {
+        root.style.setProperty('--bg-gradient', 'radial-gradient(circle at center, #881337 0%, #18181b 100%)');
+        root.style.setProperty('--accent-color', '#f43f5e');
+      }
     }
   </script>
 </body>
