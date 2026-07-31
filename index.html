@@ -3,21 +3,94 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NautilusOS v3.0</title>
-  <script async src="https://cse.google.com/cse.js?cx=972b63ac093654a7a"></script>
+  <title>NautilusOS v4.0</title>
   <style>
+    /* Theme Definitions */
     :root {
       --bg-gradient: radial-gradient(circle at center, #0f172a 0%, #020617 100%);
       --accent: #10b981;
       --accent-hover: #059669;
-      --panel-bg: rgba(15, 23, 42, 0.88);
+      --panel-bg: rgba(15, 23, 42, 0.9);
       --window-bg: rgba(30, 41, 59, 0.95);
       --text: #f8fafc;
       --border: rgba(255, 255, 255, 0.12);
+      --term-text: #38bdf8;
+    }
+
+    [data-theme="cyberpunk"] {
+      --bg-gradient: radial-gradient(circle at center, #2b0938 0%, #0c0214 100%);
+      --accent: #f43f5e;
+      --panel-bg: rgba(43, 9, 56, 0.9);
+      --window-bg: rgba(24, 9, 38, 0.95);
+      --term-text: #facc15;
+    }
+
+    [data-theme="synthwave"] {
+      --bg-gradient: linear-gradient(135deg, #18022b 0%, #080014 100%);
+      --accent: #d946ef;
+      --panel-bg: rgba(24, 2, 43, 0.9);
+      --window-bg: rgba(38, 8, 64, 0.95);
+      --term-text: #22d3ee;
+    }
+
+    [data-theme="nord"] {
+      --bg-gradient: radial-gradient(circle at center, #3b4252 0%, #2e3440 100%);
+      --accent: #88c0d0;
+      --panel-bg: rgba(46, 52, 64, 0.9);
+      --window-bg: rgba(59, 66, 82, 0.95);
+      --term-text: #a3be8c;
+    }
+
+    [data-theme="dracula"] {
+      --bg-gradient: radial-gradient(circle at center, #282a36 0%, #12131a 100%);
+      --accent: #bd93f9;
+      --panel-bg: rgba(40, 42, 54, 0.9);
+      --window-bg: rgba(68, 71, 90, 0.95);
+      --term-text: #ff79c6;
+    }
+
+    [data-theme="sunset"] {
+      --bg-gradient: linear-gradient(135deg, #451225 0%, #0f0408 100%);
+      --accent: #fb923c;
+      --panel-bg: rgba(69, 18, 37, 0.9);
+      --window-bg: rgba(41, 15, 26, 0.95);
+      --term-text: #facc15;
+    }
+
+    [data-theme="ocean"] {
+      --bg-gradient: radial-gradient(circle at center, #0c4a6e 0%, #031926 100%);
+      --accent: #0ea5e9;
+      --panel-bg: rgba(12, 74, 110, 0.9);
+      --window-bg: rgba(15, 23, 42, 0.95);
+      --term-text: #38bdf8;
+    }
+
+    [data-theme="monokai"] {
+      --bg-gradient: radial-gradient(circle at center, #272822 0%, #11120e 100%);
+      --accent: #a6e22e;
+      --panel-bg: rgba(39, 40, 34, 0.9);
+      --window-bg: rgba(62, 62, 50, 0.95);
+      --term-text: #f92672;
+    }
+
+    [data-theme="crimson"] {
+      --bg-gradient: radial-gradient(circle at center, #450a0a 0%, #180303 100%);
+      --accent: #ef4444;
+      --panel-bg: rgba(69, 10, 10, 0.9);
+      --window-bg: rgba(45, 12, 12, 0.95);
+      --term-text: #fca5a5;
+    }
+
+    [data-theme="midnight"] {
+      --bg-gradient: radial-gradient(circle at center, #020617 0%, #000000 100%);
+      --accent: #6366f1;
+      --panel-bg: rgba(2, 6, 23, 0.9);
+      --window-bg: rgba(15, 23, 42, 0.95);
+      --term-text: #818cf8;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; font-family: 'Segoe UI', system-ui, sans-serif; }
-    body { background: var(--bg-gradient); height: 100vh; overflow: hidden; color: var(--text); transition: background 0.3s ease; }
+    body { background: var(--bg-gradient); height: 100vh; overflow: hidden; color: var(--text); transition: background 0.4s ease; }
 
     /* Desktop Area */
     #desktop {
@@ -28,8 +101,8 @@
     }
 
     .icon {
-      width: 90px;
-      height: 95px;
+      width: 92px;
+      height: 96px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -39,55 +112,30 @@
       padding: 8px;
       border-radius: 8px;
       position: absolute;
-      transition: border 0.2s, background 0.2s;
+      transition: border 0.2s, background 0.2s, box-shadow 0.2s;
       border: 1px solid transparent;
     }
 
     .icon:hover { background: rgba(255, 255, 255, 0.08); border-color: var(--border); }
-    .icon.draggable { cursor: move; border-color: var(--accent); background: rgba(16, 185, 129, 0.15); }
-    .icon-svg { width: 40px; height: 40px; fill: var(--accent); pointer-events: none; }
-    .icon-label { font-size: 11px; text-align: center; text-shadow: 0 1px 3px rgba(0,0,0,0.8); pointer-events: none; }
-
-    /* Context Menu */
-    #context-menu {
-      position: fixed;
-      display: none;
-      background: var(--window-bg);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 6px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.6);
-      z-index: 10000;
-      backdrop-filter: blur(12px);
-    }
-    .context-item {
-      padding: 8px 14px;
-      font-size: 13px;
-      cursor: pointer;
-      border-radius: 4px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .context-item:hover { background: rgba(255, 255, 255, 0.1); }
-    .context-item.danger { color: #ef4444; }
+    body.drag-mode-active .icon { cursor: move; border-color: var(--accent); background: rgba(16, 185, 129, 0.15); box-shadow: 0 0 10px var(--accent); }
+    .icon-svg { width: 42px; height: 42px; fill: var(--accent); pointer-events: none; }
+    .icon-label { font-size: 11px; text-align: center; text-shadow: 0 1px 3px rgba(0,0,0,0.8); pointer-events: none; line-height: 1.2; word-break: break-word; }
 
     /* Window System */
     .window {
       position: absolute;
-      width: 800px;
-      height: 520px;
+      width: 820px;
+      height: 530px;
       background: var(--window-bg);
       border: 1px solid var(--border);
       border-radius: 10px;
-      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6);
-      backdrop-filter: blur(12px);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(14px);
       display: flex;
       flex-direction: column;
       overflow: hidden;
-      min-width: 340px;
-      min-height: 220px;
-      z-index: 10;
+      min-width: 360px;
+      min-height: 240px;
     }
 
     .window-header {
@@ -108,39 +156,45 @@
     .btn-min { background: #f59e0b; }
     .btn-max { background: var(--accent); }
 
-    .window-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; background: #0b0f19; position: relative; }
+    .window-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; background: #080c14; position: relative; }
     .app-container { padding: 18px; height: 100%; overflow-y: auto; display: flex; flex-direction: column; gap: 14px; }
 
-    /* Browser & Search */
+    /* UI Inputs & Buttons */
     .browser-bar { display: flex; gap: 8px; padding: 10px; background: #111827; border-bottom: 1px solid var(--border); align-items: center; }
-    .browser-btn { background: #1f2937; border: 1px solid var(--border); color: #fff; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 12px; }
-    .browser-btn:hover { background: #374151; }
+    .browser-btn { background: #1f2937; border: 1px solid var(--border); color: #fff; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 12px; transition: background 0.2s; }
+    .browser-btn:hover { background: var(--accent); color: #000; }
     .browser-input { flex: 1; background: #1f2937; border: 1px solid var(--border); color: #fff; padding: 7px 12px; border-radius: 6px; font-size: 13px; outline: none; }
 
-    /* Terminal */
-    .terminal-container { background: #050811; color: #38bdf8; font-family: 'Consolas', monospace; padding: 14px; flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; font-size: 13px; }
+    /* Terminal UI */
+    .terminal-container { background: #030712; color: var(--term-text); font-family: 'Consolas', monospace; padding: 14px; flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; font-size: 13px; }
     .terminal-output { white-space: pre-wrap; line-height: 1.4; }
     .terminal-input-row { display: flex; align-items: center; gap: 8px; }
     .terminal-prompt { color: var(--accent); font-weight: bold; }
     .terminal-input { flex: 1; background: transparent; border: none; outline: none; color: #fff; font-family: inherit; font-size: inherit; }
 
-    /* Code Viewer */
-    .code-editor { flex: 1; background: #020617; color: #38bdf8; font-family: 'Consolas', monospace; padding: 12px; border: 1px solid var(--border); border-radius: 6px; outline: none; resize: none; font-size: 13px; }
+    /* Code Viewer & Web Preview */
+    .code-editor { flex: 1; background: #020617; color: var(--term-text); font-family: 'Consolas', monospace; padding: 12px; border: 1px solid var(--border); border-radius: 6px; outline: none; resize: none; font-size: 13px; }
     .preview-frame { flex: 1; background: #ffffff; border: 1px solid var(--border); border-radius: 6px; }
 
-    /* Store & App Grid */
+    /* Grid & Store Layouts */
     .category-title { font-size: 13px; font-weight: 700; color: var(--accent); border-bottom: 1px solid var(--border); padding-bottom: 4px; margin-top: 10px; }
     .app-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; }
     .app-card { background: #1e293b; border: 1px solid var(--border); padding: 14px; border-radius: 8px; display: flex; flex-direction: column; gap: 8px; text-align: center; align-items: center; }
 
-    /* Taskbar & Menus */
-    #taskbar { height: 48px; background: var(--panel-bg); border-top: 1px solid var(--border); backdrop-filter: blur(15px); display: flex; align-items: center; justify-content: space-between; padding: 0 12px; position: absolute; bottom: 0; width: 100vw; z-index: 1000; }
-    .start-btn { background: var(--accent); color: #000; font-weight: bold; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; }
-    #start-menu { position: absolute; bottom: 58px; left: 12px; width: 300px; max-height: 480px; overflow-y: auto; background: var(--window-bg); border: 1px solid var(--border); border-radius: 10px; backdrop-filter: blur(20px); padding: 12px; display: none; flex-direction: column; gap: 6px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); z-index: 1001; }
+    /* Taskbar Engine */
+    #taskbar { height: 48px; background: var(--panel-bg); border-top: 1px solid var(--border); backdrop-filter: blur(16px); display: flex; align-items: center; justify-content: space-between; padding: 0 12px; position: absolute; bottom: 0; width: 100vw; z-index: 1000; }
+    .taskbar-left { display: flex; align-items: center; gap: 10px; flex: 1; overflow-x: auto; }
+    .start-btn { background: var(--accent); color: #000; font-weight: bold; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; white-space: nowrap; }
+    .taskbar-item { background: rgba(255,255,255,0.06); border: 1px solid var(--border); color: #fff; padding: 6px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 6px; white-space: nowrap; }
+    .taskbar-item.active { border-color: var(--accent); background: rgba(255,255,255,0.15); }
+    .drag-toggle-btn { background: #1f2937; border: 1px solid var(--border); color: #fff; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; }
+    .drag-toggle-btn.active { background: var(--accent); color: #000; font-weight: bold; }
+
+    #start-menu { position: absolute; bottom: 58px; left: 12px; width: 320px; max-height: 480px; overflow-y: auto; background: var(--window-bg); border: 1px solid var(--border); border-radius: 10px; backdrop-filter: blur(20px); padding: 12px; display: none; flex-direction: column; gap: 6px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); z-index: 1001; }
     .menu-item { padding: 8px 12px; border-radius: 6px; display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 13px; }
     .menu-item:hover { background: rgba(255, 255, 255, 0.1); }
 
-    /* Toast Notifications */
+    /* Toast System */
     #toast-container { position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
     .toast { background: var(--accent); color: #000; padding: 12px 20px; border-radius: 8px; font-weight: bold; box-shadow: 0 5px 15px rgba(0,0,0,0.4); }
 
@@ -152,31 +206,29 @@
 <body>
 
   <div id="toast-container"></div>
-
   <div id="desktop"></div>
-
-  <div id="context-menu">
-    <div class="context-item" id="ctx-drag">🖐️ Toggle Dragging</div>
-    <div class="context-item" id="ctx-restart">🔄 Restart App</div>
-    <div class="context-item danger" id="ctx-uninstall">🗑️ Uninstall App</div>
-  </div>
 
   <div id="start-menu"></div>
 
   <div id="taskbar">
-    <button class="start-btn" onclick="toggleStartMenu()">⚡ NautilusOS</button>
+    <div class="taskbar-left">
+      <button class="start-btn" onclick="toggleStartMenu()">⚡ NautilusOS</button>
+      <button class="drag-toggle-btn" id="drag-mode-toggle" onclick="toggleGlobalDragMode()">🖐️ Drag Mode: OFF</button>
+      <div id="running-tasks" style="display:flex; gap:6px;"></div>
+    </div>
     <div id="clock">12:00 PM</div>
   </div>
 
   <script>
-    /* System State & Persistent Applications Catalog */
-    const allAppsCatalog = [
+    /* System State & App Catalog */
+    const baseAppsCatalog = [
       { id: 'browser', name: 'Nautilus Search', category: 'Starter', icon: '<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>' },
+      { id: 'creator', name: 'Web App Creator', category: 'Developer', icon: '<path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>' },
       { id: 'htmlviewer', name: 'HTML Viewer', category: 'Developer', icon: '<path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/>' },
       { id: 'files', name: 'File Explorer', category: 'Utilities', icon: '<path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>' },
       { id: 'terminal', name: 'Terminal', category: 'Developer', icon: '<path d="M20 4H4c-1.11 0-2 .89-2 2v12c0 1.1.89 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.11-.9-2-2-2zm0 14H4V8h16v10zm-2-1h-6v-2h6v2zm-9.41-1.41L11.17 13l-2.58-2.59L10 9l4 4-4 4-1.41-1.41z"/>' },
       { id: 'store', name: 'App Store', category: 'Starter', icon: '<path d="M19 6h-2c0-2.76-2.24-5-5-5S7 3.24 7 6H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-7-3c1.66 0 3 1.34 3 3H9c0-1.66 1.34-3 3-3zm7 17H5V8h14v12z"/>' },
-      { id: 'entertainment', name: 'Entertainment', category: 'Games', icon: '<path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v2H6v-2H4v-2h2V9h2v2h3v2zm4.5 1c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm3-3c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5-1.5z"/>' },
+      { id: 'entertainment', name: 'Games Center', category: 'Games', icon: '<path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v2H6v-2H4v-2h2V9h2v2h3v2zm4.5 1c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm3-3c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5-1.5z"/>' },
       { id: 'ai', name: 'AI Assistant', category: 'Starter', icon: '<path d="M12 2a2 2 0 0 1 2 2v1c3.87.41 7 3.54 7 7.41V17a2 2 0 0 1-2 2h-1v2a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1v-2h-4v2a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1v-2H5a2 2 0 0 1-2-2v-2.59C3 8.95 6.13 5.82 10 5.41V4a2 2 0 0 1 2-2zm0 6a5 5 0 0 0-5 5v3h10v-3a5 5 0 0 0-5-5z"/>' },
       { id: 'photos', name: 'Photos', category: 'Media', icon: '<path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>' },
       { id: 'notes', name: 'Notes', category: 'Utilities', icon: '<path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>' },
@@ -184,48 +236,22 @@
       { id: 'achievements', name: 'Achievements', category: 'Games', icon: '<path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94.63 1.5 1.98 2.63 3.61 2.96V19H7v2h10v-2h-4v-3.1c1.63-.33 2.98-1.46 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2z"/>' }
     ];
 
-    let installedApps = JSON.parse(localStorage.getItem('nautilus_installed_apps')) || ['browser', 'htmlviewer', 'files', 'terminal', 'store', 'entertainment', 'ai', 'notes', 'settings', 'achievements'];
-    let userProfile = JSON.parse(localStorage.getItem('nautilus_profile')) || { username: 'NautilusUser', role: 'Developer', clock12: true, wallpaper: 'emerald' };
-    let fileSystem = JSON.parse(localStorage.getItem('nautilus_files')) || { 'index.html': '<h1>Hello NautilusOS!</h1>\n<p>Edit me in the HTML Viewer.</p>' };
+    let customApps = JSON.parse(localStorage.getItem('nautilus_custom_apps')) || [];
+    let installedApps = JSON.parse(localStorage.getItem('nautilus_installed_apps')) || ['browser', 'creator', 'htmlviewer', 'files', 'terminal', 'store', 'entertainment', 'ai', 'notes', 'settings', 'achievements'];
+    let userProfile = JSON.parse(localStorage.getItem('nautilus_profile')) || { username: 'NautilusUser', theme: 'emerald', clock12: true };
+    let fileSystem = JSON.parse(localStorage.getItem('nautilus_files')) || { 'index.html': '<h1>Welcome to NautilusOS</h1>\n<p>Double click me in Files to view!</p>' };
     let iconPositions = JSON.parse(localStorage.getItem('nautilus_icon_pos')) || {};
-    let unlockedAchievements = JSON.parse(localStorage.getItem('nautilus_achievements')) || ['boot_os'];
+    let openWindows = {}; // Track opened app windows to eliminate duplicates
     let activeZIndex = 100;
-    let iconHoldTimer = null;
-    let selectedAppCtx = null;
+    let globalDragMode = false;
 
-    /* 30 Engagement Achievements */
-    const achievementList = [
-      { id: 'boot_os', title: 'System Online', desc: 'Booted NautilusOS.' },
-      { id: 'html_saved', title: 'Web Developer', desc: 'Saved an HTML file from Code Viewer.' },
-      { id: 'open_browser', title: 'Web Navigator', desc: 'Opened Nautilus Search.' },
-      { id: 'open_files', title: 'File Explorer', desc: 'Opened File Manager.' },
-      { id: 'create_file', title: 'Author', desc: 'Created a file in File Explorer.' },
-      { id: 'delete_file', title: 'Cleaner', desc: 'Deleted a file.' },
-      { id: 'term_help', title: 'Command Line', desc: 'Ran help in terminal.' },
-      { id: 'term_sysinfo', title: 'Inspector', desc: 'Checked system stats.' },
-      { id: 'term_matrix', title: 'The Matrix', desc: 'Ran matrix command.' },
-      { id: 'term_calc', title: 'Mathematician', desc: 'Evaluated math in terminal.' },
-      { id: 'install_app', title: 'Software Engineer', desc: 'Installed an app from App Store.' },
-      { id: 'hold_app', title: 'Power User', desc: 'Held an icon to open its action menu.' },
-      { id: 'clock_toggle', title: 'Time Lord', desc: 'Toggled time format.' },
-      { id: 'notes_save', title: 'Sticky Note', desc: 'Saved a note.' },
-      { id: 'cloak_tab', title: 'Stealth Mode', desc: 'Activated tab cloaking.' },
-      { id: 'move_icon', title: 'Desktop Organizer', desc: 'Repositioned an app icon.' },
-      { id: 'search_used', title: 'Inquirer', desc: 'Executed a search query.' },
-      { id: 'secret_1337', title: '🕵️ Secret: 1337', desc: 'Executed 1337 in terminal.' },
-      { id: 'secret_konami', title: '🕵️ Secret: Konami', desc: 'Entered konami cheat.' },
-      { id: 'secret_night', title: '🕵️ Secret: Night Owl', desc: 'Ran time command late.' },
-      ...Array.from({ length: 10 }, (_, i) => ({ id: `milestone_${i+1}`, title: `Level ${i+1} Veteran`, desc: `Extended system usage milestone ${i+1}.` }))
-    ];
-
-    function unlockAchievement(id) {
-      if (!unlockedAchievements.includes(id)) {
-        unlockedAchievements.push(id);
-        localStorage.setItem('nautilus_achievements', JSON.stringify(unlockedAchievements));
-        const item = achievementList.find(a => a.id === id);
-        if (item) showToast(`🏆 Unlocked: ${item.title}`);
-      }
+    /* Theme Management */
+    function applyTheme(themeName) {
+      userProfile.theme = themeName;
+      document.body.setAttribute('data-theme', themeName);
+      localStorage.setItem('nautilus_profile', JSON.stringify(userProfile));
     }
+    applyTheme(userProfile.theme);
 
     function showToast(msg) {
       const container = document.getElementById('toast-container');
@@ -233,7 +259,7 @@
       toast.className = 'toast';
       toast.innerText = msg;
       container.appendChild(toast);
-      setTimeout(() => toast.remove(), 3500);
+      setTimeout(() => toast.remove(), 3000);
     }
 
     function updateClock() {
@@ -250,14 +276,25 @@
       menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
     }
 
-    /* Desktop Icon Lock & 3-Second Hold Logic */
+    function toggleGlobalDragMode() {
+      globalDragMode = !globalDragMode;
+      document.body.classList.toggle('drag-mode-active', globalDragMode);
+      const btn = document.getElementById('drag-mode-toggle');
+      btn.classList.toggle('active', globalDragMode);
+      btn.innerText = globalDragMode ? '🖐️ Drag Mode: ON' : '🖐️ Drag Mode: OFF';
+      showToast(globalDragMode ? 'Drag Mode Enabled!' : 'Drag Mode Locked!');
+    }
+
+    /* Desktop Rendering */
     function renderDesktop() {
       const desktop = document.getElementById('desktop');
       desktop.innerHTML = '';
       let defaultX = 20, defaultY = 20;
 
+      const fullCatalog = [...baseAppsCatalog, ...customApps];
+
       installedApps.forEach(appId => {
-        const app = allAppsCatalog.find(a => a.id === appId);
+        const app = fullCatalog.find(a => a.id === appId);
         if (!app) return;
 
         const icon = document.createElement('div');
@@ -268,20 +305,14 @@
         icon.style.left = `${pos.x}px`;
         icon.style.top = `${pos.y}px`;
 
-        icon.innerHTML = `
-          <svg class="icon-svg" viewBox="0 0 24 24">${app.icon}</svg>
-          <span class="icon-label">${app.name}</span>
-        `;
+        const iconSvg = app.icon.includes('<path') 
+          ? `<svg class="icon-svg" viewBox="0 0 24 24">${app.icon}</svg>` 
+          : `<div style="font-size:32px;">${app.icon}</div>`;
 
-        // Click to Open
+        icon.innerHTML = `${iconSvg}<span class="icon-label">${app.name}</span>`;
+
         icon.ondblclick = () => openApp(app.id);
-
-        // Hold 3 seconds for Context Menu
-        icon.onmousedown = (e) => startHoldTimer(e, app.id);
-        icon.onmouseup = clearHoldTimer;
-        icon.onmouseleave = clearHoldTimer;
-        icon.ontouchstart = (e) => startHoldTimer(e, app.id);
-        icon.ontouchend = clearHoldTimer;
+        makeDraggableIcon(icon, app.id);
 
         desktop.appendChild(icon);
 
@@ -295,50 +326,10 @@
       renderStartMenu();
     }
 
-    function startHoldTimer(e, appId) {
-      clearHoldTimer();
-      iconHoldTimer = setTimeout(() => {
-        unlockAchievement('hold_app');
-        openContextMenu(e, appId);
-      }, 3000);
-    }
-
-    function clearHoldTimer() {
-      if (iconHoldTimer) clearTimeout(iconHoldTimer);
-    }
-
-    function openContextMenu(e, appId) {
-      selectedAppCtx = appId;
-      const ctx = document.getElementById('context-menu');
-      ctx.style.display = 'block';
-      ctx.style.left = `${e.clientX || 100}px`;
-      ctx.style.top = `${e.clientY || 100}px`;
-
-      document.getElementById('ctx-drag').onclick = () => {
-        const elem = document.getElementById(`icon-${appId}`);
-        elem.classList.toggle('draggable');
-        if (elem.classList.contains('draggable')) makeDraggableIcon(elem, appId);
-        ctx.style.display = 'none';
-      };
-
-      document.getElementById('ctx-restart').onclick = () => {
-        ctx.style.display = 'none';
-        showToast(`Restarted ${appId}`);
-        openApp(appId);
-      };
-
-      document.getElementById('ctx-uninstall').onclick = () => {
-        ctx.style.display = 'none';
-        uninstallApp(appId);
-      };
-    }
-
-    document.onclick = () => document.getElementById('context-menu').style.display = 'none';
-
     function makeDraggableIcon(elem, appId) {
       let posX = 0, posY = 0, mouseX = 0, mouseY = 0;
       elem.onmousedown = (e) => {
-        if (!elem.classList.contains('draggable')) return;
+        if (!globalDragMode) return;
         e.preventDefault();
         mouseX = e.clientX;
         mouseY = e.clientY;
@@ -355,18 +346,18 @@
           document.onmouseup = null;
           iconPositions[appId] = { x: elem.offsetLeft, y: elem.offsetTop };
           localStorage.setItem('nautilus_icon_pos', JSON.stringify(iconPositions));
-          unlockAchievement('move_icon');
         };
       };
     }
 
     function renderStartMenu() {
       const menu = document.getElementById('start-menu');
-      const categories = ['Starter', 'Utilities', 'Developer', 'Games', 'Media'];
+      const categories = ['Starter', 'Utilities', 'Developer', 'Games', 'Media', 'Custom Web Apps'];
+      const fullCatalog = [...baseAppsCatalog, ...customApps];
       let html = '';
 
       categories.forEach(cat => {
-        const catApps = allAppsCatalog.filter(a => a.category === cat && installedApps.includes(a.id));
+        const catApps = fullCatalog.filter(a => a.category === cat && installedApps.includes(a.id));
         if (catApps.length > 0) {
           html += `<div class="category-title">${cat}</div>`;
           catApps.forEach(app => {
@@ -378,26 +369,57 @@
       menu.innerHTML = html;
     }
 
-    /* App Engine & Window Router */
+    /* Window & App Router (Fixes App Overlapping) */
     function openApp(appId) {
+      // If app is already open, bring window to front instead of duplicating
+      if (openWindows[appId]) {
+        const existingWin = document.getElementById(openWindows[appId]);
+        if (existingWin) {
+          existingWin.style.display = 'flex';
+          existingWin.style.zIndex = ++activeZIndex;
+          updateTaskbar();
+          return;
+        }
+      }
+
       const winId = 'win-' + Date.now();
-      const appObj = allAppsCatalog.find(a => a.id === appId);
-      let title = appObj ? appObj.name : 'App';
+      openWindows[appId] = winId;
+
+      const fullCatalog = [...baseAppsCatalog, ...customApps];
+      const appObj = fullCatalog.find(a => a.id === appId);
+      let title = appObj ? appObj.name : 'Application';
       let content = '';
 
       if (appId === 'browser') {
-        unlockAchievement('open_browser');
         content = `
           <div class="browser-bar">
-            <input type="text" class="browser-input" placeholder="Search Google or enter web address..." id="url-${winId}" onkeydown="if(event.key==='Enter') executeSearch('${winId}')">
+            <input type="text" class="browser-input" placeholder="Search Google or enter URL..." id="url-${winId}" onkeydown="if(event.key==='Enter') executeSearch('${winId}')">
             <button class="browser-btn" onclick="executeSearch('${winId}')">Search / Go</button>
+            <button class="browser-btn" onclick="addCurrentPageToHomescreen('${winId}')">+ Homescreen</button>
           </div>
-          <div class="window-content" id="view-${winId}" style="background:#0f172a; overflow-y:auto; padding:16px;">
-            <div id="cse-box-${winId}" class="gcse-search"></div>
-            <iframe id="frame-${winId}" style="width:100%; height:100%; border:none; display:none;"></iframe>
+          <div class="window-content" id="view-${winId}" style="background:#0f172a; overflow-y:auto;">
+            <iframe id="frame-${winId}" style="width:100%; height:100%; border:none;" src="https://www.bing.com"></iframe>
           </div>
         `;
-        setTimeout(() => { if (window.google && window.google.search) window.google.search.cse.element.go(); }, 300);
+
+      } else if (appId === 'creator') {
+        content = `
+          <div class="app-container">
+            <h2>Web App Creator & Homescreen Shortcut</h2>
+            <div style="display:flex; flex-direction:column; gap:10px; background:#1e293b; padding:16px; border-radius:8px; border:1px solid var(--border);">
+              <label>App Name</label>
+              <input type="text" id="custom-app-name" class="browser-input" placeholder="My Favorite App">
+              
+              <label>Icon (Emoji or SVG)</label>
+              <input type="text" id="custom-app-icon" class="browser-input" placeholder="🌐">
+              
+              <label>Web URL or HTML Code</label>
+              <input type="text" id="custom-app-url" class="browser-input" placeholder="https://example.com">
+              
+              <button class="browser-btn" onclick="createCustomApp()">Create & Pin to Desktop</button>
+            </div>
+          </div>
+        `;
 
       } else if (appId === 'htmlviewer') {
         const initialCode = fileSystem['index.html'] || '<h1>Hello World</h1>';
@@ -406,26 +428,24 @@
             <div style="display:flex; justify-content:space-between; align-items:center;">
               <input type="text" id="html-filename-${winId}" class="browser-input" value="custom_page.html" style="max-width:200px;">
               <div style="display:flex; gap:8px;">
-                <button class="browser-btn" onclick="runHTMLPreview('${winId}')">▶ Run Code</button>
-                <button class="browser-btn" onclick="saveHTMLToFile('${winId}')">💾 Save to File</button>
+                <button class="browser-btn" onclick="runHTMLPreview('${winId}')">▶ Run</button>
+                <button class="browser-btn" onclick="saveHTMLToFile('${winId}')">💾 Save</button>
               </div>
             </div>
             <div style="display:flex; gap:12px; flex:1; height:80%;">
-              <textarea id="html-code-${winId}" class="code-editor" placeholder="Write HTML code here...">${initialCode}</textarea>
+              <textarea id="html-code-${winId}" class="code-editor">${initialCode}</textarea>
               <iframe id="html-preview-${winId}" class="preview-frame"></iframe>
             </div>
           </div>
         `;
 
       } else if (appId === 'files') {
-        unlockAchievement('open_files');
         content = renderFilesApp(winId);
 
       } else if (appId === 'terminal') {
-        unlockAchievement('term_help');
         content = `
           <div class="terminal-container" id="term-box-${winId}">
-            <div class="terminal-output" id="term-out-${winId}">NautilusOS Terminal v3.0\nType 'help' for available commands.\n</div>
+            <div class="terminal-output" id="term-out-${winId}">NautilusOS Terminal v4.0\nType 'help' to see useful commands.\n</div>
             <div class="terminal-input-row">
               <span class="terminal-prompt">${userProfile.username.toLowerCase()}@nautilusos:~$</span>
               <input type="text" class="terminal-input" id="term-in-${winId}" onkeydown="handleTerminalCommand(event, '${winId}')" autofocus>
@@ -436,158 +456,147 @@
       } else if (appId === 'store') {
         content = renderStoreApp();
 
-      } else if (appId === 'ai') {
-        content = `<iframe src="https://caacgo.cresclab.com/widget/wk_5e0c5e52071687a6ef1b80075c01b811f929" style="width:100%; height:100%; border:none;"></iframe>`;
-
-      } else if (appId === 'entertainment') {
-        content = `<iframe src="https://tuesdae.vercel.app" style="width:100%; height:100%; border:none;"></iframe>`;
-
-      } else if (appId === 'photos') {
-        content = `
-          <div class="app-container">
-            <h2>Photo Gallery</h2>
-            <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap:12px;">
-              <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400" style="width:100%; border-radius:6px;">
-              <img src="https://images.unsplash.com/photo-1519681393784-d120267933ba?w=400" style="width:100%; border-radius:6px;">
-              <img src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=400" style="width:100%; border-radius:6px;">
-            </div>
-          </div>
-        `;
-
-      } else if (appId === 'notes') {
-        const saved = localStorage.getItem('nautilus_saved_note') || '';
-        content = `
-          <div class="app-container">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-              <span>Sticky Notepad</span>
-              <button class="browser-btn" onclick="localStorage.setItem('nautilus_saved_note', document.getElementById('note-${winId}').value); unlockAchievement('notes_save'); showToast('Note saved!');">Save</button>
-            </div>
-            <textarea id="note-${winId}" style="flex:1; background:#1e293b; color:#fff; border:1px solid var(--border); padding:12px; border-radius:6px; outline:none; resize:none;">${saved}</textarea>
-          </div>
-        `;
-
       } else if (appId === 'settings') {
         content = renderSettingsApp();
 
-      } else if (appId === 'achievements') {
-        content = renderAchievementsApp();
+      } else if (appObj && appObj.isCustom) {
+        content = `<iframe src="${appObj.url}" style="width:100%; height:100%; border:none;"></iframe>`;
+
+      } else {
+        content = `<iframe src="https://tuesdae.vercel.app" style="width:100%; height:100%; border:none;"></iframe>`;
       }
 
       const win = document.createElement('div');
       win.className = 'window';
       win.id = winId;
-      win.style.top = '50px';
-      win.style.left = '90px';
+      win.style.top = `${60 + (Object.keys(openWindows).length * 20)}px`;
+      win.style.left = `${80 + (Object.keys(openWindows).length * 20)}px`;
       win.style.zIndex = ++activeZIndex;
 
       win.innerHTML = `
         <div class="window-header" onmousedown="dragWindow(event, '${winId}')">
           <div class="window-title">⚡ ${title}</div>
           <div class="window-controls">
-            <button class="control-btn btn-min" onclick="document.getElementById('${winId}').style.display='none'"></button>
+            <button class="control-btn btn-min" onclick="document.getElementById('${winId}').style.display='none'; updateTaskbar();"></button>
             <button class="control-btn btn-max" onclick="maximizeWindow('${winId}')"></button>
-            <button class="control-btn btn-close" onclick="document.getElementById('${winId}').remove()"></button>
+            <button class="control-btn btn-close" onclick="closeWindow('${appId}', '${winId}')"></button>
           </div>
         </div>
         <div class="window-content">${content}</div>
       `;
 
-      win.onmousedown = () => win.style.zIndex = ++activeZIndex;
+      win.onmousedown = () => {
+        win.style.zIndex = ++activeZIndex;
+        updateTaskbar();
+      };
+
       document.body.appendChild(win);
+      updateTaskbar();
     }
 
-    /* HTML Viewer Helpers */
-    function runHTMLPreview(winId) {
-      const code = document.getElementById(`html-code-${winId}`).value;
-      const iframe = document.getElementById(`html-preview-${winId}`);
-      iframe.srcdoc = code;
+    function closeWindow(appId, winId) {
+      document.getElementById(winId).remove();
+      delete openWindows[appId];
+      updateTaskbar();
     }
 
-    function saveHTMLToFile(winId) {
-      const filename = document.getElementById(`html-filename-${winId}`).value.trim() || 'page.html';
-      const code = document.getElementById(`html-code-${winId}`).value;
-      fileSystem[filename] = code;
-      localStorage.setItem('nautilus_files', JSON.stringify(fileSystem));
-      unlockAchievement('html_saved');
-      showToast(`Saved code to ${filename}!`);
+    function updateTaskbar() {
+      const taskContainer = document.getElementById('running-tasks');
+      taskContainer.innerHTML = '';
+      const fullCatalog = [...baseAppsCatalog, ...customApps];
+
+      Object.keys(openWindows).forEach(appId => {
+        const winId = openWindows[appId];
+        const winElem = document.getElementById(winId);
+        if (!winElem) return;
+
+        const appObj = fullCatalog.find(a => a.id === appId);
+        const item = document.createElement('div');
+        item.className = `taskbar-item ${winElem.style.display !== 'none' ? 'active' : ''}`;
+        item.innerText = appObj ? appObj.name : appId;
+        item.onclick = () => {
+          if (winElem.style.display === 'none') {
+            winElem.style.display = 'flex';
+            winElem.style.zIndex = ++activeZIndex;
+          } else {
+            winElem.style.display = 'none';
+          }
+          updateTaskbar();
+        };
+        taskContainer.appendChild(item);
+      });
     }
 
-    /* Reliable Browser & Search Engine */
+    /* Web App Creator & Add to Homescreen Engine */
+    function createCustomApp(nameInput, iconInput, urlInput) {
+      const name = nameInput || document.getElementById('custom-app-name').value.trim();
+      const icon = iconInput || document.getElementById('custom-app-icon').value.trim() || '🌐';
+      const url = urlInput || document.getElementById('custom-app-url').value.trim();
+
+      if (!name || !url) {
+        showToast('Please provide both an App Name and URL!');
+        return;
+      }
+
+      const appId = 'custom-' + Date.now();
+      const newApp = {
+        id: appId,
+        name: name,
+        category: 'Custom Web Apps',
+        icon: icon,
+        url: url.startsWith('http') ? url : 'https://' + url,
+        isCustom: true
+      };
+
+      customApps.push(newApp);
+      localStorage.setItem('nautilus_custom_apps', JSON.stringify(customApps));
+
+      if (!installedApps.includes(appId)) {
+        installedApps.push(appId);
+        localStorage.setItem('nautilus_installed_apps', JSON.stringify(installedApps));
+      }
+
+      renderDesktop();
+      showToast(`Added ${name} to Homescreen!`);
+    }
+
+    function addCurrentPageToHomescreen(winId) {
+      const url = document.getElementById(`url-${winId}`).value;
+      if (url) {
+        createCustomApp('Saved Webpage', '🔗', url);
+      }
+    }
+
+    /* Search Browser Engine */
     function executeSearch(winId) {
-      unlockAchievement('search_used');
       const input = document.getElementById(`url-${winId}`).value.trim();
       const iframe = document.getElementById(`frame-${winId}`);
-      const cseBox = document.getElementById(`cse-box-${winId}`);
-
       if (!input) return;
 
       if (input.startsWith('http://') || input.startsWith('https://') || input.includes('.')) {
-        cseBox.style.display = 'none';
-        iframe.style.display = 'block';
         iframe.src = input.startsWith('http') ? input : 'https://' + input;
       } else {
-        cseBox.style.display = 'none';
-        iframe.style.display = 'block';
         iframe.src = `https://www.bing.com/search?q=${encodeURIComponent(input)}`;
       }
     }
 
-    /* App Store Engine */
-    function renderStoreApp() {
-      let html = `<div class="app-container"><h2>Nautilus App Store</h2>`;
-      const categories = ['Starter', 'Utilities', 'Developer', 'Games', 'Media'];
-
-      categories.forEach(cat => {
-        html += `<div class="category-title">${cat}</div><div class="app-grid">`;
-        allAppsCatalog.filter(a => a.category === cat).forEach(app => {
-          const isInstalled = installedApps.includes(app.id);
-          html += `
-            <div class="app-card">
-              <svg class="icon-svg" viewBox="0 0 24 24">${app.icon}</svg>
-              <strong>${app.name}</strong>
-              <button class="browser-btn" onclick="${isInstalled ? `uninstallApp('${app.id}')` : `installApp('${app.id}')`}">
-                ${isInstalled ? 'Uninstall' : 'Install'}
-              </button>
-            </div>
-          `;
-        });
-        html += `</div>`;
-      });
-
-      html += `</div>`;
-      return html;
-    }
-
-    function installApp(appId) {
-      if (!installedApps.includes(appId)) {
-        installedApps.push(appId);
-        localStorage.setItem('nautilus_installed_apps', JSON.stringify(installedApps));
-        unlockAchievement('install_app');
-        renderDesktop();
-        showToast('App installed!');
-      }
-    }
-
-    function uninstallApp(appId) {
-      installedApps = installedApps.filter(id => id !== appId);
-      localStorage.setItem('nautilus_installed_apps', JSON.stringify(installedApps));
-      renderDesktop();
-      showToast('App uninstalled!');
-    }
-
-    /* Persistent Files App */
+    /* Web File Viewer in File Explorer */
     function renderFilesApp(winId) {
       return `
         <div class="app-container">
           <div style="display:flex; gap:8px;">
-            <input type="text" id="fname-${winId}" class="browser-input" placeholder="filename.txt">
+            <input type="text" id="fname-${winId}" class="browser-input" placeholder="document.html">
             <button class="browser-btn" onclick="createFile('${winId}')">Create File</button>
           </div>
           <div style="display:flex; gap:16px; flex:1;">
-            <div style="width:35%; background:#1e293b; border:1px solid var(--border); border-radius:6px; padding:8px;" id="file-list-${winId}">
+            <div style="width:30%; background:#1e293b; border:1px solid var(--border); border-radius:6px; padding:8px;" id="file-list-${winId}">
               ${renderFileList(winId)}
             </div>
-            <textarea id="file-content-${winId}" style="flex:1; background:#1e293b; color:#fff; border:1px solid var(--border); padding:10px; border-radius:6px; resize:none;"></textarea>
+            <div style="flex:1; display:flex; flex-direction:column; gap:8px;">
+              <textarea id="file-content-${winId}" style="flex:1; background:#1e293b; color:#fff; border:1px solid var(--border); padding:10px; border-radius:6px; resize:none;"></textarea>
+              <button class="browser-btn" onclick="viewFileInExplorer('${winId}')">🌐 Render / View Web File</button>
+              <iframe id="file-view-frame-${winId}" style="height:160px; background:#fff; border:1px solid var(--border); border-radius:6px; display:none;"></iframe>
+            </div>
           </div>
         </div>
       `;
@@ -602,85 +611,31 @@
       `).join('');
     }
 
+    function viewFileInExplorer(winId) {
+      const content = document.getElementById(`file-content-${winId}`).value;
+      const frame = document.getElementById(`file-view-frame-${winId}`);
+      frame.style.display = 'block';
+      frame.srcdoc = content;
+    }
+
     function createFile(winId) {
       const fname = document.getElementById(`fname-${winId}`).value.trim();
       const content = document.getElementById(`file-content-${winId}`).value;
       if (fname) {
         fileSystem[fname] = content;
         localStorage.setItem('nautilus_files', JSON.stringify(fileSystem));
-        unlockAchievement('create_file');
         document.getElementById(`file-list-${winId}`).innerHTML = renderFileList(winId);
-        showToast(`File ${fname} saved to local storage!`);
+        showToast(`Saved ${fname}`);
       }
     }
 
     function deleteFile(fname, winId) {
       delete fileSystem[fname];
       localStorage.setItem('nautilus_files', JSON.stringify(fileSystem));
-      unlockAchievement('delete_file');
       document.getElementById(`file-list-${winId}`).innerHTML = renderFileList(winId);
     }
 
-    /* Settings UI & Cloaking */
-    function renderSettingsApp() {
-      return `
-        <div class="app-container">
-          <h2>Nautilus System Settings</h2>
-          <div style="background:#1e293b; padding:12px; border-radius:6px; border:1px solid var(--border);">
-            <label>Username</label>
-            <input type="text" class="browser-input" value="${userProfile.username}" onchange="userProfile.username=this.value; localStorage.setItem('nautilus_profile', JSON.stringify(userProfile)); showToast('Profile saved!');">
-          </div>
-          <div style="background:#1e293b; padding:12px; border-radius:6px; border:1px solid var(--border);">
-            <h3>Clock Format</h3>
-            <button class="browser-btn" onclick="userProfile.clock12 = !userProfile.clock12; unlockAchievement('clock_toggle'); localStorage.setItem('nautilus_profile', JSON.stringify(userProfile)); updateClock(); showToast('Clock updated!');">Toggle 12h / 24h Clock</button>
-          </div>
-          <div style="background:#1e293b; padding:12px; border-radius:6px; border:1px solid var(--border);">
-            <h3>Tab Cloaking</h3>
-            <div style="display:flex; gap:8px; margin-top:6px;">
-              <button class="browser-btn" onclick="cloakTab('Google Drive', 'https://ssl.gstatic.com/images/branding/product/1x/drive_2020q4_32dp.png')">Google Drive</button>
-              <button class="browser-btn" onclick="cloakTab('Canvas', 'https://du11hjcvx0uqb.cloudfront.net/dist/images/favicon-e80f08050e.ico')">Canvas</button>
-              <button class="browser-btn" onclick="cloakTab('Reset', '')">Reset</button>
-            </div>
-          </div>
-          <div style="background:#1e293b; padding:12px; border-radius:6px; border:1px solid var(--border);">
-            <h3>Storage & Data</h3>
-            <button class="browser-btn" style="background:#ef4444;" onclick="localStorage.clear(); location.reload();">Reset Factory Settings</button>
-          </div>
-        </div>
-      `;
-    }
-
-    function cloakTab(title, iconUrl) {
-      unlockAchievement('cloak_tab');
-      document.title = title === 'Reset' ? 'NautilusOS v3.0' : title;
-      let link = document.querySelector("link[rel*='icon']") || document.createElement('link');
-      link.type = 'image/x-icon';
-      link.rel = 'shortcut icon';
-      link.href = iconUrl;
-      document.getElementsByTagName('head')[0].appendChild(link);
-      showToast(`Tab cloaked as ${title}`);
-    }
-
-    function renderAchievementsApp() {
-      return `
-        <div class="app-container">
-          <h2>Achievements (${unlockedAchievements.length} / ${achievementList.length})</h2>
-          <div class="achieve-grid">
-            ${achievementList.map(a => {
-              const unlocked = unlockedAchievements.includes(a.id);
-              return `
-                <div class="achieve-card ${unlocked ? 'unlocked' : ''}">
-                  <strong style="color:${unlocked ? 'var(--accent)' : '#94a3b8'}">${a.title}</strong>
-                  <div style="font-size:11px; color:#cbd5e1; margin-top:4px;">${a.desc}</div>
-                </div>
-              `;
-            }).join('')}
-          </div>
-        </div>
-      `;
-    }
-
-    /* Terminal Command Router */
+    /* Terminal Commands */
     function handleTerminalCommand(e, winId) {
       if (e.key === 'Enter') {
         const inputElem = document.getElementById(`term-in-${winId}`);
@@ -694,49 +649,123 @@
 
         switch (cmd) {
           case 'help':
-            outputElem.innerText += `Commands: help, ls, clear, date, whoami, sysinfo, matrix, calc, 1337, konami\n`;
+            outputElem.innerText += `Useful Commands:\n - ls: list files\n - cat <file>: read file\n - touch <file>: create empty file\n - rm <file>: remove file\n - theme <name>: switch OS theme\n - calc <expr>: evaluate math\n - sysinfo: view OS memory & stats\n - clear: clear screen\n`;
             break;
           case 'ls':
             outputElem.innerText += Object.keys(fileSystem).join('  ') + '\n';
             break;
+          case 'cat':
+            if (args[1] && fileSystem[args[1]]) {
+              outputElem.innerText += fileSystem[args[1]] + '\n';
+            } else outputElem.innerText += `File not found.\n`;
+            break;
+          case 'touch':
+            if (args[1]) {
+              fileSystem[args[1]] = '';
+              localStorage.setItem('nautilus_files', JSON.stringify(fileSystem));
+              outputElem.innerText += `Created file: ${args[1]}\n`;
+            }
+            break;
+          case 'rm':
+            if (args[1] && fileSystem[args[1]]) {
+              delete fileSystem[args[1]];
+              localStorage.setItem('nautilus_files', JSON.stringify(fileSystem));
+              outputElem.innerText += `Deleted file: ${args[1]}\n`;
+            }
+            break;
+          case 'theme':
+            if (args[1]) {
+              applyTheme(args[1]);
+              outputElem.innerText += `Theme set to ${args[1]}\n`;
+            } else {
+              outputElem.innerText += `Available themes: emerald, cyberpunk, synthwave, nord, dracula, sunset, ocean, monokai, crimson, midnight\n`;
+            }
+            break;
+          case 'calc':
+            try { outputElem.innerText += `= ${eval(args.slice(1).join(' '))}\n`; } catch { outputElem.innerText += `Invalid calculation.\n`; }
+            break;
+          case 'sysinfo':
+            outputElem.innerText += `NautilusOS v4.0\nInstalled Apps: ${installedApps.length}\nFiles: ${Object.keys(fileSystem).length}\n`;
+            break;
           case 'clear':
             outputElem.innerText = '';
             break;
-          case 'date':
-            outputElem.innerText += new Date().toString() + '\n';
-            break;
-          case 'whoami':
-            outputElem.innerText += `${userProfile.username} (${userProfile.role})\n`;
-            break;
-          case 'sysinfo':
-            unlockAchievement('term_sysinfo');
-            outputElem.innerText += `OS: NautilusOS v3.0\nPersistent Files: ${Object.keys(fileSystem).length}\n`;
-            break;
-          case 'matrix':
-            unlockAchievement('term_matrix');
-            outputElem.innerText += `01001110 01000001 01010101 01010100 01001001 01001100 01010101 01010011\n`;
-            break;
-          case 'calc':
-            try {
-              outputElem.innerText += `Result: ${eval(args.slice(1).join(' '))}\n`;
-              unlockAchievement('term_calc');
-            } catch { outputElem.innerText += `Error calculating.\n`; }
-            break;
-          case '1337':
-            unlockAchievement('secret_1337');
-            outputElem.innerText += `Leet Mode Activated!\n`;
-            break;
-          case 'konami':
-            unlockAchievement('secret_konami');
-            outputElem.innerText += `Cheat Code Accepted!\n`;
-            break;
           default:
-            if (cmd) outputElem.innerText += `Unknown command: ${cmd}\n`;
+            if (cmd) outputElem.innerText += `Command not recognized: ${cmd}\n`;
         }
 
         const box = document.getElementById(`term-box-${winId}`);
         box.scrollTop = box.scrollHeight;
       }
+    }
+
+    /* Expanded Settings UI */
+    function renderSettingsApp() {
+      const themes = ['emerald', 'cyberpunk', 'synthwave', 'nord', 'dracula', 'sunset', 'ocean', 'monokai', 'crimson', 'midnight'];
+      return `
+        <div class="app-container">
+          <h2>OS Settings & Customization</h2>
+          <div style="background:#1e293b; padding:14px; border-radius:8px; border:1px solid var(--border);">
+            <h3>Choose OS Color Theme (10 Themes)</h3>
+            <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap:8px; margin-top:10px;">
+              ${themes.map(t => `<button class="browser-btn" onclick="applyTheme('${t}')">${t.toUpperCase()}</button>`).join('')}
+            </div>
+          </div>
+          <div style="background:#1e293b; padding:14px; border-radius:8px; border:1px solid var(--border);">
+            <h3>System Profile</h3>
+            <label>Username</label>
+            <input type="text" class="browser-input" value="${userProfile.username}" onchange="userProfile.username=this.value; localStorage.setItem('nautilus_profile', JSON.stringify(userProfile)); showToast('Saved profile!');">
+          </div>
+          <div style="background:#1e293b; padding:14px; border-radius:8px; border:1px solid var(--border);">
+            <h3>Factory Reset</h3>
+            <button class="browser-btn" style="background:#ef4444;" onclick="localStorage.clear(); location.reload();">Clear All Data & Reset OS</button>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderStoreApp() {
+      let html = `<div class="app-container"><h2>App Store</h2>`;
+      const fullCatalog = [...baseAppsCatalog, ...customApps];
+      const categories = ['Starter', 'Utilities', 'Developer', 'Games', 'Media', 'Custom Web Apps'];
+
+      categories.forEach(cat => {
+        const catApps = fullCatalog.filter(a => a.category === cat);
+        if (catApps.length > 0) {
+          html += `<div class="category-title">${cat}</div><div class="app-grid">`;
+          catApps.forEach(app => {
+            const isInstalled = installedApps.includes(app.id);
+            html += `
+              <div class="app-card">
+                <strong>${app.name}</strong>
+                <button class="browser-btn" onclick="${isInstalled ? `uninstallApp('${app.id}')` : `installApp('${app.id}')`}">
+                  ${isInstalled ? 'Uninstall' : 'Install'}
+                </button>
+              </div>
+            `;
+          });
+          html += `</div>`;
+        }
+      });
+
+      html += `</div>`;
+      return html;
+    }
+
+    function installApp(appId) {
+      if (!installedApps.includes(appId)) {
+        installedApps.push(appId);
+        localStorage.setItem('nautilus_installed_apps', JSON.stringify(installedApps));
+        renderDesktop();
+        showToast('App installed!');
+      }
+    }
+
+    function uninstallApp(appId) {
+      installedApps = installedApps.filter(id => id !== appId);
+      localStorage.setItem('nautilus_installed_apps', JSON.stringify(installedApps));
+      renderDesktop();
+      showToast('App uninstalled!');
     }
 
     function dragWindow(e, id) {
@@ -753,8 +782,8 @@
     function maximizeWindow(id) {
       const win = document.getElementById(id);
       if (win.style.width === '100vw') {
-        win.style.width = '800px';
-        win.style.height = '520px';
+        win.style.width = '820px';
+        win.style.height = '530px';
       } else {
         win.style.width = '100vw';
         win.style.height = 'calc(100vh - 48px)';
@@ -763,7 +792,20 @@
       }
     }
 
-    /* Init Desktop */
+    function runHTMLPreview(winId) {
+      const code = document.getElementById(`html-code-${winId}`).value;
+      document.getElementById(`html-preview-${winId}`).srcdoc = code;
+    }
+
+    function saveHTMLToFile(winId) {
+      const fname = document.getElementById(`html-filename-${winId}`).value.trim() || 'page.html';
+      const code = document.getElementById(`html-code-${winId}`).value;
+      fileSystem[fname] = code;
+      localStorage.setItem('nautilus_files', JSON.stringify(fileSystem));
+      showToast(`Saved to ${fname}`);
+    }
+
+    /* Initialize System */
     renderDesktop();
   </script>
 </body>
