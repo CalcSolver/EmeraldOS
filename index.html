@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NautilusOS v5.1</title>
+  <title>NautilusOS v5.2</title>
   <style>
     /* 10 Preset Themes */
     :root {
@@ -246,6 +246,18 @@
     /* Notifications */
     #toast-container { position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
     .toast { background: var(--accent); color: #000; padding: 12px 20px; border-radius: 8px; font-weight: bold; box-shadow: 0 5px 15px rgba(0,0,0,0.4); }
+
+    .stat-badge {
+      font-size: 18px;
+      font-weight: bold;
+      color: var(--accent);
+      background: #0f172a;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      text-align: center;
+      margin-top: 6px;
+    }
   </style>
 </head>
 <body>
@@ -351,6 +363,35 @@
   </script>
 
   <script>
+    /* Time Spent Engine */
+    let sessionSeconds = 0;
+    let totalSecondsSpent = parseInt(localStorage.getItem('nautilus_time_spent') || '0', 10);
+
+    function formatFormattedTime(totalSec) {
+      const hours = Math.floor(totalSec / 3600);
+      const minutes = Math.floor((totalSec % 3600) / 60);
+      const seconds = totalSec % 60;
+      
+      let res = [];
+      if (hours > 0) res.push(`${hours}h`);
+      if (minutes > 0 || hours > 0) res.push(`${minutes}m`);
+      res.push(`${seconds}s`);
+      return res.join(' ');
+    }
+
+    setInterval(() => {
+      sessionSeconds++;
+      totalSecondsSpent++;
+      localStorage.setItem('nautilus_time_spent', totalSecondsSpent.toString());
+
+      // Live update settings display if Settings is open
+      const sessionElem = document.getElementById('session-time-display');
+      const totalElem = document.getElementById('total-time-display');
+
+      if (sessionElem) sessionElem.innerText = formatFormattedTime(sessionSeconds);
+      if (totalElem) totalElem.innerText = formatFormattedTime(totalSecondsSpent);
+    }, 1000);
+
     /* Full App Catalog */
     const baseAppsCatalog = [
       { id: 'browser', name: 'Nautilus Search', category: 'Starter', icon: '<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>' },
@@ -572,7 +613,7 @@
       } else if (appId === 'terminal') {
         content = `
           <div class="terminal-container" id="term-box-${winId}">
-            <div class="terminal-output" id="term-out-${winId}">NautilusOS Terminal v5.1\nType 'help' for commands.\n</div>
+            <div class="terminal-output" id="term-out-${winId}">NautilusOS Terminal v5.2\nType 'help' for commands.\n</div>
             <div class="terminal-input-row">
               <span class="terminal-prompt">${userProfile.username.toLowerCase()}@nautilusos:~$</span>
               <input type="text" class="terminal-input" id="term-in-${winId}" onkeydown="handleTerminalCommand(event, '${winId}')" autofocus>
@@ -873,7 +914,7 @@
             try { outputElem.innerText += `= ${eval(args.slice(1).join(' '))}\n`; } catch { outputElem.innerText += `Invalid calculation.\n`; }
             break;
           case 'sysinfo':
-            outputElem.innerText += `NautilusOS v5.1\nInstalled Apps: ${installedApps.length}\nFiles: ${Object.keys(fileSystem).length}\n`;
+            outputElem.innerText += `NautilusOS v5.2\nTime Logged Total: ${formatFormattedTime(totalSecondsSpent)}\nInstalled Apps: ${installedApps.length}\nFiles: ${Object.keys(fileSystem).length}\n`;
             break;
           case 'clear':
             outputElem.innerText = '';
@@ -892,12 +933,28 @@
       return `
         <div class="app-container">
           <h2>OS Settings</h2>
+
+          <div style="background:#1e293b; padding:14px; border-radius:8px; border:1px solid var(--border);">
+            <h3>⏱️ Time Spent Tracker</h3>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:10px;">
+              <div>
+                <p style="font-size:12px; color:#94a3b8;">Current Session</p>
+                <div class="stat-badge" id="session-time-display">${formatFormattedTime(sessionSeconds)}</div>
+              </div>
+              <div>
+                <p style="font-size:12px; color:#94a3b8;">Total Time Logged</p>
+                <div class="stat-badge" id="total-time-display">${formatFormattedTime(totalSecondsSpent)}</div>
+              </div>
+            </div>
+          </div>
+
           <div style="background:#1e293b; padding:14px; border-radius:8px; border:1px solid var(--border);">
             <h3>Choose Theme</h3>
             <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap:8px; margin-top:10px;">
               ${themes.map(t => `<button class="browser-btn" onclick="applyTheme('${t}')">${t.toUpperCase()}</button>`).join('')}
             </div>
           </div>
+
           <div style="background:#1e293b; padding:14px; border-radius:8px; border:1px solid var(--border);">
             <h3>System Reset</h3>
             <button class="browser-btn" style="background:#ef4444;" onclick="localStorage.clear(); location.reload();">Clear All Data & Reset OS</button>
