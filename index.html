@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NautilusOS v5.0</title>
+  <title>NautilusOS v5.1</title>
   <style>
-    /* Theme Definitions */
+    /* 10 Preset Themes */
     :root {
       --bg-gradient: radial-gradient(circle at center, #0f172a 0%, #020617 100%);
       --accent: #10b981;
@@ -41,10 +41,58 @@
       --term-text: #a3be8c;
     }
 
+    [data-theme="dracula"] {
+      --bg-gradient: radial-gradient(circle at center, #282a36 0%, #12131a 100%);
+      --accent: #bd93f9;
+      --panel-bg: rgba(40, 42, 54, 0.9);
+      --window-bg: rgba(68, 71, 90, 0.95);
+      --term-text: #ff79c6;
+    }
+
+    [data-theme="sunset"] {
+      --bg-gradient: linear-gradient(135deg, #451225 0%, #0f0408 100%);
+      --accent: #fb923c;
+      --panel-bg: rgba(69, 18, 37, 0.9);
+      --window-bg: rgba(41, 15, 26, 0.95);
+      --term-text: #facc15;
+    }
+
+    [data-theme="ocean"] {
+      --bg-gradient: radial-gradient(circle at center, #0c4a6e 0%, #031926 100%);
+      --accent: #0ea5e9;
+      --panel-bg: rgba(12, 74, 110, 0.9);
+      --window-bg: rgba(15, 23, 42, 0.95);
+      --term-text: #38bdf8;
+    }
+
+    [data-theme="monokai"] {
+      --bg-gradient: radial-gradient(circle at center, #272822 0%, #11120e 100%);
+      --accent: #a6e22e;
+      --panel-bg: rgba(39, 40, 34, 0.9);
+      --window-bg: rgba(62, 62, 50, 0.95);
+      --term-text: #f92672;
+    }
+
+    [data-theme="crimson"] {
+      --bg-gradient: radial-gradient(circle at center, #450a0a 0%, #180303 100%);
+      --accent: #ef4444;
+      --panel-bg: rgba(69, 10, 10, 0.9);
+      --window-bg: rgba(45, 12, 12, 0.95);
+      --term-text: #fca5a5;
+    }
+
+    [data-theme="midnight"] {
+      --bg-gradient: radial-gradient(circle at center, #020617 0%, #000000 100%);
+      --accent: #6366f1;
+      --panel-bg: rgba(2, 6, 23, 0.9);
+      --window-bg: rgba(15, 23, 42, 0.95);
+      --term-text: #818cf8;
+    }
+
     * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; font-family: 'Segoe UI', system-ui, sans-serif; }
     body { background: var(--bg-gradient); height: 100vh; overflow: hidden; color: var(--text); transition: background 0.4s ease; }
 
-    /* Auth Overlay */
+    /* Auth Screen Overlay */
     #auth-overlay {
       position: fixed;
       inset: 0;
@@ -64,7 +112,7 @@
       width: 360px;
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 12px;
       box-shadow: 0 20px 50px rgba(0,0,0,0.8);
       text-align: center;
     }
@@ -95,7 +143,7 @@
     .auth-btn.secondary { background: #334155; color: #fff; }
     .auth-btn.google { background: #ea4335; color: #fff; }
 
-    /* Desktop Area */
+    /* Desktop Layout */
     #desktop {
       width: 100vw;
       height: calc(100vh - 48px);
@@ -120,11 +168,11 @@
     }
 
     .icon:hover { background: rgba(255, 255, 255, 0.08); border-color: var(--border); }
-    body.drag-mode-active .icon { cursor: move; border-color: var(--accent); background: rgba(16, 185, 129, 0.15); }
+    body.drag-mode-active .icon { cursor: move; border-color: var(--accent); background: rgba(16, 185, 129, 0.15); box-shadow: 0 0 10px var(--accent); }
     .icon-svg { width: 42px; height: 42px; fill: var(--accent); pointer-events: none; }
-    .icon-label { font-size: 11px; text-align: center; text-shadow: 0 1px 3px rgba(0,0,0,0.8); pointer-events: none; line-height: 1.2; }
+    .icon-label { font-size: 11px; text-align: center; text-shadow: 0 1px 3px rgba(0,0,0,0.8); pointer-events: none; line-height: 1.2; word-break: break-word; }
 
-    /* Window System */
+    /* Window UI Frame */
     .window {
       position: absolute;
       width: 820px;
@@ -137,6 +185,8 @@
       display: flex;
       flex-direction: column;
       overflow: hidden;
+      min-width: 360px;
+      min-height: 240px;
     }
 
     .window-header {
@@ -150,6 +200,7 @@
       border-bottom: 1px solid var(--border);
     }
 
+    .window-title { font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
     .window-controls { display: flex; gap: 8px; }
     .control-btn { width: 12px; height: 12px; border-radius: 50%; border: none; cursor: pointer; }
     .btn-close { background: #ef4444; }
@@ -159,24 +210,40 @@
     .window-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; background: #080c14; position: relative; }
     .app-container { padding: 18px; height: 100%; overflow-y: auto; display: flex; flex-direction: column; gap: 14px; }
 
+    /* Custom Inputs & Controls */
     .browser-bar { display: flex; gap: 8px; padding: 10px; background: #111827; border-bottom: 1px solid var(--border); align-items: center; }
     .browser-btn { background: #1f2937; border: 1px solid var(--border); color: #fff; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 12px; }
     .browser-btn:hover { background: var(--accent); color: #000; }
     .browser-input { flex: 1; background: #1f2937; border: 1px solid var(--border); color: #fff; padding: 7px 12px; border-radius: 6px; font-size: 13px; outline: none; }
 
+    /* Terminal UI */
+    .terminal-container { background: #030712; color: var(--term-text); font-family: 'Consolas', monospace; padding: 14px; flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; font-size: 13px; }
+    .terminal-output { white-space: pre-wrap; line-height: 1.4; }
+    .terminal-input-row { display: flex; align-items: center; gap: 8px; }
+    .terminal-prompt { color: var(--accent); font-weight: bold; }
+    .terminal-input { flex: 1; background: transparent; border: none; outline: none; color: #fff; font-family: inherit; font-size: inherit; }
+
+    /* Code Editor & Preview Frame */
     .code-editor { flex: 1; background: #020617; color: var(--term-text); font-family: 'Consolas', monospace; padding: 12px; border: 1px solid var(--border); border-radius: 6px; outline: none; resize: none; font-size: 13px; }
     .preview-frame { flex: 1; background: #ffffff; border: 1px solid var(--border); border-radius: 6px; }
 
-    /* Taskbar Engine */
+    /* Store Grid & Categories */
+    .category-title { font-size: 13px; font-weight: 700; color: var(--accent); border-bottom: 1px solid var(--border); padding-bottom: 4px; margin-top: 10px; }
+    .app-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; }
+    .app-card { background: #1e293b; border: 1px solid var(--border); padding: 14px; border-radius: 8px; display: flex; flex-direction: column; gap: 8px; text-align: center; align-items: center; }
+
+    /* Bottom Taskbar Engine */
     #taskbar { height: 48px; background: var(--panel-bg); border-top: 1px solid var(--border); backdrop-filter: blur(16px); display: flex; align-items: center; justify-content: space-between; padding: 0 12px; position: absolute; bottom: 0; width: 100vw; z-index: 1000; }
     .taskbar-left { display: flex; align-items: center; gap: 10px; flex: 1; overflow-x: auto; }
-    .start-btn { background: var(--accent); color: #000; font-weight: bold; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; }
-    .taskbar-item { background: rgba(255,255,255,0.06); border: 1px solid var(--border); color: #fff; padding: 6px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 6px; }
-
-    #start-menu { position: absolute; bottom: 58px; left: 12px; width: 320px; max-height: 480px; overflow-y: auto; background: var(--window-bg); border: 1px solid var(--border); border-radius: 10px; backdrop-filter: blur(20px); padding: 12px; display: none; flex-direction: column; gap: 6px; z-index: 1001; }
+    .start-btn { background: var(--accent); color: #000; font-weight: bold; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; white-space: nowrap; }
+    .taskbar-item { background: rgba(255,255,255,0.06); border: 1px solid var(--border); color: #fff; padding: 6px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 6px; white-space: nowrap; }
+    .taskbar-item.active { border-color: var(--accent); background: rgba(255,255,255,0.15); }
+    
+    #start-menu { position: absolute; bottom: 58px; left: 12px; width: 320px; max-height: 480px; overflow-y: auto; background: var(--window-bg); border: 1px solid var(--border); border-radius: 10px; backdrop-filter: blur(20px); padding: 12px; display: none; flex-direction: column; gap: 6px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); z-index: 1001; }
     .menu-item { padding: 8px 12px; border-radius: 6px; display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 13px; }
     .menu-item:hover { background: rgba(255, 255, 255, 0.1); }
 
+    /* Notifications */
     #toast-container { position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
     .toast { background: var(--accent); color: #000; padding: 12px 20px; border-radius: 8px; font-weight: bold; box-shadow: 0 5px 15px rgba(0,0,0,0.4); }
   </style>
@@ -196,7 +263,7 @@
       <button class="auth-btn google" id="btn-login-google">Sign In with Google</button>
       
       <hr style="border-color: var(--border); margin: 4px 0;">
-      <button class="auth-btn secondary" id="btn-login-guest">Continue as Guest</button>
+      <button class="auth-btn secondary" id="btn-login-guest">Continue as Guest Mode</button>
     </div>
   </div>
 
@@ -245,7 +312,6 @@
     const auth = getAuth(app);
     const googleProvider = new GoogleAuthProvider();
 
-    // Attach Handlers
     document.getElementById('btn-login-email').onclick = () => {
       const email = document.getElementById('auth-email').value;
       const password = document.getElementById('auth-password').value;
@@ -285,19 +351,39 @@
   </script>
 
   <script>
-    /* Desktop OS Engine */
+    /* Full App Catalog */
     const baseAppsCatalog = [
       { id: 'browser', name: 'Nautilus Search', category: 'Starter', icon: '<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>' },
-      { id: 'htmlviewer', name: 'HTML Viewer', category: 'Developer', icon: '<path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/>' },
+      { id: 'codeshare', name: 'Code Share', category: 'Developer', icon: '<path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/>', url: 'https://codeshare-eta.vercel.app/' },
+      { id: 'creator', name: 'Web App Creator', category: 'Developer', icon: '<path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>' },
+      { id: 'htmlviewer', name: 'HTML Viewer', category: 'Developer', icon: '<path d="M12 2l-5.5 9h11zM4 14h16v6H4z"/>' },
       { id: 'files', name: 'File Explorer', category: 'Utilities', icon: '<path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>' },
-      { id: 'settings', name: 'Settings', category: 'Starter', icon: '<path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6-3.6z"/>' }
+      { id: 'terminal', name: 'Terminal', category: 'Developer', icon: '<path d="M20 4H4c-1.11 0-2 .89-2 2v12c0 1.1.89 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.11-.9-2-2-2zm0 14H4V8h16v10zm-2-1h-6v-2h6v2zm-9.41-1.41L11.17 13l-2.58-2.59L10 9l4 4-4 4-1.41-1.41z"/>' },
+      { id: 'store', name: 'App Store', category: 'Starter', icon: '<path d="M19 6h-2c0-2.76-2.24-5-5-5S7 3.24 7 6H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-7-3c1.66 0 3 1.34 3 3H9c0-1.66 1.34-3 3-3zm7 17H5V8h14v12z"/>' },
+      { id: 'entertainment', name: 'Games Center', category: 'Games', icon: '<path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v2H6v-2H4v-2h2V9h2v2h3v2zm4.5 1c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm3-3c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5-1.5z"/>' },
+      { id: 'ai', name: 'AI Assistant', category: 'Starter', icon: '<path d="M12 2a2 2 0 0 1 2 2v1c3.87.41 7 3.54 7 7.41V17a2 2 0 0 1-2 2h-1v2a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1v-2h-4v2a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1v-2H5a2 2 0 0 1-2-2v-2.59C3 8.95 6.13 5.82 10 5.41V4a2 2 0 0 1 2-2zm0 6a5 5 0 0 0-5 5v3h10v-3a5 5 0 0 0-5-5z"/>' },
+      { id: 'photos', name: 'Photos', category: 'Media', icon: '<path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>' },
+      { id: 'notes', name: 'Notes', category: 'Utilities', icon: '<path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>' },
+      { id: 'settings', name: 'Settings', category: 'Starter', icon: '<path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6-3.6z"/>' },
+      { id: 'achievements', name: 'Achievements', category: 'Games', icon: '<path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94.63 1.5 1.98 2.63 3.61 2.96V19H7v2h10v-2h-4v-3.1c1.63-.33 2.98-1.46 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2z"/>' }
     ];
 
-    let installedApps = ['browser', 'htmlviewer', 'files', 'settings'];
-    let fileSystem = JSON.parse(localStorage.getItem('nautilus_files')) || { 'index.html': '<h1>Hello NautilusOS!</h1>' };
+    let customApps = JSON.parse(localStorage.getItem('nautilus_custom_apps')) || [];
+    let installedApps = JSON.parse(localStorage.getItem('nautilus_installed_apps')) || ['browser', 'codeshare', 'creator', 'htmlviewer', 'files', 'terminal', 'store', 'entertainment', 'ai', 'photos', 'notes', 'settings', 'achievements'];
+    let userProfile = JSON.parse(localStorage.getItem('nautilus_profile')) || { username: 'NautilusUser', theme: 'emerald' };
+    let fileSystem = JSON.parse(localStorage.getItem('nautilus_files')) || { 'index.html': '<h1>Welcome to NautilusOS</h1>\n<p>Double click me in Files to view!</p>' };
+    let userNotes = localStorage.getItem('nautilus_notes') || 'Welcome to Notes!\nType anything here and it auto-saves.';
+    let iconPositions = JSON.parse(localStorage.getItem('nautilus_icon_pos')) || {};
     let openWindows = {};
     let activeZIndex = 100;
     let globalDragMode = false;
+
+    function applyTheme(themeName) {
+      userProfile.theme = themeName;
+      document.body.setAttribute('data-theme', themeName);
+      localStorage.setItem('nautilus_profile', JSON.stringify(userProfile));
+    }
+    applyTheme(userProfile.theme);
 
     function showToast(msg) {
       const container = document.getElementById('toast-container');
@@ -309,7 +395,8 @@
     }
 
     function updateClock() {
-      document.getElementById('clock').innerText = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      const now = new Date();
+      document.getElementById('clock').innerText = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     }
     setInterval(updateClock, 1000);
     updateClock();
@@ -322,66 +409,585 @@
     function toggleGlobalDragMode() {
       globalDragMode = !globalDragMode;
       document.body.classList.toggle('drag-mode-active', globalDragMode);
+      const btn = document.getElementById('drag-mode-toggle');
+      btn.innerText = globalDragMode ? '🖐️ Drag Mode: ON' : '🖐️ Drag Mode: OFF';
+      showToast(globalDragMode ? 'Drag Mode Enabled!' : 'Drag Mode Locked!');
     }
 
     function renderDesktop() {
       const desktop = document.getElementById('desktop');
       desktop.innerHTML = '';
       let defaultX = 20, defaultY = 20;
+      const fullCatalog = [...baseAppsCatalog, ...customApps];
 
       installedApps.forEach(appId => {
-        const app = baseAppsCatalog.find(a => a.id === appId);
+        const app = fullCatalog.find(a => a.id === appId);
         if (!app) return;
 
         const icon = document.createElement('div');
         icon.className = 'icon';
-        icon.style.left = `${defaultX}px`;
-        icon.style.top = `${defaultY}px`;
-        icon.innerHTML = `<svg class="icon-svg" viewBox="0 0 24 24">${app.icon}</svg><span class="icon-label">${app.name}</span>`;
+        icon.id = `icon-${app.id}`;
+
+        const pos = iconPositions[app.id] || { x: defaultX, y: defaultY };
+        icon.style.left = `${pos.x}px`;
+        icon.style.top = `${pos.y}px`;
+
+        const iconSvg = app.icon.includes('<path') 
+          ? `<svg class="icon-svg" viewBox="0 0 24 24">${app.icon}</svg>` 
+          : `<div style="font-size:32px;">${app.icon}</div>`;
+
+        icon.innerHTML = `${iconSvg}<span class="icon-label">${app.name}</span>`;
         icon.ondblclick = () => openApp(app.id);
+        makeDraggableIcon(icon, app.id);
 
         desktop.appendChild(icon);
+
         defaultY += 105;
+        if (defaultY > window.innerHeight - 160) {
+          defaultY = 20;
+          defaultX += 100;
+        }
       });
+
+      renderStartMenu();
     }
 
+    function makeDraggableIcon(elem, appId) {
+      let posX = 0, posY = 0, mouseX = 0, mouseY = 0;
+      elem.onmousedown = (e) => {
+        if (!globalDragMode) return;
+        e.preventDefault();
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        document.onmousemove = (e) => {
+          posX = mouseX - e.clientX;
+          posY = mouseY - e.clientY;
+          mouseX = e.clientX;
+          mouseY = e.clientY;
+          elem.style.top = (elem.offsetTop - posY) + "px";
+          elem.style.left = (elem.offsetLeft - posX) + "px";
+        };
+        document.onmouseup = () => {
+          document.onmousemove = null;
+          document.onmouseup = null;
+          iconPositions[appId] = { x: elem.offsetLeft, y: elem.offsetTop };
+          localStorage.setItem('nautilus_icon_pos', JSON.stringify(iconPositions));
+        };
+      };
+    }
+
+    function renderStartMenu() {
+      const menu = document.getElementById('start-menu');
+      const categories = ['Starter', 'Utilities', 'Developer', 'Games', 'Media', 'Custom Web Apps'];
+      const fullCatalog = [...baseAppsCatalog, ...customApps];
+      let html = '';
+
+      categories.forEach(cat => {
+        const catApps = fullCatalog.filter(a => a.category === cat && installedApps.includes(a.id));
+        if (catApps.length > 0) {
+          html += `<div class="category-title">${cat}</div>`;
+          catApps.forEach(app => {
+            html += `<div class="menu-item" onclick="openApp('${app.id}'); toggleStartMenu();">${app.name}</div>`;
+          });
+        }
+      });
+
+      menu.innerHTML = html;
+    }
+
+    /* Full Window & App Engine */
     function openApp(appId) {
       if (openWindows[appId]) {
         const existingWin = document.getElementById(openWindows[appId]);
         if (existingWin) {
           existingWin.style.display = 'flex';
           existingWin.style.zIndex = ++activeZIndex;
+          updateTaskbar();
           return;
         }
       }
 
       const winId = 'win-' + Date.now();
       openWindows[appId] = winId;
-      const appObj = baseAppsCatalog.find(a => a.id === appId);
+      const fullCatalog = [...baseAppsCatalog, ...customApps];
+      const appObj = fullCatalog.find(a => a.id === appId);
+      let title = appObj ? appObj.name : 'Application';
+      let content = '';
+
+      if (appId === 'browser') {
+        content = `
+          <div class="browser-bar">
+            <input type="text" class="browser-input" placeholder="Search Bing or enter URL..." id="url-${winId}" onkeydown="if(event.key==='Enter') executeSearch('${winId}')">
+            <button class="browser-btn" onclick="executeSearch('${winId}')">Search / Go</button>
+            <button class="browser-btn" onclick="addCurrentPageToHomescreen('${winId}')">+ Homescreen</button>
+          </div>
+          <div class="window-content" id="view-${winId}" style="background:#0f172a; overflow-y:auto;">
+            <iframe id="frame-${winId}" style="width:100%; height:100%; border:none;" src="https://www.bing.com"></iframe>
+          </div>
+        `;
+
+      } else if (appId === 'codeshare') {
+        content = `<iframe src="https://codeshare-eta.vercel.app/" style="width:100%; height:100%; border:none;"></iframe>`;
+
+      } else if (appId === 'creator') {
+        content = `
+          <div class="app-container">
+            <h2>Web App Creator & Homescreen Shortcut</h2>
+            <div style="display:flex; flex-direction:column; gap:10px; background:#1e293b; padding:16px; border-radius:8px; border:1px solid var(--border);">
+              <label>App Name</label>
+              <input type="text" id="custom-app-name" class="browser-input" placeholder="My Code Project">
+              
+              <label>Icon (Emoji or SVG)</label>
+              <input type="text" id="custom-app-icon" class="browser-input" placeholder="🚀">
+              
+              <label>Web URL</label>
+              <input type="text" id="custom-app-url" class="browser-input" placeholder="https://codeshare-eta.vercel.app/">
+              
+              <button class="browser-btn" onclick="createCustomApp()">Create & Pin to Desktop</button>
+            </div>
+          </div>
+        `;
+
+      } else if (appId === 'htmlviewer') {
+        const initialCode = fileSystem['index.html'] || '<h1>Hello World</h1>';
+        content = `
+          <div class="app-container">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <input type="text" id="html-filename-${winId}" class="browser-input" value="custom_page.html" style="max-width:200px;">
+              <div style="display:flex; gap:8px;">
+                <button class="browser-btn" onclick="runHTMLPreview('${winId}')">▶ Run</button>
+                <button class="browser-btn" onclick="saveHTMLToFile('${winId}')">💾 Save</button>
+              </div>
+            </div>
+            <div style="display:flex; gap:12px; flex:1; height:80%;">
+              <textarea id="html-code-${winId}" class="code-editor">${initialCode}</textarea>
+              <iframe id="html-preview-${winId}" class="preview-frame"></iframe>
+            </div>
+          </div>
+        `;
+
+      } else if (appId === 'files') {
+        content = renderFilesApp(winId);
+
+      } else if (appId === 'terminal') {
+        content = `
+          <div class="terminal-container" id="term-box-${winId}">
+            <div class="terminal-output" id="term-out-${winId}">NautilusOS Terminal v5.1\nType 'help' for commands.\n</div>
+            <div class="terminal-input-row">
+              <span class="terminal-prompt">${userProfile.username.toLowerCase()}@nautilusos:~$</span>
+              <input type="text" class="terminal-input" id="term-in-${winId}" onkeydown="handleTerminalCommand(event, '${winId}')" autofocus>
+            </div>
+          </div>
+        `;
+
+      } else if (appId === 'store') {
+        content = renderStoreApp();
+
+      } else if (appId === 'notes') {
+        content = `
+          <div class="app-container">
+            <h2>Notes</h2>
+            <textarea id="notes-area" class="code-editor" style="color:#fff;" oninput="localStorage.setItem('nautilus_notes', this.value);">${userNotes}</textarea>
+          </div>
+        `;
+
+      } else if (appId === 'settings') {
+        content = renderSettingsApp();
+
+      } else if (appId === 'entertainment') {
+        content = `
+          <div class="app-container">
+            <h2>Games Center</h2>
+            <div class="app-grid">
+              <div class="app-card">
+                <h3>Code Share</h3>
+                <p>Post and view public code snippet creations!</p>
+                <button class="browser-btn" onclick="openApp('codeshare')">Launch Code Share</button>
+              </div>
+            </div>
+          </div>
+        `;
+
+      } else if (appId === 'ai') {
+        content = `
+          <div class="app-container">
+            <h2>AI Assistant</h2>
+            <div style="flex:1; background:#1e293b; border:1px solid var(--border); border-radius:8px; padding:12px; overflow-y:auto;" id="ai-chat">
+              <div style="color:var(--accent); font-weight:bold;">AI Assistant:</div>
+              <div>Hello! I am your local Nautilus OS companion. How can I help you customize your desktop or write code?</div>
+            </div>
+            <div style="display:flex; gap:8px;">
+              <input type="text" id="ai-input" class="browser-input" placeholder="Ask AI anything..." onkeydown="if(event.key==='Enter') sendAIMessage()">
+              <button class="browser-btn" onclick="sendAIMessage()">Send</button>
+            </div>
+          </div>
+        `;
+
+      } else if (appId === 'photos') {
+        content = `
+          <div class="app-container">
+            <h2>Photos Gallery</h2>
+            <div class="app-grid">
+              <div class="app-card" style="width:100%; height:180px; background:radial-gradient(circle, #38bdf8, #0369a1); display:flex; align-items:center; justify-content:center;">🖼️ Sample Wallpaper 1</div>
+              <div class="app-card" style="width:100%; height:180px; background:radial-gradient(circle, #f43f5e, #881337); display:flex; align-items:center; justify-content:center;">🖼️ Sample Wallpaper 2</div>
+            </div>
+          </div>
+        `;
+
+      } else if (appId === 'achievements') {
+        content = `
+          <div class="app-container">
+            <h2>OS Achievements</h2>
+            <div style="display:flex; flex-direction:column; gap:10px;">
+              <div class="app-card" style="text-align:left; width:100%;">🏆 <strong>First Boot</strong>: Booted Nautilus OS</div>
+              <div class="app-card" style="text-align:left; width:100%;">🏆 <strong>Developer</strong>: Saved a web file in File Explorer</div>
+              <div class="app-card" style="text-align:left; width:100%;">🏆 <strong>Social Coder</strong>: Shared code using Code Share</div>
+            </div>
+          </div>
+        `;
+
+      } else if (appObj && appObj.url) {
+        content = `<iframe src="${appObj.url}" style="width:100%; height:100%; border:none;"></iframe>`;
+      }
 
       const win = document.createElement('div');
       win.className = 'window';
       win.id = winId;
-      win.style.top = '60px';
-      win.style.left = '80px';
+      win.style.top = `${60 + (Object.keys(openWindows).length * 15)}px`;
+      win.style.left = `${80 + (Object.keys(openWindows).length * 15)}px`;
       win.style.zIndex = ++activeZIndex;
 
       win.innerHTML = `
-        <div class="window-header">
-          <div class="window-title">⚡ ${appObj ? appObj.name : 'App'}</div>
+        <div class="window-header" onmousedown="dragWindow(event, '${winId}')">
+          <div class="window-title">⚡ ${title}</div>
           <div class="window-controls">
-            <button class="control-btn btn-close" onclick="document.getElementById('${winId}').remove(); delete openWindows['${appId}'];"></button>
+            <button class="control-btn btn-min" onclick="document.getElementById('${winId}').style.display='none'; updateTaskbar();"></button>
+            <button class="control-btn btn-max" onclick="maximizeWindow('${winId}')"></button>
+            <button class="control-btn btn-close" onclick="closeWindow('${appId}', '${winId}')"></button>
           </div>
         </div>
-        <div class="window-content" style="padding:16px;">
-          <h3>${appObj.name}</h3>
-          <p>Application active and ready.</p>
-        </div>
+        <div class="window-content">${content}</div>
       `;
 
+      win.onmousedown = () => {
+        win.style.zIndex = ++activeZIndex;
+        updateTaskbar();
+      };
+
       document.body.appendChild(win);
+      updateTaskbar();
     }
 
+    function closeWindow(appId, winId) {
+      document.getElementById(winId).remove();
+      delete openWindows[appId];
+      updateTaskbar();
+    }
+
+    function updateTaskbar() {
+      const taskContainer = document.getElementById('running-tasks');
+      taskContainer.innerHTML = '';
+      const fullCatalog = [...baseAppsCatalog, ...customApps];
+
+      Object.keys(openWindows).forEach(appId => {
+        const winId = openWindows[appId];
+        const winElem = document.getElementById(winId);
+        if (!winElem) return;
+
+        const appObj = fullCatalog.find(a => a.id === appId);
+        const item = document.createElement('div');
+        item.className = `taskbar-item ${winElem.style.display !== 'none' ? 'active' : ''}`;
+        item.innerText = appObj ? appObj.name : appId;
+        item.onclick = () => {
+          if (winElem.style.display === 'none') {
+            winElem.style.display = 'flex';
+            winElem.style.zIndex = ++activeZIndex;
+          } else {
+            winElem.style.display = 'none';
+          }
+          updateTaskbar();
+        };
+        taskContainer.appendChild(item);
+      });
+    }
+
+    /* Helper Utilities */
+    function sendAIMessage() {
+      const input = document.getElementById('ai-input');
+      const chat = document.getElementById('ai-chat');
+      if (!input.value.trim()) return;
+
+      chat.innerHTML += `<div style="color:#fff; margin-top:8px;"><strong>You:</strong> ${input.value}</div>`;
+      chat.innerHTML += `<div style="color:var(--accent); margin-top:4px;"><strong>AI Assistant:</strong> Code Share and web editor tools are ready for your projects!</div>`;
+      input.value = '';
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    function createCustomApp() {
+      const name = document.getElementById('custom-app-name').value.trim();
+      const icon = document.getElementById('custom-app-icon').value.trim() || '🚀';
+      const url = document.getElementById('custom-app-url').value.trim();
+
+      if (!name || !url) {
+        showToast('Please provide both App Name and URL!');
+        return;
+      }
+
+      const appId = 'custom-' + Date.now();
+      const newApp = {
+        id: appId,
+        name: name,
+        category: 'Custom Web Apps',
+        icon: icon,
+        url: url.startsWith('http') ? url : 'https://' + url,
+        isCustom: true
+      };
+
+      customApps.push(newApp);
+      localStorage.setItem('nautilus_custom_apps', JSON.stringify(customApps));
+
+      if (!installedApps.includes(appId)) {
+        installedApps.push(appId);
+        localStorage.setItem('nautilus_installed_apps', JSON.stringify(installedApps));
+      }
+
+      renderDesktop();
+      showToast(`Added ${name} to Homescreen!`);
+    }
+
+    function addCurrentPageToHomescreen(winId) {
+      const url = document.getElementById(`url-${winId}`).value;
+      if (url) {
+        document.getElementById('custom-app-url').value = url;
+        createCustomApp();
+      }
+    }
+
+    function executeSearch(winId) {
+      const input = document.getElementById(`url-${winId}`).value.trim();
+      const iframe = document.getElementById(`frame-${winId}`);
+      if (!input) return;
+
+      if (input.startsWith('http://') || input.startsWith('https://') || input.includes('.')) {
+        iframe.src = input.startsWith('http') ? input : 'https://' + input;
+      } else {
+        iframe.src = `https://www.bing.com/search?q=${encodeURIComponent(input)}`;
+      }
+    }
+
+    function renderFilesApp(winId) {
+      return `
+        <div class="app-container">
+          <div style="display:flex; gap:8px;">
+            <input type="text" id="fname-${winId}" class="browser-input" placeholder="document.html">
+            <button class="browser-btn" onclick="createFile('${winId}')">Save / Create File</button>
+          </div>
+          <div style="display:flex; gap:16px; flex:1;">
+            <div style="width:30%; background:#1e293b; border:1px solid var(--border); border-radius:6px; padding:8px;" id="file-list-${winId}">
+              ${renderFileList(winId)}
+            </div>
+            <div style="flex:1; display:flex; flex-direction:column; gap:8px;">
+              <textarea id="file-content-${winId}" style="flex:1; background:#1e293b; color:#fff; border:1px solid var(--border); padding:10px; border-radius:6px; resize:none;"></textarea>
+              <button class="browser-btn" onclick="viewFileInExplorer('${winId}')">🌐 Render Web File</button>
+              <iframe id="file-view-frame-${winId}" style="height:160px; background:#fff; border:1px solid var(--border); border-radius:6px; display:none;"></iframe>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderFileList(winId) {
+      return Object.keys(fileSystem).map(f => `
+        <div style="display:flex; justify-content:space-between; padding:6px; cursor:pointer;" onclick="document.getElementById('file-content-${winId}').value = fileSystem['${f}']">
+          📄 ${f}
+          <span style="color:#ef4444; cursor:pointer;" onclick="deleteFile('${f}', '${winId}')">✕</span>
+        </div>
+      `).join('');
+    }
+
+    function viewFileInExplorer(winId) {
+      const content = document.getElementById(`file-content-${winId}`).value;
+      const frame = document.getElementById(`file-view-frame-${winId}`);
+      frame.style.display = 'block';
+      frame.srcdoc = content;
+    }
+
+    function createFile(winId) {
+      const fname = document.getElementById(`fname-${winId}`).value.trim();
+      const content = document.getElementById(`file-content-${winId}`).value;
+      if (fname) {
+        fileSystem[fname] = content;
+        localStorage.setItem('nautilus_files', JSON.stringify(fileSystem));
+        document.getElementById(`file-list-${winId}`).innerHTML = renderFileList(winId);
+        showToast(`Saved ${fname}`);
+      }
+    }
+
+    function deleteFile(fname, winId) {
+      delete fileSystem[fname];
+      localStorage.setItem('nautilus_files', JSON.stringify(fileSystem));
+      document.getElementById(`file-list-${winId}`).innerHTML = renderFileList(winId);
+    }
+
+    function handleTerminalCommand(e, winId) {
+      if (e.key === 'Enter') {
+        const inputElem = document.getElementById(`term-in-${winId}`);
+        const outputElem = document.getElementById(`term-out-${winId}`);
+        const cmdText = inputElem.value.trim();
+        inputElem.value = '';
+
+        outputElem.innerText += `\n${userProfile.username.toLowerCase()}@nautilusos:~$ ${cmdText}\n`;
+        const args = cmdText.split(' ');
+        const cmd = args[0].toLowerCase();
+
+        switch (cmd) {
+          case 'help':
+            outputElem.innerText += `Available Commands:\n - ls: list files\n - cat <file>: read file\n - touch <file>: create empty file\n - rm <file>: remove file\n - theme <name>: switch OS theme\n - calc <expr>: evaluate math\n - sysinfo: view OS memory & stats\n - clear: clear screen\n`;
+            break;
+          case 'ls':
+            outputElem.innerText += Object.keys(fileSystem).join('  ') + '\n';
+            break;
+          case 'cat':
+            if (args[1] && fileSystem[args[1]]) outputElem.innerText += fileSystem[args[1]] + '\n';
+            else outputElem.innerText += `File not found.\n`;
+            break;
+          case 'touch':
+            if (args[1]) {
+              fileSystem[args[1]] = '';
+              localStorage.setItem('nautilus_files', JSON.stringify(fileSystem));
+              outputElem.innerText += `Created file: ${args[1]}\n`;
+            }
+            break;
+          case 'rm':
+            if (args[1] && fileSystem[args[1]]) {
+              delete fileSystem[args[1]];
+              localStorage.setItem('nautilus_files', JSON.stringify(fileSystem));
+              outputElem.innerText += `Deleted file: ${args[1]}\n`;
+            }
+            break;
+          case 'theme':
+            if (args[1]) applyTheme(args[1]);
+            else outputElem.innerText += `Available: emerald, cyberpunk, synthwave, nord, dracula, sunset, ocean, monokai, crimson, midnight\n`;
+            break;
+          case 'calc':
+            try { outputElem.innerText += `= ${eval(args.slice(1).join(' '))}\n`; } catch { outputElem.innerText += `Invalid calculation.\n`; }
+            break;
+          case 'sysinfo':
+            outputElem.innerText += `NautilusOS v5.1\nInstalled Apps: ${installedApps.length}\nFiles: ${Object.keys(fileSystem).length}\n`;
+            break;
+          case 'clear':
+            outputElem.innerText = '';
+            break;
+          default:
+            if (cmd) outputElem.innerText += `Command not recognized: ${cmd}\n`;
+        }
+
+        const box = document.getElementById(`term-box-${winId}`);
+        box.scrollTop = box.scrollHeight;
+      }
+    }
+
+    function renderSettingsApp() {
+      const themes = ['emerald', 'cyberpunk', 'synthwave', 'nord', 'dracula', 'sunset', 'ocean', 'monokai', 'crimson', 'midnight'];
+      return `
+        <div class="app-container">
+          <h2>OS Settings</h2>
+          <div style="background:#1e293b; padding:14px; border-radius:8px; border:1px solid var(--border);">
+            <h3>Choose Theme</h3>
+            <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap:8px; margin-top:10px;">
+              ${themes.map(t => `<button class="browser-btn" onclick="applyTheme('${t}')">${t.toUpperCase()}</button>`).join('')}
+            </div>
+          </div>
+          <div style="background:#1e293b; padding:14px; border-radius:8px; border:1px solid var(--border);">
+            <h3>System Reset</h3>
+            <button class="browser-btn" style="background:#ef4444;" onclick="localStorage.clear(); location.reload();">Clear All Data & Reset OS</button>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderStoreApp() {
+      let html = `<div class="app-container"><h2>App Store</h2>`;
+      const fullCatalog = [...baseAppsCatalog, ...customApps];
+      const categories = ['Starter', 'Utilities', 'Developer', 'Games', 'Media', 'Custom Web Apps'];
+
+      categories.forEach(cat => {
+        const catApps = fullCatalog.filter(a => a.category === cat);
+        if (catApps.length > 0) {
+          html += `<div class="category-title">${cat}</div><div class="app-grid">`;
+          catApps.forEach(app => {
+            const isInstalled = installedApps.includes(app.id);
+            html += `
+              <div class="app-card">
+                <strong>${app.name}</strong>
+                <button class="browser-btn" onclick="${isInstalled ? `uninstallApp('${app.id}')` : `installApp('${app.id}')`}">
+                  ${isInstalled ? 'Uninstall' : 'Install'}
+                </button>
+              </div>
+            `;
+          });
+          html += `</div>`;
+        }
+      });
+
+      html += `</div>`;
+      return html;
+    }
+
+    function installApp(appId) {
+      if (!installedApps.includes(appId)) {
+        installedApps.push(appId);
+        localStorage.setItem('nautilus_installed_apps', JSON.stringify(installedApps));
+        renderDesktop();
+        showToast('App installed!');
+      }
+    }
+
+    function uninstallApp(appId) {
+      installedApps = installedApps.filter(id => id !== appId);
+      localStorage.setItem('nautilus_installed_apps', JSON.stringify(installedApps));
+      renderDesktop();
+      showToast('App uninstalled!');
+    }
+
+    function dragWindow(e, id) {
+      const win = document.getElementById(id);
+      let shiftX = e.clientX - win.getBoundingClientRect().left;
+      let shiftY = e.clientY - win.getBoundingClientRect().top;
+      document.onmousemove = (e) => {
+        win.style.left = (e.clientX - shiftX) + 'px';
+        win.style.top = (e.clientY - shiftY) + 'px';
+      };
+      document.onmouseup = () => document.onmousemove = null;
+    }
+
+    function maximizeWindow(id) {
+      const win = document.getElementById(id);
+      if (win.style.width === '100vw') {
+        win.style.width = '820px';
+        win.style.height = '530px';
+      } else {
+        win.style.width = '100vw';
+        win.style.height = 'calc(100vh - 48px)';
+        win.style.top = '0';
+        win.style.left = '0';
+      }
+    }
+
+    function runHTMLPreview(winId) {
+      const code = document.getElementById(`html-code-${winId}`).value;
+      document.getElementById(`html-preview-${winId}`).srcdoc = code;
+    }
+
+    function saveHTMLToFile(winId) {
+      const fname = document.getElementById(`html-filename-${winId}`).value.trim() || 'page.html';
+      const code = document.getElementById(`html-code-${winId}`).value;
+      fileSystem[fname] = code;
+      localStorage.setItem('nautilus_files', JSON.stringify(fileSystem));
+      showToast(`Saved to ${fname}`);
+    }
+
+    /* Initialize OS Desktop */
     renderDesktop();
   </script>
 </body>
