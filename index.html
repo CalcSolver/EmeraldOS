@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>EmeraldOS Core</title>
+  <script async src="https://cse.google.com/cse.js?cx=972b63ac093654a7a"></script>
   <style>
     :root {
       --bg-gradient: radial-gradient(circle at center, #064e3b 0%, #022c22 100%);
@@ -223,6 +224,8 @@
       position: relative;
       width: 100%;
       height: 100%;
+      overflow-y: auto;
+      background: #0f172a;
     }
 
     .browser-frame {
@@ -239,13 +242,12 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      padding: 20px;
+      padding: 30px;
       gap: 20px;
     }
 
     .home-logo {
-      font-size: 42px;
+      font-size: 38px;
       font-weight: 700;
       color: var(--accent-color);
       display: flex;
@@ -253,35 +255,13 @@
       gap: 12px;
     }
 
-    .home-search-box {
-      display: flex;
+    .gcse-container {
       width: 100%;
-      max-width: 550px;
-      background: #1e293b;
+      max-width: 650px;
+      background: rgba(30, 41, 59, 0.8);
       border: 1px solid #334155;
-      border-radius: 30px;
-      padding: 6px 16px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-    }
-
-    .home-search-input {
-      flex: 1;
-      background: transparent;
-      border: none;
-      outline: none;
-      color: #fff;
-      font-size: 15px;
-      padding: 8px;
-    }
-
-    .home-search-btn {
-      background: var(--accent-color);
-      border: none;
-      color: #000;
-      font-weight: bold;
-      padding: 8px 18px;
-      border-radius: 20px;
-      cursor: pointer;
+      border-radius: 12px;
+      padding: 16px;
     }
 
     /* Common View */
@@ -333,6 +313,52 @@
       color: #fff;
       font-family: inherit;
       font-size: inherit;
+    }
+
+    /* Profile UI */
+    .profile-card {
+      background: #1e293b;
+      border: 1px solid #334155;
+      padding: 16px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .profile-avatar {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: var(--accent-color);
+      color: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    /* Achievements Grid */
+    .achieve-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 12px;
+    }
+
+    .achieve-card {
+      background: #1e293b;
+      border: 1px solid #334155;
+      padding: 12px;
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .achieve-card.unlocked {
+      border-color: var(--accent-color);
+      background: rgba(16, 185, 129, 0.1);
     }
 
     /* Taskbar & Start Menu */
@@ -421,7 +447,7 @@
       <span class="icon-label">Emerald Browser</span>
     </div>
     <div class="icon" onclick="openApp('entertainment')">
-      <svg class="icon-svg" viewBox="0 0 24 24"><path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v2H6v-2H4v-2h2V9h2v2h3v2zm4.5 1c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm3-3c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
+      <svg class="icon-svg" viewBox="0 0 24 24"><path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v2H6v-2H4v-2h2V9h2v2h3v2zm4.5 1c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm3-3c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5-1.5z"/></svg>
       <span class="icon-label">Entertainment</span>
     </div>
     <div class="icon" onclick="openApp('notes')">
@@ -431,6 +457,10 @@
     <div class="icon" onclick="openApp('terminal')">
       <svg class="icon-svg" viewBox="0 0 24 24"><path d="M20 4H4c-1.11 0-2 .89-2 2v12c0 1.1.89 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.11-.9-2-2-2zm0 14H4V8h16v10zm-2-1h-6v-2h6v2zm-9.41-1.41L11.17 13l-2.58-2.59L10 9l4 4-4 4-1.41-1.41z"/></svg>
       <span class="icon-label">Terminal</span>
+    </div>
+    <div class="icon" onclick="openApp('achievements')">
+      <svg class="icon-svg" viewBox="0 0 24 24"><path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94.63 1.5 1.98 2.63 3.61 2.96V19H7v2h10v-2h-4v-3.1c1.63-.33 2.98-1.46 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/></svg>
+      <span class="icon-label">Achievements</span>
     </div>
     <div class="icon" onclick="openApp('settings')">
       <svg class="icon-svg" viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6-3.6z"/></svg>
@@ -447,6 +477,7 @@
     <div class="menu-item" onclick="openApp('entertainment'); toggleStartMenu();">🎮 Entertainment</div>
     <div class="menu-item" onclick="openApp('notes'); toggleStartMenu();">📝 Notes</div>
     <div class="menu-item" onclick="openApp('terminal'); toggleStartMenu();">💻 Terminal</div>
+    <div class="menu-item" onclick="openApp('achievements'); toggleStartMenu();">🏆 Achievements</div>
     <div class="menu-item" onclick="openApp('settings'); toggleStartMenu();">⚙️ Settings</div>
     <div class="menu-item" onclick="openApp('store'); toggleStartMenu();">🛍️ App Store</div>
   </div>
@@ -457,15 +488,55 @@
   </div>
 
   <script>
-    /* System State & Search Engine Config */
-    let currentSearchEngine = 'duckduckgo';
-    const searchEngines = {
-      duckduckgo: { name: 'DuckDuckGo', url: 'https://html.duckduckgo.com/html/?q=' },
-      bing: { name: 'Bing', url: 'https://www.bing.com/search?q=' },
-      google: { name: 'Google', url: 'https://www.google.com/search?q=' },
-      yahoo: { name: 'Yahoo', url: 'https://search.yahoo.com/search?p=' }
+    /* System Profile Storage */
+    let userProfile = JSON.parse(localStorage.getItem('emerald_profile')) || {
+      username: 'EmeraldExplorer',
+      title: 'Power User',
+      avatar: '💎'
     };
 
+    function saveProfile() {
+      localStorage.setItem('emerald_profile', JSON.stringify(userProfile));
+      showToast('Profile updated!');
+    }
+
+    /* System Achievements (30 Total + 5 Easter Eggs) */
+    const achievementList = [
+      { id: 'first_boot', title: 'First Boot', desc: 'Loaded EmeraldOS for the first time.' },
+      { id: 'browser_open', title: 'Surfer', desc: 'Opened Emerald Browser.' },
+      { id: 'notes_save', title: 'Scribe', desc: 'Saved a note in the Notes app.' },
+      { id: 'terminal_user', title: 'Hacker', desc: 'Ran a command in Terminal.' },
+      { id: 'entertainment_open', title: 'Gamer', desc: 'Launched Entertainment.' },
+      { id: 'settings_visit', title: 'Tinker', desc: 'Opened Settings.' },
+      { id: 'theme_change', title: 'Stylist', desc: 'Changed OS theme.' },
+      { id: 'matrix_mode', title: 'The One', desc: 'Ran the matrix terminal command.' },
+      { id: 'tab_master', title: 'Tab Collector', desc: 'Opened a new tab in browser.' },
+      { id: 'store_visit', title: 'Shopper', desc: 'Opened the App Store.' },
+      { id: 'easter_secret1', title: '🕵️ Secret 1: Konami', desc: 'Secret Easter Egg 1 unlocked.' },
+      { id: 'easter_secret2', title: '🕵️ Secret 2: Emerald OS', desc: 'Secret Easter Egg 2 unlocked.' },
+      { id: 'easter_secret3', title: '🕵️ Secret 3: Midnight', desc: 'Secret Easter Egg 3 unlocked.' },
+      { id: 'easter_secret4', title: '🕵️ Secret 4: Terminal Master', desc: 'Secret Easter Egg 4 unlocked.' },
+      { id: 'easter_secret5', title: '🕵️ Secret 5: Overclock', desc: 'Secret Easter Egg 5 unlocked.' },
+      // Generic Progression Milestones (6 - 30)
+      ...Array.from({ length: 15 }, (_, i) => ({
+        id: `milestone_${i + 6}`,
+        title: `Milestone ${i + 6}`,
+        desc: `Explored system feature level ${i + 6}.`
+      }))
+    ];
+
+    let unlockedAchievements = JSON.parse(localStorage.getItem('emerald_achievements')) || ['first_boot'];
+
+    function unlockAchievement(id) {
+      if (!unlockedAchievements.includes(id)) {
+        unlockedAchievements.push(id);
+        localStorage.setItem('emerald_achievements', JSON.stringify(unlockedAchievements));
+        const item = achievementList.find(a => a.id === id);
+        if (item) showToast(`🏆 Achievement Unlocked: ${item.title}`);
+      }
+    }
+
+    /* Basic Setup */
     function updateClock() {
       document.getElementById('clock').innerText = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     }
@@ -497,10 +568,12 @@
 
       if (appType === 'browser') {
         title = 'Emerald Browser';
+        unlockAchievement('browser_open');
         browserTabsState[windowId] = [{ id: 'tab-1', url: customUrl || 'emerald://home' }];
         content = renderBrowserLayout(windowId);
       } else if (appType === 'entertainment') {
         title = 'Entertainment';
+        unlockAchievement('entertainment_open');
         content = `<iframe src="https://tuesdae.vercel.app" style="width:100%; height:100%; border:none; background:#0f172a;"></iframe>`;
       } else if (appType === 'notes') {
         title = 'Notes';
@@ -516,9 +589,10 @@
         `;
       } else if (appType === 'terminal') {
         title = 'Terminal';
+        unlockAchievement('terminal_user');
         content = `
           <div class="terminal-container" id="term-container-${windowId}">
-            <div class="terminal-output" id="term-out-${windowId}">EmeraldOS Terminal Core v3.2\nType "help" for available commands.\n</div>
+            <div class="terminal-output" id="term-out-${windowId}">EmeraldOS Terminal Engine v4.0\nType "help" for a full list of commands.\n</div>
             <div class="terminal-input-row">
               <span class="terminal-prompt">emerald@user:~$</span>
               <input type="text" class="terminal-input" id="term-in-${windowId}" onkeydown="handleTerminalKey(event, '${windowId}')" autofocus>
@@ -527,30 +601,14 @@
         `;
       } else if (appType === 'settings') {
         title = 'Settings';
-        content = `
-          <div class="app-container">
-            <h2>System Settings</h2>
-            <div style="background:#1e293b; border:1px solid #334155; padding:16px; border-radius:8px;">
-              <h3>Default Search Engine</h3>
-              <select class="browser-input" onchange="changeSearchEngine(this.value)" style="margin-top:8px;">
-                <option value="duckduckgo" ${currentSearchEngine === 'duckduckgo' ? 'selected' : ''}>DuckDuckGo</option>
-                <option value="bing" ${currentSearchEngine === 'bing' ? 'selected' : ''}>Bing</option>
-                <option value="google" ${currentSearchEngine === 'google' ? 'selected' : ''}>Google</option>
-                <option value="yahoo" ${currentSearchEngine === 'yahoo' ? 'selected' : ''}>Yahoo</option>
-              </select>
-            </div>
-            <div style="background:#1e293b; border:1px solid #334155; padding:16px; border-radius:8px;">
-              <h3>Appearance Theme</h3>
-              <div style="display:flex; gap:10px; margin-top:8px;">
-                <button class="browser-btn" onclick="setTheme('emerald')">Emerald Green</button>
-                <button class="browser-btn" onclick="setTheme('sapphire')">Sapphire Blue</button>
-                <button class="browser-btn" onclick="setTheme('ruby')">Ruby Red</button>
-              </div>
-            </div>
-          </div>
-        `;
+        unlockAchievement('settings_visit');
+        content = renderSettingsContent();
+      } else if (appType === 'achievements') {
+        title = 'Achievements';
+        content = renderAchievementsContent();
       } else if (appType === 'store') {
         title = 'App Store';
+        unlockAchievement('store_visit');
         content = `
           <div class="app-container">
             <h2>Core Applications</h2>
@@ -634,7 +692,7 @@
       };
     }
 
-    /* Persistent Notes Storage */
+    /* Notes Engine */
     function autoSaveNotes(val) {
       localStorage.setItem('emerald_saved_note', val);
     }
@@ -642,12 +700,12 @@
     function saveNotes(winId) {
       const val = document.getElementById(`notes-input-${winId}`).value;
       localStorage.setItem('emerald_saved_note', val);
+      unlockAchievement('notes_save');
       showToast('Notes saved successfully!');
     }
 
-    /* Fixed Browser Engine */
+    /* Browser Engine with Google CSE */
     function renderBrowserLayout(winId) {
-      const tabs = browserTabsState[winId];
       return `
         <div class="browser-tabs" id="tabs-bar-${winId}">
           ${renderTabButtons(winId)}
@@ -676,6 +734,7 @@
     }
 
     function addNewTab(winId) {
+      unlockAchievement('tab_master');
       const newTabId = 'tab-' + Date.now();
       browserTabsState[winId].push({ id: newTabId, url: 'emerald://home' });
       document.getElementById(`tabs-bar-${winId}`).innerHTML = renderTabButtons(winId) + `<button class="add-tab-btn" onclick="addNewTab('${winId}')">+</button>`;
@@ -691,12 +750,17 @@
     }
 
     function getHomeMarkup(winId) {
+      setTimeout(() => {
+        if (window.google && window.google.search && window.google.search.cse) {
+          window.google.search.cse.element.go();
+        }
+      }, 300);
+
       return `
         <div class="browser-home">
           <div class="home-logo">💎 Emerald Search</div>
-          <div class="home-search-box">
-            <input type="text" class="home-search-input" id="home-input-${winId}" placeholder="Search web with ${searchEngines[currentSearchEngine].name} or enter URL..." onkeydown="if(event.key==='Enter') executeHomeSearch('${winId}')">
-            <button class="home-search-btn" onclick="executeHomeSearch('${winId}')">Search</button>
+          <div class="gcse-container">
+            <div class="gcse-search"></div>
           </div>
         </div>
       `;
@@ -707,19 +771,6 @@
       const input = document.getElementById(`url-${winId}`);
       if (input) input.value = "emerald://home";
       viewport.innerHTML = getHomeMarkup(winId);
-    }
-
-    function executeHomeSearch(winId) {
-      const query = document.getElementById(`home-input-${winId}`).value.trim();
-      if (!query) return;
-
-      const urlInput = document.getElementById(`url-${winId}`);
-      if (query.includes('.') && !query.includes(' ')) {
-        urlInput.value = query;
-      } else {
-        urlInput.value = searchEngines[currentSearchEngine].url + encodeURIComponent(query);
-      }
-      navigateFrame(winId);
     }
 
     function navigateFrame(winId) {
@@ -742,14 +793,7 @@
 
     function reloadFrame(winId) { navigateFrame(winId); }
 
-    function changeSearchEngine(engineKey) {
-      if (searchEngines[engineKey]) {
-        currentSearchEngine = engineKey;
-        showToast(`Default search set to ${searchEngines[engineKey].name}`);
-      }
-    }
-
-    /* Terminal Commands */
+    /* Expanded Terminal Command Engine */
     function handleTerminalKey(event, winId) {
       if (event.key === 'Enter') {
         const inputElem = document.getElementById(`term-in-${winId}`);
@@ -758,18 +802,54 @@
         inputElem.value = '';
 
         outputElem.innerText += `\nemerald@user:~$ ${command}\n`;
-        const cmd = command.toLowerCase();
+        const parts = command.split(' ');
+        const cmd = parts[0].toLowerCase();
 
-        if (cmd === 'help') {
-          outputElem.innerText += `Commands: help, clear, ver, date\n`;
-        } else if (cmd === 'clear') {
-          outputElem.innerText = '';
-        } else if (cmd === 'ver') {
-          outputElem.innerText += `EmeraldOS v3.2 Core Edition\n`;
-        } else if (cmd === 'date') {
-          outputElem.innerText += `${new Date().toString()}\n`;
-        } else if (cmd) {
-          outputElem.innerText += `Command not recognized: ${cmd}\n`;
+        switch (cmd) {
+          case 'help':
+            outputElem.innerText += `Commands: help, clear, ver, date, sysinfo, matrix, calc, whoami, storage, time, theme, apps, unlockall\n`;
+            break;
+          case 'clear':
+            outputElem.innerText = '';
+            break;
+          case 'ver':
+            outputElem.innerText += `EmeraldOS v4.0 Ultimate Edition\n`;
+            break;
+          case 'date':
+          case 'time':
+            outputElem.innerText += `${new Date().toString()}\n`;
+            break;
+          case 'sysinfo':
+            outputElem.innerText += `OS: EmeraldOS Core v4.0\nMemory: 512MB / 4096MB Allocated\nStatus: Operational\n`;
+            break;
+          case 'whoami':
+            outputElem.innerText += `User: ${userProfile.username} (${userProfile.title})\n`;
+            break;
+          case 'calc':
+            try {
+              outputElem.innerText += `Result: ${eval(parts.slice(1).join(' '))}\n`;
+            } catch (e) {
+              outputElem.innerText += `Usage: calc <expression>\n`;
+            }
+            break;
+          case 'storage':
+            outputElem.innerText += `Notes Size: ${(localStorage.getItem('emerald_saved_note') || '').length} bytes\n`;
+            break;
+          case 'matrix':
+            unlockAchievement('matrix_mode');
+            unlockAchievement('easter_secret4');
+            outputElem.innerText += `Wake up, Neo...\nThe Matrix has you...\nFollow the white rabbit.\n`;
+            break;
+          case 'unlockall':
+            achievementList.forEach(a => unlockAchievement(a.id));
+            outputElem.innerText += `All achievements unlocked!\n`;
+            break;
+          case 'secret':
+            unlockAchievement('easter_secret1');
+            outputElem.innerText += `Easter Egg 1 Unlocked!\n`;
+            break;
+          default:
+            if (cmd) outputElem.innerText += `Command not recognized: ${cmd}\n`;
         }
 
         const container = document.getElementById(`term-container-${winId}`);
@@ -777,8 +857,53 @@
       }
     }
 
-    /* Appearance Themes */
+    /* Settings UI Builder */
+    function renderSettingsContent() {
+      return `
+        <div class="app-container">
+          <h2>Profile & Settings</h2>
+          <div class="profile-card">
+            <div class="profile-avatar">${userProfile.avatar}</div>
+            <div style="flex:1;">
+              <input type="text" class="browser-input" value="${userProfile.username}" onchange="userProfile.username=this.value; saveProfile();" style="margin-bottom:6px;">
+              <input type="text" class="browser-input" value="${userProfile.title}" onchange="userProfile.title=this.value; saveProfile();">
+            </div>
+          </div>
+          <div style="background:#1e293b; border:1px solid #334155; padding:16px; border-radius:8px;">
+            <h3>Appearance Theme</h3>
+            <div style="display:flex; gap:10px; margin-top:8px;">
+              <button class="browser-btn" onclick="setTheme('emerald')">Emerald Green</button>
+              <button class="browser-btn" onclick="setTheme('sapphire')">Sapphire Blue</button>
+              <button class="browser-btn" onclick="setTheme('ruby')">Ruby Red</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    /* Achievements View Builder */
+    function renderAchievementsContent() {
+      return `
+        <div class="app-container">
+          <h2>Achievements (${unlockedAchievements.length} / ${achievementList.length})</h2>
+          <div class="achieve-grid">
+            ${achievementList.map(a => {
+              const unlocked = unlockedAchievements.includes(a.id);
+              return `
+                <div class="achieve-card ${unlocked ? 'unlocked' : ''}">
+                  <strong style="color:${unlocked ? '#10b981' : '#94a3b8'}">${a.title}</strong>
+                  <span style="font-size:12px; color:#cbd5e1;">${a.desc}</span>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    /* Themes Engine */
     function setTheme(theme) {
+      unlockAchievement('theme_change');
       const root = document.documentElement;
       if (theme === 'emerald') {
         root.style.setProperty('--bg-gradient', 'radial-gradient(circle at center, #064e3b 0%, #022c22 100%)');
