@@ -3,36 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>EmeraldOS Core</title>
+  <title>NautilusOS v2.0</title>
   <script async src="https://cse.google.com/cse.js?cx=972b63ac093654a7a"></script>
   <style>
     :root {
-      --bg-gradient: radial-gradient(circle at center, #064e3b 0%, #022c22 100%);
-      --accent-color: #10b981;
+      --bg-gradient: radial-gradient(circle at center, #0f172a 0%, #020617 100%);
+      --accent: #10b981;
       --accent-hover: #059669;
-      --panel-bg: rgba(16, 24, 20, 0.85);
-      --window-bg: rgba(20, 30, 25, 0.95);
-      --text-color: #ecfdf5;
-      --border-color: rgba(16, 185, 129, 0.2);
+      --panel-bg: rgba(15, 23, 42, 0.85);
+      --window-bg: rgba(30, 41, 59, 0.95);
+      --text: #f8fafc;
+      --border: rgba(255, 255, 255, 0.1);
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      user-select: none;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; font-family: 'Segoe UI', system-ui, sans-serif; }
+    body { background: var(--bg-gradient); height: 100vh; overflow: hidden; color: var(--text); transition: background 0.3s ease; }
 
-    body {
-      background: var(--bg-gradient);
-      height: 100vh;
-      overflow: hidden;
-      color: var(--text-color);
-      transition: background 0.3s ease;
-    }
-
-    /* Desktop Area */
+    /* Desktop & Grid */
     #desktop {
       width: 100vw;
       height: calc(100vh - 48px);
@@ -42,510 +29,177 @@
       flex-direction: column;
       flex-wrap: wrap;
       align-content: flex-start;
-      gap: 20px;
+      gap: 16px;
     }
 
     .icon {
-      width: 88px;
+      width: 90px;
+      height: 90px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 8px;
-      cursor: pointer;
-      padding: 10px;
+      gap: 6px;
+      cursor: grab;
+      padding: 8px;
       border-radius: 8px;
-      transition: background 0.2s, transform 0.1s;
+      position: absolute;
+      transition: background 0.2s, border 0.2s;
+      border: 1px solid transparent;
     }
 
-    .icon:hover {
-      background: rgba(255, 255, 255, 0.1);
-      transform: translateY(-2px);
-    }
-
-    .icon-svg {
-      width: 44px;
-      height: 44px;
-      fill: var(--accent-color);
-    }
-
-    .icon-label {
-      font-size: 12px;
-      text-align: center;
-      text-shadow: 0 1px 3px rgba(0,0,0,0.8);
-    }
+    .icon:hover { background: rgba(255, 255, 255, 0.08); border-color: var(--border); }
+    .icon:active { cursor: grabbing; }
+    .icon-svg { width: 40px; height: 40px; fill: var(--accent); }
+    .icon-label { font-size: 11px; text-align: center; text-shadow: 0 1px 3px rgba(0,0,0,0.8); }
 
     /* Window System */
     .window {
       position: absolute;
-      width: 820px;
-      height: 520px;
+      width: 780px;
+      height: 500px;
       background: var(--window-bg);
-      border: 1px solid var(--border-color);
+      border: 1px solid var(--border);
       border-radius: 10px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6);
       backdrop-filter: blur(12px);
       display: flex;
       flex-direction: column;
       overflow: hidden;
-      min-width: 340px;
-      min-height: 220px;
+      min-width: 320px;
+      min-height: 200px;
       z-index: 10;
     }
 
     .window-header {
       height: 38px;
-      background: rgba(0, 0, 0, 0.35);
+      background: rgba(0, 0, 0, 0.3);
       display: flex;
       align-items: center;
       justify-content: space-between;
       padding: 0 12px;
       cursor: move;
-      border-bottom: 1px solid var(--border-color);
+      border-bottom: 1px solid var(--border);
     }
 
-    .window-title {
-      font-size: 13px;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .window-controls {
-      display: flex;
-      gap: 8px;
-    }
-
-    .control-btn {
-      width: 13px;
-      height: 13px;
-      border-radius: 50%;
-      border: none;
-      cursor: pointer;
-    }
-
+    .window-title { font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+    .window-controls { display: flex; gap: 8px; }
+    .control-btn { width: 12px; height: 12px; border-radius: 50%; border: none; cursor: pointer; }
     .btn-close { background: #ef4444; }
     .btn-min { background: #f59e0b; }
-    .btn-max { background: var(--accent-color); }
+    .btn-max { background: var(--accent); }
 
-    .window-content {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      background: #000;
-      position: relative;
-    }
+    .window-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; background: #0b0f19; position: relative; }
 
-    /* Browser Tabs System */
-    .browser-tabs {
-      display: flex;
-      background: #090d16;
-      border-bottom: 1px solid #374151;
-      overflow-x: auto;
-    }
-
-    .tab-btn {
-      padding: 6px 14px;
-      background: #111827;
-      border: none;
-      border-right: 1px solid #374151;
-      color: #9ca3af;
-      cursor: pointer;
-      font-size: 12px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      max-width: 160px;
-      white-space: nowrap;
-    }
-
-    .tab-btn.active {
-      background: #1f2937;
-      color: #fff;
-      font-weight: bold;
-    }
-
-    .close-tab-btn {
-      font-size: 10px;
-      color: #ef4444;
-      cursor: pointer;
-      border-radius: 50%;
-      padding: 0 4px;
-    }
-
-    .close-tab-btn:hover { background: rgba(239, 68, 68, 0.2); }
-
-    .add-tab-btn {
-      padding: 6px 12px;
-      background: transparent;
-      border: none;
-      color: var(--accent-color);
-      cursor: pointer;
-      font-weight: bold;
-    }
-
-    /* Browser Navigation Bar */
-    .browser-bar {
-      display: flex;
-      gap: 8px;
-      padding: 8px;
-      background: #111827;
-      border-bottom: 1px solid #374151;
-      align-items: center;
-    }
-
-    .browser-btn {
-      background: #1f2937;
-      border: 1px solid #374151;
-      color: #fff;
-      padding: 6px 12px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 12px;
-    }
-
-    .browser-btn:hover { background: #374151; }
-
-    .browser-input {
-      flex: 1;
-      background: #1f2937;
-      border: 1px solid #374151;
-      color: #fff;
-      padding: 6px 12px;
-      border-radius: 6px;
-      font-size: 13px;
-      outline: none;
-    }
-
-    .browser-viewport {
-      flex: 1;
-      position: relative;
-      width: 100%;
-      height: 100%;
-      overflow-y: auto;
-      background: #0f172a;
-    }
-
-    .browser-frame {
-      width: 100%;
-      height: 100%;
-      border: none;
-      background: #ffffff;
-    }
-
-    .browser-home {
-      width: 100%;
-      height: 100%;
-      background: #0f172a;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 30px;
-      gap: 20px;
-    }
-
-    .home-logo {
-      font-size: 38px;
-      font-weight: 700;
-      color: var(--accent-color);
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .gcse-container {
-      width: 100%;
-      max-width: 650px;
-      background: rgba(30, 41, 59, 0.8);
-      border: 1px solid #334155;
-      border-radius: 12px;
-      padding: 16px;
-    }
-
-    /* Common View */
-    .app-container {
-      padding: 20px;
-      background: #0f172a;
-      height: 100%;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-
+    /* Layout Containers */
+    .app-container { padding: 20px; height: 100%; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; }
+    
     /* Terminal */
-    .terminal-container {
-      background: #090d16;
-      color: #38bdf8;
-      font-family: 'Consolas', 'Courier New', monospace;
-      padding: 14px;
-      flex: 1;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      font-size: 13px;
-    }
+    .terminal-container { background: #050811; color: #38bdf8; font-family: 'Consolas', monospace; padding: 14px; flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; font-size: 13px; }
+    .terminal-output { white-space: pre-wrap; line-height: 1.4; }
+    .terminal-input-row { display: flex; align-items: center; gap: 8px; }
+    .terminal-prompt { color: var(--accent); font-weight: bold; }
+    .terminal-input { flex: 1; background: transparent; border: none; outline: none; color: #fff; font-family: inherit; font-size: inherit; }
 
-    .terminal-output {
-      white-space: pre-wrap;
-      line-height: 1.4;
-    }
+    /* Browser & CSE */
+    .browser-bar { display: flex; gap: 8px; padding: 8px; background: #111827; border-bottom: 1px solid var(--border); align-items: center; }
+    .browser-btn { background: #1f2937; border: 1px solid var(--border); color: #fff; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; }
+    .browser-btn:hover { background: #374151; }
+    .browser-input { flex: 1; background: #1f2937; border: 1px solid var(--border); color: #fff; padding: 6px 12px; border-radius: 6px; font-size: 13px; outline: none; }
+    .gcse-box { max-width: 650px; width: 100%; margin: 20px auto; background: rgba(30, 41, 59, 0.8); border: 1px solid var(--border); border-radius: 8px; padding: 16px; }
 
-    .terminal-input-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
+    /* App Categories & Cards */
+    .category-title { font-size: 14px; font-weight: 700; color: var(--accent); border-bottom: 1px solid var(--border); padding-bottom: 4px; margin-top: 10px; }
+    .app-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; }
+    .app-card { background: #1e293b; border: 1px solid var(--border); padding: 14px; border-radius: 8px; display: flex; flex-direction: column; gap: 8px; text-align: center; align-items: center; }
 
-    .terminal-prompt {
-      color: var(--accent-color);
-      font-weight: bold;
-    }
-
-    .terminal-input {
-      flex: 1;
-      background: transparent;
-      border: none;
-      outline: none;
-      color: #fff;
-      font-family: inherit;
-      font-size: inherit;
-    }
-
-    /* Profile UI */
-    .profile-card {
-      background: #1e293b;
-      border: 1px solid #334155;
-      padding: 16px;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-
-    .profile-avatar {
-      width: 56px;
-      height: 56px;
-      border-radius: 50%;
-      background: var(--accent-color);
-      color: #000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px;
-      font-weight: bold;
-    }
-
-    /* Achievements Grid */
-    .achieve-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 12px;
-    }
-
-    .achieve-card {
-      background: #1e293b;
-      border: 1px solid #334155;
-      padding: 12px;
-      border-radius: 8px;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .achieve-card.unlocked {
-      border-color: var(--accent-color);
-      background: rgba(16, 185, 129, 0.1);
-    }
-
-    /* Taskbar & Start Menu */
-    #taskbar {
-      height: 48px;
-      background: var(--panel-bg);
-      border-top: 1px solid var(--border-color);
-      backdrop-filter: blur(15px);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 12px;
-      position: absolute;
-      bottom: 0;
-      width: 100vw;
-      z-index: 1000;
-    }
-
-    .start-btn {
-      background: var(--accent-color);
-      color: #000;
-      font-weight: bold;
-      border: none;
-      padding: 8px 16px;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-
-    #start-menu {
-      position: absolute;
-      bottom: 58px;
-      left: 12px;
-      width: 280px;
-      background: var(--window-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 10px;
-      backdrop-filter: blur(20px);
-      padding: 12px;
-      display: none;
-      flex-direction: column;
-      gap: 6px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-      z-index: 1001;
-    }
-
-    .menu-item {
-      padding: 8px 12px;
-      border-radius: 6px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      cursor: pointer;
-      font-size: 13px;
-    }
-
-    .menu-item:hover { background: rgba(16, 185, 129, 0.15); }
+    /* Taskbar & Menus */
+    #taskbar { height: 48px; background: var(--panel-bg); border-top: 1px solid var(--border); backdrop-filter: blur(15px); display: flex; align-items: center; justify-content: space-between; padding: 0 12px; position: absolute; bottom: 0; width: 100vw; z-index: 1000; }
+    .start-btn { background: var(--accent); color: #000; font-weight: bold; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; }
+    #start-menu { position: absolute; bottom: 58px; left: 12px; width: 300px; max-height: 480px; overflow-y: auto; background: var(--window-bg); border: 1px solid var(--border); border-radius: 10px; backdrop-filter: blur(20px); padding: 12px; display: none; flex-direction: column; gap: 6px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); z-index: 1001; }
+    .menu-item { padding: 8px 12px; border-radius: 6px; display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 13px; }
+    .menu-item:hover { background: rgba(255, 255, 255, 0.1); }
 
     /* Toast Notifications */
-    #toast-container {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      z-index: 9999;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
+    #toast-container { position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
+    .toast { background: var(--accent); color: #000; padding: 12px 20px; border-radius: 8px; font-weight: bold; box-shadow: 0 5px 15px rgba(0,0,0,0.4); }
 
-    .toast {
-      background: #10b981;
-      color: #000;
-      padding: 12px 20px;
-      border-radius: 8px;
-      font-weight: bold;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.4);
-    }
+    /* Achievements UI */
+    .achieve-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; }
+    .achieve-card { background: #1e293b; border: 1px solid var(--border); padding: 10px; border-radius: 6px; opacity: 0.5; }
+    .achieve-card.unlocked { opacity: 1; border-color: var(--accent); background: rgba(16, 185, 129, 0.1); }
   </style>
 </head>
 <body>
 
   <div id="toast-container"></div>
 
-  <div id="desktop">
-    <div class="icon" onclick="openApp('browser')">
-      <svg class="icon-svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
-      <span class="icon-label">Emerald Browser</span>
-    </div>
-    <div class="icon" onclick="openApp('entertainment')">
-      <svg class="icon-svg" viewBox="0 0 24 24"><path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v2H6v-2H4v-2h2V9h2v2h3v2zm4.5 1c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm3-3c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5-1.5z"/></svg>
-      <span class="icon-label">Entertainment</span>
-    </div>
-    <div class="icon" onclick="openApp('notes')">
-      <svg class="icon-svg" viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
-      <span class="icon-label">Notes</span>
-    </div>
-    <div class="icon" onclick="openApp('terminal')">
-      <svg class="icon-svg" viewBox="0 0 24 24"><path d="M20 4H4c-1.11 0-2 .89-2 2v12c0 1.1.89 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.11-.9-2-2-2zm0 14H4V8h16v10zm-2-1h-6v-2h6v2zm-9.41-1.41L11.17 13l-2.58-2.59L10 9l4 4-4 4-1.41-1.41z"/></svg>
-      <span class="icon-label">Terminal</span>
-    </div>
-    <div class="icon" onclick="openApp('achievements')">
-      <svg class="icon-svg" viewBox="0 0 24 24"><path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94.63 1.5 1.98 2.63 3.61 2.96V19H7v2h10v-2h-4v-3.1c1.63-.33 2.98-1.46 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/></svg>
-      <span class="icon-label">Achievements</span>
-    </div>
-    <div class="icon" onclick="openApp('settings')">
-      <svg class="icon-svg" viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6-3.6z"/></svg>
-      <span class="icon-label">Settings</span>
-    </div>
-    <div class="icon" onclick="openApp('store')">
-      <svg class="icon-svg" viewBox="0 0 24 24"><path d="M19 6h-2c0-2.76-2.24-5-5-5S7 3.24 7 6H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-7-3c1.66 0 3 1.34 3 3H9c0-1.66 1.34-3 3-3zm7 17H5V8h14v12z"/></svg>
-      <span class="icon-label">App Store</span>
-    </div>
-  </div>
+  <div id="desktop"></div>
 
-  <div id="start-menu">
-    <div class="menu-item" onclick="openApp('browser'); toggleStartMenu();">🌐 Emerald Browser</div>
-    <div class="menu-item" onclick="openApp('entertainment'); toggleStartMenu();">🎮 Entertainment</div>
-    <div class="menu-item" onclick="openApp('notes'); toggleStartMenu();">📝 Notes</div>
-    <div class="menu-item" onclick="openApp('terminal'); toggleStartMenu();">💻 Terminal</div>
-    <div class="menu-item" onclick="openApp('achievements'); toggleStartMenu();">🏆 Achievements</div>
-    <div class="menu-item" onclick="openApp('settings'); toggleStartMenu();">⚙️ Settings</div>
-    <div class="menu-item" onclick="openApp('store'); toggleStartMenu();">🛍️ App Store</div>
-  </div>
+  <div id="start-menu"></div>
 
   <div id="taskbar">
-    <button class="start-btn" onclick="toggleStartMenu()">💎 Emerald</button>
+    <button class="start-btn" onclick="toggleStartMenu()">⚡ NautilusOS</button>
     <div id="clock">12:00 PM</div>
   </div>
 
   <script>
-    /* System Profile Storage */
-    let userProfile = JSON.parse(localStorage.getItem('emerald_profile')) || {
-      username: 'EmeraldExplorer',
-      title: 'Power User',
-      avatar: '💎'
-    };
-
-    function saveProfile() {
-      localStorage.setItem('emerald_profile', JSON.stringify(userProfile));
-      showToast('Profile updated!');
-    }
-
-    /* System Achievements (30 Total + 5 Easter Eggs) */
-    const achievementList = [
-      { id: 'first_boot', title: 'First Boot', desc: 'Loaded EmeraldOS for the first time.' },
-      { id: 'browser_open', title: 'Surfer', desc: 'Opened Emerald Browser.' },
-      { id: 'notes_save', title: 'Scribe', desc: 'Saved a note in the Notes app.' },
-      { id: 'terminal_user', title: 'Hacker', desc: 'Ran a command in Terminal.' },
-      { id: 'entertainment_open', title: 'Gamer', desc: 'Launched Entertainment.' },
-      { id: 'settings_visit', title: 'Tinker', desc: 'Opened Settings.' },
-      { id: 'theme_change', title: 'Stylist', desc: 'Changed OS theme.' },
-      { id: 'matrix_mode', title: 'The One', desc: 'Ran the matrix terminal command.' },
-      { id: 'tab_master', title: 'Tab Collector', desc: 'Opened a new tab in browser.' },
-      { id: 'store_visit', title: 'Shopper', desc: 'Opened the App Store.' },
-      { id: 'easter_secret1', title: '🕵️ Secret 1: Konami', desc: 'Secret Easter Egg 1 unlocked.' },
-      { id: 'easter_secret2', title: '🕵️ Secret 2: Emerald OS', desc: 'Secret Easter Egg 2 unlocked.' },
-      { id: 'easter_secret3', title: '🕵️ Secret 3: Midnight', desc: 'Secret Easter Egg 3 unlocked.' },
-      { id: 'easter_secret4', title: '🕵️ Secret 4: Terminal Master', desc: 'Secret Easter Egg 4 unlocked.' },
-      { id: 'easter_secret5', title: '🕵️ Secret 5: Overclock', desc: 'Secret Easter Egg 5 unlocked.' },
-      // Generic Progression Milestones (6 - 30)
-      ...Array.from({ length: 15 }, (_, i) => ({
-        id: `milestone_${i + 6}`,
-        title: `Milestone ${i + 6}`,
-        desc: `Explored system feature level ${i + 6}.`
-      }))
+    /* System State & Profile */
+    const defaultApps = [
+      { id: 'browser', name: 'Nautilus Search', category: 'Starter', icon: '<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>' },
+      { id: 'files', name: 'File Explorer', category: 'Utilities', icon: '<path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>' },
+      { id: 'terminal', name: 'Terminal', category: 'Utilities', icon: '<path d="M20 4H4c-1.11 0-2 .89-2 2v12c0 1.1.89 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.11-.9-2-2-2zm0 14H4V8h16v10zm-2-1h-6v-2h6v2zm-9.41-1.41L11.17 13l-2.58-2.59L10 9l4 4-4 4-1.41-1.41z"/>' },
+      { id: 'entertainment', name: 'Entertainment', category: 'Games', icon: '<path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v2H6v-2H4v-2h2V9h2v2h3v2zm4.5 1c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm3-3c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5-1.5z"/>' },
+      { id: 'ai', name: 'AI Assistant', category: 'Starter', icon: '<path d="M12 2a2 2 0 0 1 2 2v1c3.87.41 7 3.54 7 7.41V17a2 2 0 0 1-2 2h-1v2a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1v-2h-4v2a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1v-2H5a2 2 0 0 1-2-2v-2.59C3 8.95 6.13 5.82 10 5.41V4a2 2 0 0 1 2-2zm0 6a5 5 0 0 0-5 5v3h10v-3a5 5 0 0 0-5-5z"/>' },
+      { id: 'photos', name: 'Photos', category: 'Media', icon: '<path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>' },
+      { id: 'notes', name: 'Notes', category: 'Utilities', icon: '<path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>' },
+      { id: 'settings', name: 'Settings', category: 'Starter', icon: '<path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6-3.6z"/>' },
+      { id: 'achievements', name: 'Achievements', category: 'Games', icon: '<path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94.63 1.5 1.98 2.63 3.61 2.96V19H7v2h10v-2h-4v-3.1c1.63-.33 2.98-1.46 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2z"/>' },
+      { id: 'about', name: 'About OS', category: 'Starter', icon: '<path d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>' }
     ];
 
-    let unlockedAchievements = JSON.parse(localStorage.getItem('emerald_achievements')) || ['first_boot'];
+    let userProfile = JSON.parse(localStorage.getItem('nautilus_profile')) || { username: 'NautilusUser', role: 'Administrator', theme: 'emerald' };
+    let fileSystem = JSON.parse(localStorage.getItem('nautilus_files')) || { 'welcome.txt': 'Welcome to NautilusOS v2.0!' };
+    let iconPositions = JSON.parse(localStorage.getItem('nautilus_icon_pos')) || {};
+    let activeZIndex = 100;
+
+    /* 30 Progressive Achievements */
+    const achievementList = [
+      { id: 'boot_os', title: 'System Online', desc: 'Booted NautilusOS.' },
+      { id: 'open_browser', title: 'Web Navigator', desc: 'Opened Nautilus Search.' },
+      { id: 'open_files', title: 'File Explorer', desc: 'Opened File Manager.' },
+      { id: 'create_file', title: 'Author', desc: 'Created a new text file.' },
+      { id: 'delete_file', title: 'Cleaner', desc: 'Deleted a file.' },
+      { id: 'term_help', title: 'Command Line', desc: 'Ran help in terminal.' },
+      { id: 'term_sysinfo', title: 'Inspector', desc: 'Checked system stats.' },
+      { id: 'term_matrix', title: 'The Matrix', desc: 'Discovered the matrix command.' },
+      { id: 'term_calc', title: 'Mathematician', desc: 'Evaluated a calculation in terminal.' },
+      { id: 'term_neofetch', title: 'Flex', desc: 'Ran neofetch.' },
+      { id: 'ai_talk', title: 'AI Assistant', desc: 'Launched Nautilus AI.' },
+      { id: 'photo_view', title: 'Gallery Viewer', desc: 'Opened Photos app.' },
+      { id: 'notes_save', title: 'Sticky Note', desc: 'Saved a document in Notes.' },
+      { id: 'change_theme', title: 'Customizer', desc: 'Changed OS theme.' },
+      { id: 'cloak_tab', title: 'Stealth Mode', desc: 'Activated tab cloaking.' },
+      { id: 'move_icon', title: 'Organizer', desc: 'Moved a desktop icon.' },
+      { id: 'start_click', title: 'Menu Surfer', desc: 'Opened Start Menu.' },
+      { id: 'about_read', title: 'Historian', desc: 'Read About NautilusOS.' },
+      { id: 'secret_easter1', title: '🕵️ Secret: 1337', desc: 'Typed 1337 in terminal.' },
+      { id: 'secret_easter2', title: '🕵️ Secret: Konami', desc: 'Typed konami in terminal.' },
+      { id: 'secret_easter3', title: '🕵️ Secret: Cloaked', desc: 'Cloaked as Google Drive.' },
+      { id: 'secret_easter4', title: '🕵️ Secret: Night Owl', desc: 'Ran time after dark.' },
+      { id: 'secret_easter5', title: '🕵️ Secret: Clear Slate', desc: 'Cleared terminal 3 times.' },
+      ...Array.from({ length: 7 }, (_, i) => ({ id: `milestone_${i+1}`, title: `Level ${i+1} User`, desc: `Continued system interaction level ${i+1}.` }))
+    ];
+
+    let unlockedAchievements = JSON.parse(localStorage.getItem('nautilus_achievements')) || ['boot_os'];
 
     function unlockAchievement(id) {
       if (!unlockedAchievements.includes(id)) {
         unlockedAchievements.push(id);
-        localStorage.setItem('emerald_achievements', JSON.stringify(unlockedAchievements));
+        localStorage.setItem('nautilus_achievements', JSON.stringify(unlockedAchievements));
         const item = achievementList.find(a => a.id === id);
-        if (item) showToast(`🏆 Achievement Unlocked: ${item.title}`);
+        if (item) showToast(`🏆 Unlocked: ${item.title}`);
       }
-    }
-
-    /* Basic Setup */
-    function updateClock() {
-      document.getElementById('clock').innerText = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    }
-    setInterval(updateClock, 1000);
-    updateClock();
-
-    function toggleStartMenu() {
-      const menu = document.getElementById('start-menu');
-      menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
     }
 
     function showToast(msg) {
@@ -557,115 +211,234 @@
       setTimeout(() => toast.remove(), 3500);
     }
 
-    let activeZIndex = 100;
-    const browserTabsState = {};
+    function updateClock() {
+      document.getElementById('clock').innerText = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
 
-    /* Main Window & App Launcher */
-    function openApp(appType, customUrl) {
-      const windowId = 'win-' + Date.now();
+    function toggleStartMenu() {
+      unlockAchievement('start_click');
+      const menu = document.getElementById('start-menu');
+      menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
+    }
+
+    /* Desktop & Draggable App Setup */
+    function renderDesktop() {
+      const desktop = document.getElementById('desktop');
+      desktop.innerHTML = '';
+
+      let defaultX = 20, defaultY = 20;
+
+      defaultApps.forEach((app, idx) => {
+        const icon = document.createElement('div');
+        icon.className = 'icon';
+        icon.id = `icon-${app.id}`;
+        
+        const pos = iconPositions[app.id] || { x: defaultX, y: defaultY };
+        icon.style.left = `${pos.x}px`;
+        icon.style.top = `${pos.y}px`;
+
+        icon.innerHTML = `
+          <svg class="icon-svg" viewBox="0 0 24 24">${app.icon}</svg>
+          <span class="icon-label">${app.name}</span>
+        `;
+
+        icon.ondblclick = () => openApp(app.id);
+        makeDraggableIcon(icon, app.id);
+        desktop.appendChild(icon);
+
+        defaultY += 105;
+        if (defaultY > window.innerHeight - 160) {
+          defaultY = 20;
+          defaultX += 100;
+        }
+      });
+
+      renderStartMenu();
+    }
+
+    function makeDraggableIcon(elem, appId) {
+      let posX = 0, posY = 0, mouseX = 0, mouseY = 0;
+      elem.onmousedown = (e) => {
+        e.preventDefault();
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        document.onmousemove = (e) => {
+          posX = mouseX - e.clientX;
+          posY = mouseY - e.clientY;
+          mouseX = e.clientX;
+          mouseY = e.clientY;
+          elem.style.top = (elem.offsetTop - posY) + "px";
+          elem.style.left = (elem.offsetLeft - posX) + "px";
+        };
+        document.onmouseup = () => {
+          document.onmousemove = null;
+          document.onmouseup = null;
+          iconPositions[appId] = { x: elem.offsetLeft, y: elem.offsetTop };
+          localStorage.setItem('nautilus_icon_pos', JSON.stringify(iconPositions));
+          unlockAchievement('move_icon');
+        };
+      };
+    }
+
+    function renderStartMenu() {
+      const menu = document.getElementById('start-menu');
+      const categories = ['Starter', 'Games', 'Utilities', 'Media'];
+      let html = '';
+
+      categories.forEach(cat => {
+        html += `<div class="category-title">${cat}</div>`;
+        defaultApps.filter(a => a.category === cat).forEach(app => {
+          html += `<div class="menu-item" onclick="openApp('${app.id}'); toggleStartMenu();">${app.name}</div>`;
+        });
+      });
+
+      menu.innerHTML = html;
+    }
+
+    /* Window & App Launch Engine */
+    function openApp(appId) {
+      const winId = 'win-' + Date.now();
       let title = 'Application';
       let content = '';
 
-      if (appType === 'browser') {
-        title = 'Emerald Browser';
-        unlockAchievement('browser_open');
-        browserTabsState[windowId] = [{ id: 'tab-1', url: customUrl || 'emerald://home' }];
-        content = renderBrowserLayout(windowId);
-      } else if (appType === 'entertainment') {
-        title = 'Entertainment';
-        unlockAchievement('entertainment_open');
-        content = `<iframe src="https://tuesdae.vercel.app" style="width:100%; height:100%; border:none; background:#0f172a;"></iframe>`;
-      } else if (appType === 'notes') {
-        title = 'Notes';
-        const savedNote = localStorage.getItem('emerald_saved_note') || '';
+      const appObj = defaultApps.find(a => a.id === appId);
+      if (appObj) title = appObj.name;
+
+      if (appId === 'browser') {
+        unlockAchievement('open_browser');
         content = `
-          <div class="app-container" style="padding:10px;">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-              <span style="font-size:12px; color:#10b981;">Auto-Saves to Local Storage</span>
-              <button class="browser-btn" onclick="saveNotes('${windowId}')">Save Note</button>
+          <div class="browser-bar">
+            <button class="browser-btn" onclick="document.getElementById('gcse-${winId}').style.display='block'">Search</button>
+            <input type="text" class="browser-input" placeholder="Enter URL or Search query..." id="url-${winId}" onkeydown="if(event.key==='Enter') navigateBrowser('${winId}')">
+            <button class="browser-btn" onclick="navigateBrowser('${winId}')">Go</button>
+          </div>
+          <div class="window-content" id="view-${winId}" style="background:#0f172a; overflow-y:auto;">
+            <div class="gcse-box" id="gcse-${winId}">
+              <div class="gcse-search"></div>
             </div>
-            <textarea id="notes-input-${windowId}" style="width:100%; height:88%; background:#0f172a; color:#fff; border:1px solid #334155; padding:12px; border-radius:6px; outline:none; resize:none;" oninput="autoSaveNotes(this.value)" placeholder="Start typing...">${savedNote}</textarea>
+            <iframe id="frame-${winId}" style="width:100%; height:100%; border:none; display:none;"></iframe>
           </div>
         `;
-      } else if (appType === 'terminal') {
-        title = 'Terminal';
-        unlockAchievement('terminal_user');
+        setTimeout(() => { if (window.google && window.google.search) window.google.search.cse.element.go(); }, 300);
+
+      } else if (appId === 'terminal') {
+        unlockAchievement('term_help');
         content = `
-          <div class="terminal-container" id="term-container-${windowId}">
-            <div class="terminal-output" id="term-out-${windowId}">EmeraldOS Terminal Engine v4.0\nType "help" for a full list of commands.\n</div>
+          <div class="terminal-container" id="term-box-${winId}">
+            <div class="terminal-output" id="term-out-${winId}">NautilusOS Terminal v2.0\nType 'help' to display list of commands.\n</div>
             <div class="terminal-input-row">
-              <span class="terminal-prompt">emerald@user:~$</span>
-              <input type="text" class="terminal-input" id="term-in-${windowId}" onkeydown="handleTerminalKey(event, '${windowId}')" autofocus>
+              <span class="terminal-prompt">${userProfile.username.toLowerCase()}@nautilusos:~$</span>
+              <input type="text" class="terminal-input" id="term-in-${winId}" onkeydown="handleTerminalCommand(event, '${winId}')" autofocus>
             </div>
           </div>
         `;
-      } else if (appType === 'settings') {
-        title = 'Settings';
-        unlockAchievement('settings_visit');
-        content = renderSettingsContent();
-      } else if (appType === 'achievements') {
-        title = 'Achievements';
-        content = renderAchievementsContent();
-      } else if (appType === 'store') {
-        title = 'App Store';
-        unlockAchievement('store_visit');
+
+      } else if (appId === 'ai') {
+        unlockAchievement('ai_talk');
+        content = `<iframe src="https://caacgo.cresclab.com/widget/wk_5e0c5e52071687a6ef1b80075c01b811f929" style="width:100%; height:100%; border:none;"></iframe>`;
+
+      } else if (appId === 'entertainment') {
+        content = `<iframe src="https://tuesdae.vercel.app" style="width:100%; height:100%; border:none;"></iframe>`;
+
+      } else if (appId === 'files') {
+        unlockAchievement('open_files');
+        content = renderFilesApp(winId);
+
+      } else if (appId === 'photos') {
+        unlockAchievement('photo_view');
         content = `
           <div class="app-container">
-            <h2>Core Applications</h2>
-            <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap:16px;">
-              <div style="background:#1e293b; border:1px solid #334155; padding:16px; border-radius:8px; text-align:center;">
-                <h3>Entertainment</h3>
-                <p style="font-size:12px; color:#94a3b8; margin:8px 0;">Pre-installed Web App</p>
-                <button class="browser-btn" onclick="openApp('entertainment')">Launch</button>
-              </div>
-              <div style="background:#1e293b; border:1px solid #334155; padding:16px; border-radius:8px; text-align:center;">
-                <h3>Emerald Browser</h3>
-                <p style="font-size:12px; color:#94a3b8; margin:8px 0;">Web Navigation Engine</p>
-                <button class="browser-btn" onclick="openApp('browser')">Launch</button>
-              </div>
+            <h2>Photo Gallery</h2>
+            <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap:12px;">
+              <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400" style="width:100%; border-radius:6px;">
+              <img src="https://images.unsplash.com/photo-1519681393784-d120267933ba?w=400" style="width:100%; border-radius:6px;">
+              <img src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=400" style="width:100%; border-radius:6px;">
             </div>
+          </div>
+        `;
+
+      } else if (appId === 'notes') {
+        const saved = localStorage.getItem('nautilus_saved_note') || '';
+        content = `
+          <div class="app-container">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span>Sticky Note Pad</span>
+              <button class="browser-btn" onclick="localStorage.setItem('nautilus_saved_note', document.getElementById('note-${winId}').value); unlockAchievement('notes_save'); showToast('Note saved!');">Save</button>
+            </div>
+            <textarea id="note-${winId}" style="flex:1; background:#1e293b; color:#fff; border:1px solid var(--border); padding:12px; border-radius:6px; outline:none; resize:none;">${saved}</textarea>
+          </div>
+        `;
+
+      } else if (appId === 'settings') {
+        content = renderSettingsApp();
+
+      } else if (appId === 'achievements') {
+        content = renderAchievementsApp();
+
+      } else if (appId === 'about') {
+        unlockAchievement('about_read');
+        content = `
+          <div class="app-container" style="text-align:center; align-items:center; justify-content:center;">
+            <h2>NautilusOS v2.0 Core</h2>
+            <p style="color:#94a3b8; max-width:400px; margin:10px 0;">An unblockable, customizable web operating system environment complete with file management, AI integration, and progressive achievements.</p>
+            <span style="font-size:12px; color:var(--accent);">Built with Vanilla Web Technologies</span>
           </div>
         `;
       }
 
       const win = document.createElement('div');
       win.className = 'window';
-      win.id = windowId;
+      win.id = winId;
       win.style.top = '60px';
-      win.style.left = '80px';
+      win.style.left = '100px';
       win.style.zIndex = ++activeZIndex;
 
       win.innerHTML = `
-        <div class="window-header" onmousedown="dragWindow(event, '${windowId}')">
-          <div class="window-title">💎 ${title}</div>
+        <div class="window-header" onmousedown="dragWindow(event, '${winId}')">
+          <div class="window-title">⚡ ${title}</div>
           <div class="window-controls">
-            <button class="control-btn btn-min" onclick="minimizeWindow('${windowId}')"></button>
-            <button class="control-btn btn-max" onclick="maximizeWindow('${windowId}')"></button>
-            <button class="control-btn btn-close" onclick="closeWindow('${windowId}')"></button>
+            <button class="control-btn btn-min" onclick="document.getElementById('${winId}').style.display='none'"></button>
+            <button class="control-btn btn-max" onclick="maximizeWindow('${winId}')"></button>
+            <button class="control-btn btn-close" onclick="document.getElementById('${winId}').remove()"></button>
           </div>
         </div>
         <div class="window-content">${content}</div>
       `;
 
-      win.addEventListener('mousedown', () => win.style.zIndex = ++activeZIndex);
+      win.onmousedown = () => win.style.zIndex = ++activeZIndex;
       document.body.appendChild(win);
+    }
 
-      if (customUrl && appType === 'browser') {
-        document.getElementById(`url-${windowId}`).value = customUrl;
-        navigateFrame(windowId);
+    function navigateBrowser(winId) {
+      const urlInput = document.getElementById(`url-${winId}`).value;
+      const iframe = document.getElementById(`frame-${winId}`);
+      const gcse = document.getElementById(`gcse-${winId}`);
+
+      if (urlInput) {
+        gcse.style.display = 'none';
+        iframe.style.display = 'block';
+        iframe.src = urlInput.startsWith('http') ? urlInput : 'https://' + urlInput;
       }
     }
 
-    function closeWindow(id) { document.getElementById(id).remove(); }
-    function minimizeWindow(id) { document.getElementById(id).style.display = 'none'; }
-    
+    function dragWindow(e, id) {
+      const win = document.getElementById(id);
+      let shiftX = e.clientX - win.getBoundingClientRect().left;
+      let shiftY = e.clientY - win.getBoundingClientRect().top;
+      document.onmousemove = (e) => {
+        win.style.left = (e.clientX - shiftX) + 'px';
+        win.style.top = (e.clientY - shiftY) + 'px';
+      };
+      document.onmouseup = () => document.onmousemove = null;
+    }
+
     function maximizeWindow(id) {
       const win = document.getElementById(id);
       if (win.style.width === '100vw') {
-        win.style.width = '820px';
-        win.style.height = '520px';
-        win.style.top = '60px';
-        win.style.left = '80px';
+        win.style.width = '780px';
+        win.style.height = '500px';
       } else {
         win.style.width = '100vw';
         win.style.height = 'calc(100vh - 48px)';
@@ -674,215 +447,150 @@
       }
     }
 
-    function dragWindow(e, id) {
-      const win = document.getElementById(id);
-      let shiftX = e.clientX - win.getBoundingClientRect().left;
-      let shiftY = e.clientY - win.getBoundingClientRect().top;
-
-      function moveAt(pageX, pageY) {
-        win.style.left = pageX - shiftX + 'px';
-        win.style.top = pageY - shiftY + 'px';
-      }
-
-      function onMouseMove(event) { moveAt(event.clientX, event.clientY); }
-      document.addEventListener('mousemove', onMouseMove);
-      document.onmouseup = function() {
-        document.removeEventListener('mousemove', onMouseMove);
-        document.onmouseup = null;
-      };
-    }
-
-    /* Notes Engine */
-    function autoSaveNotes(val) {
-      localStorage.setItem('emerald_saved_note', val);
-    }
-
-    function saveNotes(winId) {
-      const val = document.getElementById(`notes-input-${winId}`).value;
-      localStorage.setItem('emerald_saved_note', val);
-      unlockAchievement('notes_save');
-      showToast('Notes saved successfully!');
-    }
-
-    /* Browser Engine with Google CSE */
-    function renderBrowserLayout(winId) {
+    /* Virtual File Manager App */
+    function renderFilesApp(winId) {
       return `
-        <div class="browser-tabs" id="tabs-bar-${winId}">
-          ${renderTabButtons(winId)}
-          <button class="add-tab-btn" onclick="addNewTab('${winId}')">+</button>
-        </div>
-        <div class="browser-bar">
-          <button class="browser-btn" onclick="goHome('${winId}')">🏠</button>
-          <button class="browser-btn" onclick="reloadFrame('${winId}')">↻</button>
-          <input type="text" class="browser-input" id="url-${winId}" value="emerald://home" onkeydown="if(event.key==='Enter') navigateFrame('${winId}')">
-          <button class="browser-btn" onclick="navigateFrame('${winId}')">Go</button>
-        </div>
-        <div class="browser-viewport" id="viewport-${winId}">
-          ${getHomeMarkup(winId)}
-        </div>
-      `;
-    }
-
-    function renderTabButtons(winId) {
-      const tabs = browserTabsState[winId] || [];
-      return tabs.map((t, idx) => `
-        <button class="tab-btn ${idx === 0 ? 'active' : ''}" onclick="switchTab('${winId}')">
-          Tab ${idx + 1}
-          <span class="close-tab-btn" onclick="event.stopPropagation(); closeTab('${winId}', '${t.id}')">✕</span>
-        </button>
-      `).join('');
-    }
-
-    function addNewTab(winId) {
-      unlockAchievement('tab_master');
-      const newTabId = 'tab-' + Date.now();
-      browserTabsState[winId].push({ id: newTabId, url: 'emerald://home' });
-      document.getElementById(`tabs-bar-${winId}`).innerHTML = renderTabButtons(winId) + `<button class="add-tab-btn" onclick="addNewTab('${winId}')">+</button>`;
-      goHome(winId);
-    }
-
-    function switchTab(winId) { goHome(winId); }
-
-    function closeTab(winId, tabId) {
-      if (browserTabsState[winId].length <= 1) return;
-      browserTabsState[winId] = browserTabsState[winId].filter(t => t.id !== tabId);
-      document.getElementById(`tabs-bar-${winId}`).innerHTML = renderTabButtons(winId) + `<button class="add-tab-btn" onclick="addNewTab('${winId}')">+</button>`;
-    }
-
-    function getHomeMarkup(winId) {
-      setTimeout(() => {
-        if (window.google && window.google.search && window.google.search.cse) {
-          window.google.search.cse.element.go();
-        }
-      }, 300);
-
-      return `
-        <div class="browser-home">
-          <div class="home-logo">💎 Emerald Search</div>
-          <div class="gcse-container">
-            <div class="gcse-search"></div>
+        <div class="app-container">
+          <div style="display:flex; gap:8px;">
+            <input type="text" id="fname-${winId}" class="browser-input" placeholder="filename.txt">
+            <button class="browser-btn" onclick="createFile('${winId}')">Create File</button>
+          </div>
+          <div style="display:flex; gap:16px; flex:1;">
+            <div style="width:30%; background:#1e293b; border:1px solid var(--border); border-radius:6px; padding:8px;" id="file-list-${winId}">
+              ${renderFileList(winId)}
+            </div>
+            <textarea id="file-content-${winId}" style="flex:1; background:#1e293b; color:#fff; border:1px solid var(--border); padding:10px; border-radius:6px; resize:none;"></textarea>
           </div>
         </div>
       `;
     }
 
-    function goHome(winId) {
-      const viewport = document.getElementById(`viewport-${winId}`);
-      const input = document.getElementById(`url-${winId}`);
-      if (input) input.value = "emerald://home";
-      viewport.innerHTML = getHomeMarkup(winId);
+    function renderFileList(winId) {
+      return Object.keys(fileSystem).map(f => `
+        <div style="display:flex; justify-content:space-between; padding:6px; cursor:pointer;" onclick="document.getElementById('file-content-${winId}').value = fileSystem['${f}']">
+          📄 ${f}
+          <span style="color:#ef4444; cursor:pointer;" onclick="deleteFile('${f}', '${winId}')">✕</span>
+        </div>
+      `).join('');
     }
 
-    function navigateFrame(winId) {
-      const input = document.getElementById(`url-${winId}`);
-      const viewport = document.getElementById(`viewport-${winId}`);
-      let url = input.value.trim();
-
-      if (url === 'emerald://home' || url === 'home') {
-        goHome(winId);
-        return;
+    function createFile(winId) {
+      const fname = document.getElementById(`fname-${winId}`).value.trim();
+      const content = document.getElementById(`file-content-${winId}`).value;
+      if (fname) {
+        fileSystem[fname] = content;
+        localStorage.setItem('nautilus_files', JSON.stringify(fileSystem));
+        unlockAchievement('create_file');
+        document.getElementById(`file-list-${winId}`).innerHTML = renderFileList(winId);
+        showToast(`File ${fname} created!`);
       }
-
-      if (!url.startsWith('http://') && !url.startsWith('https://')) {
-        url = 'https://' + url;
-      }
-      input.value = url;
-
-      viewport.innerHTML = `<iframe id="frame-${winId}" class="browser-frame" src="${url}"></iframe>`;
     }
 
-    function reloadFrame(winId) { navigateFrame(winId); }
+    function deleteFile(fname, winId) {
+      delete fileSystem[fname];
+      localStorage.setItem('nautilus_files', JSON.stringify(fileSystem));
+      unlockAchievement('delete_file');
+      document.getElementById(`file-list-${winId}`).innerHTML = renderFileList(winId);
+    }
 
-    /* Expanded Terminal Command Engine */
-    function handleTerminalKey(event, winId) {
-      if (event.key === 'Enter') {
+    /* Terminal Command Router */
+    function handleTerminalCommand(e, winId) {
+      if (e.key === 'Enter') {
         const inputElem = document.getElementById(`term-in-${winId}`);
         const outputElem = document.getElementById(`term-out-${winId}`);
-        const command = inputElem.value.trim();
+        const cmdText = inputElem.value.trim();
         inputElem.value = '';
 
-        outputElem.innerText += `\nemerald@user:~$ ${command}\n`;
-        const parts = command.split(' ');
-        const cmd = parts[0].toLowerCase();
+        outputElem.innerText += `\n${userProfile.username.toLowerCase()}@nautilusos:~$ ${cmdText}\n`;
+        const args = cmdText.split(' ');
+        const cmd = args[0].toLowerCase();
 
         switch (cmd) {
           case 'help':
-            outputElem.innerText += `Commands: help, clear, ver, date, sysinfo, matrix, calc, whoami, storage, time, theme, apps, unlockall\n`;
+            outputElem.innerText += `Available commands: help, ls, clear, date, whoami, sysinfo, matrix, calc, neofetch, theme, echo, cat, rm, touch\n`;
+            break;
+          case 'ls':
+            outputElem.innerText += Object.keys(fileSystem).join('  ') + '\n';
             break;
           case 'clear':
             outputElem.innerText = '';
             break;
-          case 'ver':
-            outputElem.innerText += `EmeraldOS v4.0 Ultimate Edition\n`;
-            break;
           case 'date':
-          case 'time':
-            outputElem.innerText += `${new Date().toString()}\n`;
-            break;
-          case 'sysinfo':
-            outputElem.innerText += `OS: EmeraldOS Core v4.0\nMemory: 512MB / 4096MB Allocated\nStatus: Operational\n`;
+            outputElem.innerText += new Date().toString() + '\n';
             break;
           case 'whoami':
-            outputElem.innerText += `User: ${userProfile.username} (${userProfile.title})\n`;
+            outputElem.innerText += `${userProfile.username} (${userProfile.role})\n`;
+            break;
+          case 'sysinfo':
+            unlockAchievement('term_sysinfo');
+            outputElem.innerText += `OS: NautilusOS v2.0\nMemory: 256MB allocated\nStatus: Operational\n`;
+            break;
+          case 'neofetch':
+            unlockAchievement('term_neofetch');
+            outputElem.innerText += ` OS: NautilusOS v2.0\n Host: Browser Sandbox\n Kernel: WebAssembly / JS Engine\n Shell: Nautilus Terminal\n`;
+            break;
+          case 'matrix':
+            unlockAchievement('term_matrix');
+            outputElem.innerText += `01001110 01000001 01010101 01010100 01001001 01001100 01010101 01010011\nWake up, User...\n`;
             break;
           case 'calc':
             try {
-              outputElem.innerText += `Result: ${eval(parts.slice(1).join(' '))}\n`;
-            } catch (e) {
-              outputElem.innerText += `Usage: calc <expression>\n`;
-            }
+              outputElem.innerText += `Result: ${eval(args.slice(1).join(' '))}\n`;
+              unlockAchievement('term_calc');
+            } catch { outputElem.innerText += `Syntax error in calculation.\n`; }
             break;
-          case 'storage':
-            outputElem.innerText += `Notes Size: ${(localStorage.getItem('emerald_saved_note') || '').length} bytes\n`;
+          case '1337':
+            unlockAchievement('secret_easter1');
+            outputElem.innerText += `Leet Mode Unlocked!\n`;
             break;
-          case 'matrix':
-            unlockAchievement('matrix_mode');
-            unlockAchievement('easter_secret4');
-            outputElem.innerText += `Wake up, Neo...\nThe Matrix has you...\nFollow the white rabbit.\n`;
-            break;
-          case 'unlockall':
-            achievementList.forEach(a => unlockAchievement(a.id));
-            outputElem.innerText += `All achievements unlocked!\n`;
-            break;
-          case 'secret':
-            unlockAchievement('easter_secret1');
-            outputElem.innerText += `Easter Egg 1 Unlocked!\n`;
+          case 'konami':
+            unlockAchievement('secret_easter2');
+            outputElem.innerText += `30 Extra Lives Granted!\n`;
             break;
           default:
-            if (cmd) outputElem.innerText += `Command not recognized: ${cmd}\n`;
+            if (cmd) outputElem.innerText += `Command not found: ${cmd}\n`;
         }
 
-        const container = document.getElementById(`term-container-${winId}`);
-        container.scrollTop = container.scrollHeight;
+        const box = document.getElementById(`term-box-${winId}`);
+        box.scrollTop = box.scrollHeight;
       }
     }
 
-    /* Settings UI Builder */
-    function renderSettingsContent() {
+    /* Settings App & Cloaking */
+    function renderSettingsApp() {
       return `
         <div class="app-container">
-          <h2>Profile & Settings</h2>
-          <div class="profile-card">
-            <div class="profile-avatar">${userProfile.avatar}</div>
-            <div style="flex:1;">
-              <input type="text" class="browser-input" value="${userProfile.username}" onchange="userProfile.username=this.value; saveProfile();" style="margin-bottom:6px;">
-              <input type="text" class="browser-input" value="${userProfile.title}" onchange="userProfile.title=this.value; saveProfile();">
-            </div>
+          <h2>Profile & System Settings</h2>
+          <div style="background:#1e293b; padding:12px; border-radius:6px; border:1px solid var(--border);">
+            <label>Username</label>
+            <input type="text" class="browser-input" value="${userProfile.username}" onchange="userProfile.username=this.value; localStorage.setItem('nautilus_profile', JSON.stringify(userProfile)); showToast('Profile saved!');">
           </div>
-          <div style="background:#1e293b; border:1px solid #334155; padding:16px; border-radius:8px;">
-            <h3>Appearance Theme</h3>
-            <div style="display:flex; gap:10px; margin-top:8px;">
-              <button class="browser-btn" onclick="setTheme('emerald')">Emerald Green</button>
-              <button class="browser-btn" onclick="setTheme('sapphire')">Sapphire Blue</button>
-              <button class="browser-btn" onclick="setTheme('ruby')">Ruby Red</button>
+          <div style="background:#1e293b; padding:12px; border-radius:6px; border:1px solid var(--border);">
+            <h3>Tab Cloaking</h3>
+            <p style="font-size:12px; color:#94a3b8; margin:6px 0;">Mask this tab title & icon in your browser bar.</p>
+            <div style="display:flex; gap:8px;">
+              <button class="browser-btn" onclick="cloakTab('Google Drive', 'https://ssl.gstatic.com/images/branding/product/1x/drive_2020q4_32dp.png')">Google Drive</button>
+              <button class="browser-btn" onclick="cloakTab('Canvas', 'https://du11hjcvx0uqb.cloudfront.net/dist/images/favicon-e80f08050e.ico')">Canvas</button>
+              <button class="browser-btn" onclick="cloakTab('Reset', '')">Reset</button>
             </div>
           </div>
         </div>
       `;
     }
 
-    /* Achievements View Builder */
-    function renderAchievementsContent() {
+    function cloakTab(title, iconUrl) {
+      unlockAchievement('cloak_tab');
+      if (title === 'Google Drive') unlockAchievement('secret_easter3');
+      document.title = title === 'Reset' ? 'NautilusOS v2.0' : title;
+      let link = document.querySelector("link[rel*='icon']") || document.createElement('link');
+      link.type = 'image/x-icon';
+      link.rel = 'shortcut icon';
+      link.href = iconUrl;
+      document.getElementsByTagName('head')[0].appendChild(link);
+      showToast(`Tab cloaked as ${title}`);
+    }
+
+    function renderAchievementsApp() {
       return `
         <div class="app-container">
           <h2>Achievements (${unlockedAchievements.length} / ${achievementList.length})</h2>
@@ -891,8 +599,8 @@
               const unlocked = unlockedAchievements.includes(a.id);
               return `
                 <div class="achieve-card ${unlocked ? 'unlocked' : ''}">
-                  <strong style="color:${unlocked ? '#10b981' : '#94a3b8'}">${a.title}</strong>
-                  <span style="font-size:12px; color:#cbd5e1;">${a.desc}</span>
+                  <strong style="color:${unlocked ? 'var(--accent)' : '#94a3b8'}">${a.title}</strong>
+                  <div style="font-size:11px; color:#cbd5e1; margin-top:4px;">${a.desc}</div>
                 </div>
               `;
             }).join('')}
@@ -901,21 +609,8 @@
       `;
     }
 
-    /* Themes Engine */
-    function setTheme(theme) {
-      unlockAchievement('theme_change');
-      const root = document.documentElement;
-      if (theme === 'emerald') {
-        root.style.setProperty('--bg-gradient', 'radial-gradient(circle at center, #064e3b 0%, #022c22 100%)');
-        root.style.setProperty('--accent-color', '#10b981');
-      } else if (theme === 'sapphire') {
-        root.style.setProperty('--bg-gradient', 'radial-gradient(circle at center, #1e3a8a 0%, #0f172a 100%)');
-        root.style.setProperty('--accent-color', '#3b82f6');
-      } else if (theme === 'ruby') {
-        root.style.setProperty('--bg-gradient', 'radial-gradient(circle at center, #881337 0%, #18181b 100%)');
-        root.style.setProperty('--accent-color', '#f43f5e');
-      }
-    }
+    /* Initialize System */
+    renderDesktop();
   </script>
 </body>
 </html>
