@@ -30,7 +30,6 @@
       color: var(--text-color);
     }
 
-    /* Desktop Area */
     #desktop {
       width: 100vw;
       height: calc(100vh - 48px);
@@ -72,11 +71,10 @@
       text-shadow: 0 1px 3px rgba(0,0,0,0.8);
     }
 
-    /* Window Styling */
     .window {
       position: absolute;
       width: 800px;
-      height: 500px;
+      height: 520px;
       background: var(--window-bg);
       border: 1px solid var(--border-color);
       border-radius: 10px;
@@ -134,7 +132,7 @@
       background: #000;
     }
 
-    /* Browser App Styles */
+    /* Browser Bar */
     .browser-bar {
       display: flex;
       gap: 8px;
@@ -174,6 +172,47 @@
       background: #ffffff;
     }
 
+    /* App Store Styles */
+    .store-grid {
+      padding: 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 16px;
+      overflow-y: auto;
+      background: #0f172a;
+      height: 100%;
+    }
+
+    .store-card {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 10px;
+    }
+
+    .store-card-icon {
+      font-size: 36px;
+    }
+
+    .store-card-btn {
+      background: var(--accent-color);
+      color: #000;
+      border: none;
+      padding: 6px 14px;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .store-card-btn:hover {
+      background: var(--accent-hover);
+    }
+
     /* Taskbar */
     #taskbar {
       height: 48px;
@@ -190,12 +229,6 @@
       z-index: 1000;
     }
 
-    .taskbar-left, .taskbar-right {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
     .start-btn {
       background: var(--accent-color);
       color: #000;
@@ -204,22 +237,8 @@
       padding: 8px 16px;
       border-radius: 6px;
       cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      transition: background 0.2s;
     }
 
-    .start-btn:hover {
-      background: var(--accent-hover);
-    }
-
-    #clock {
-      font-size: 13px;
-      font-weight: 500;
-    }
-
-    /* Start Menu */
     #start-menu {
       position: absolute;
       bottom: 58px;
@@ -258,34 +277,23 @@
       <svg class="icon-svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
       <span class="icon-label">Emerald Browser</span>
     </div>
-    <div class="icon" onclick="openApp('settings')">
-      <svg class="icon-svg" viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
-      <span class="icon-label">Settings</span>
+    <div class="icon" onclick="openApp('store')">
+      <svg class="icon-svg" viewBox="0 0 24 24"><path d="M19 6h-2c0-2.76-2.24-5-5-5S7 3.24 7 6H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-7-3c1.66 0 3 1.34 3 3H9c0-1.66 1.34-3 3-3zm7 17H5V8h14v12z"/></svg>
+      <span class="icon-label">App Store</span>
     </div>
   </div>
 
   <div id="start-menu">
-    <div class="menu-item" onclick="openApp('browser'); toggleStartMenu();">
-      🌐 Emerald Browser
-    </div>
-    <div class="menu-item" onclick="openApp('settings'); toggleStartMenu();">
-      ⚙️ Settings
-    </div>
+    <div class="menu-item" onclick="openApp('browser'); toggleStartMenu();">🌐 Emerald Browser</div>
+    <div class="menu-item" onclick="openApp('store'); toggleStartMenu();">🛍️ App Store</div>
   </div>
 
   <div id="taskbar">
-    <div class="taskbar-left">
-      <button class="start-btn" onclick="toggleStartMenu()">
-        💎 Emerald
-      </button>
-    </div>
-    <div class="taskbar-right">
-      <div id="clock">12:00 PM</div>
-    </div>
+    <button class="start-btn" onclick="toggleStartMenu()">💎 Emerald</button>
+    <div id="clock">12:00 PM</div>
   </div>
 
   <script>
-    // Clock Implementation
     function updateClock() {
       const now = new Date();
       document.getElementById('clock').innerText = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -293,39 +301,54 @@
     setInterval(updateClock, 1000);
     updateClock();
 
-    // Start Menu Toggle
     function toggleStartMenu() {
       const menu = document.getElementById('start-menu');
       menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
     }
 
-    // Window Management System
     let activeZIndex = 100;
 
-    function openApp(appType) {
+    function openApp(appType, customUrl) {
       const windowId = 'win-' + Date.now();
-      let title = 'Application';
+      let title = 'App';
       let content = '';
 
       if (appType === 'browser') {
         title = 'Emerald Browser';
+        const initialUrl = customUrl || 'https://wikipedia.org';
         content = `
           <div class="browser-bar">
             <button class="browser-btn" onclick="document.getElementById('frame-${windowId}').contentWindow.history.back()">◄</button>
             <button class="browser-btn" onclick="document.getElementById('frame-${windowId}').contentWindow.history.forward()">►</button>
             <button class="browser-btn" onclick="reloadFrame('${windowId}')">↻</button>
-            <input type="text" class="browser-input" id="url-${windowId}" value="https://bing.com" onkeydown="if(event.key==='Enter') navigateFrame('${windowId}')">
+            <input type="text" class="browser-input" id="url-${windowId}" value="${initialUrl}" onkeydown="if(event.key==='Enter') navigateFrame('${windowId}')">
             <button class="browser-btn" onclick="navigateFrame('${windowId}')">Go</button>
+            <button class="browser-btn" title="Open in new tab if blocked" onclick="openExternal('${windowId}')">↗ Open External</button>
           </div>
-          <iframe id="frame-${windowId}" class="browser-frame" src="https://bing.com"></iframe>
+          <iframe id="frame-${windowId}" class="browser-frame" src="${initialUrl}"></iframe>
         `;
-      } else if (appType === 'settings') {
-        title = 'Settings';
+      } else if (appType === 'store') {
+        title = 'App Store';
         content = `
-          <div style="padding: 20px; color: white;">
-            <h2>EmeraldOS Settings</h2>
-            <p style="margin-top: 10px;">Version: 1.0.0</p>
-            <p>Theme: Emerald Dark</p>
+          <div class="store-grid">
+            <div class="store-card">
+              <div class="store-card-icon">📚</div>
+              <h3>Wikipedia</h3>
+              <p>Free online encyclopedia.</p>
+              <button class="store-card-btn" onclick="openApp('browser', 'https://wikipedia.org')">Launch</button>
+            </div>
+            <div class="store-card">
+              <div class="store-card-icon">🎮</div>
+              <h3>2048 Game</h3>
+              <p>Play the 2048 puzzle app.</p>
+              <button class="store-card-btn" onclick="openApp('browser', 'https://play2048.co')">Launch</button>
+            </div>
+            <div class="store-card">
+              <div class="store-card-icon">🎨</div>
+              <h3>Excalidraw</h3>
+              <p>Virtual whiteboard tool.</p>
+              <button class="store-card-btn" onclick="openApp('browser', 'https://excalidraw.com')">Launch</button>
+            </div>
           </div>
         `;
       }
@@ -333,8 +356,8 @@
       const win = document.createElement('div');
       win.className = 'window';
       win.id = windowId;
-      win.style.top = '80px';
-      win.style.left = '100px';
+      win.style.top = '70px';
+      win.style.left = '90px';
       win.style.zIndex = ++activeZIndex;
 
       win.innerHTML = `
@@ -349,29 +372,20 @@
         <div class="window-content">${content}</div>
       `;
 
-      win.addEventListener('mousedown', () => {
-        win.style.zIndex = ++activeZIndex;
-      });
-
+      win.addEventListener('mousedown', () => win.style.zIndex = ++activeZIndex);
       document.body.appendChild(win);
     }
 
-    function closeWindow(id) {
-      document.getElementById(id).remove();
-    }
-
-    function minimizeWindow(id) {
-      const win = document.getElementById(id);
-      win.style.display = 'none';
-    }
-
+    function closeWindow(id) { document.getElementById(id).remove(); }
+    function minimizeWindow(id) { document.getElementById(id).style.display = 'none'; }
+    
     function maximizeWindow(id) {
       const win = document.getElementById(id);
       if (win.style.width === '100vw') {
         win.style.width = '800px';
-        win.style.height = '500px';
-        win.style.top = '80px';
-        win.style.left = '100px';
+        win.style.height = '520px';
+        win.style.top = '70px';
+        win.style.left = '90px';
       } else {
         win.style.width = '100vw';
         win.style.height = 'calc(100vh - 48px)';
@@ -380,7 +394,6 @@
       }
     }
 
-    // Dragging Logic
     function dragWindow(e, id) {
       const win = document.getElementById(id);
       let shiftX = e.clientX - win.getBoundingClientRect().left;
@@ -391,19 +404,14 @@
         win.style.top = pageY - shiftY + 'px';
       }
 
-      function onMouseMove(event) {
-        moveAt(event.clientX, event.clientY);
-      }
-
+      function onMouseMove(event) { moveAt(event.clientX, event.clientY); }
       document.addEventListener('mousemove', onMouseMove);
-
       document.onmouseup = function() {
         document.removeEventListener('mousemove', onMouseMove);
         document.onmouseup = null;
       };
     }
 
-    // Navigation logic for the embedded web browser
     function navigateFrame(id) {
       const input = document.getElementById(`url-${id}`);
       const frame = document.getElementById(`frame-${id}`);
@@ -419,6 +427,11 @@
     function reloadFrame(id) {
       const frame = document.getElementById(`frame-${id}`);
       frame.src = frame.src;
+    }
+
+    function openExternal(id) {
+      const input = document.getElementById(`url-${id}`);
+      window.open(input.value, '_blank');
     }
   </script>
 </body>
