@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NautilusOS v5.2</title>
+  <title>NautilusOS v5.3</title>
   <style>
     /* 10 Preset Themes */
     :root {
@@ -152,7 +152,7 @@
     }
 
     .icon {
-      width: 92px;
+      width: 96px;
       height: 96px;
       display: flex;
       flex-direction: column;
@@ -169,7 +169,7 @@
 
     .icon:hover { background: rgba(255, 255, 255, 0.08); border-color: var(--border); }
     body.drag-mode-active .icon { cursor: move; border-color: var(--accent); background: rgba(16, 185, 129, 0.15); box-shadow: 0 0 10px var(--accent); }
-    .icon-svg { width: 42px; height: 42px; fill: var(--accent); pointer-events: none; }
+    .icon-svg { width: 40px; height: 40px; fill: var(--accent); pointer-events: none; }
     .icon-label { font-size: 11px; text-align: center; text-shadow: 0 1px 3px rgba(0,0,0,0.8); pointer-events: none; line-height: 1.2; word-break: break-word; }
 
     /* Window UI Frame */
@@ -212,7 +212,7 @@
 
     /* Custom Inputs & Controls */
     .browser-bar { display: flex; gap: 8px; padding: 10px; background: #111827; border-bottom: 1px solid var(--border); align-items: center; }
-    .browser-btn { background: #1f2937; border: 1px solid var(--border); color: #fff; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 12px; }
+    .browser-btn { background: #1f2937; border: 1px solid var(--border); color: #fff; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 12px; display: inline-flex; align-items: center; gap: 6px; }
     .browser-btn:hover { background: var(--accent); color: #000; }
     .browser-input { flex: 1; background: #1f2937; border: 1px solid var(--border); color: #fff; padding: 7px 12px; border-radius: 6px; font-size: 13px; outline: none; }
 
@@ -232,16 +232,65 @@
     .app-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; }
     .app-card { background: #1e293b; border: 1px solid var(--border); padding: 14px; border-radius: 8px; display: flex; flex-direction: column; gap: 8px; text-align: center; align-items: center; }
 
-    /* Bottom Taskbar Engine */
-    #taskbar { height: 48px; background: var(--panel-bg); border-top: 1px solid var(--border); backdrop-filter: blur(16px); display: flex; align-items: center; justify-content: space-between; padding: 0 12px; position: absolute; bottom: 0; width: 100vw; z-index: 1000; }
-    .taskbar-left { display: flex; align-items: center; gap: 10px; flex: 1; overflow-x: auto; }
-    .start-btn { background: var(--accent); color: #000; font-weight: bold; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; white-space: nowrap; }
-    .taskbar-item { background: rgba(255,255,255,0.06); border: 1px solid var(--border); color: #fff; padding: 6px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 6px; white-space: nowrap; }
-    .taskbar-item.active { border-color: var(--accent); background: rgba(255,255,255,0.15); }
+    /* Windows Taskbar Engine */
+    #taskbar { 
+      height: 48px; 
+      background: var(--panel-bg); 
+      border-top: 1px solid var(--border); 
+      backdrop-filter: blur(16px); 
+      display: flex; 
+      align-items: center; 
+      justify-content: space-between; 
+      padding: 0 10px; 
+      position: absolute; 
+      bottom: 0; 
+      width: 100vw; 
+      z-index: 1000; 
+    }
+    .taskbar-left { display: flex; align-items: center; gap: 8px; flex: 1; overflow-x: auto; }
     
-    #start-menu { position: absolute; bottom: 58px; left: 12px; width: 320px; max-height: 480px; overflow-y: auto; background: var(--window-bg); border: 1px solid var(--border); border-radius: 10px; backdrop-filter: blur(20px); padding: 12px; display: none; flex-direction: column; gap: 6px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); z-index: 1001; }
-    .menu-item { padding: 8px 12px; border-radius: 6px; display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 13px; }
-    .menu-item:hover { background: rgba(255, 255, 255, 0.1); }
+    /* Windows Start Button */
+    .win-start-btn { 
+      background: rgba(255,255,255,0.05); 
+      border: 1px solid var(--border); 
+      padding: 6px 12px; 
+      border-radius: 6px; 
+      cursor: pointer; 
+      display: flex; 
+      align-items: center; 
+      gap: 8px; 
+      color: #fff; 
+      font-weight: 600; 
+      font-size: 13px;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .win-start-btn:hover { background: rgba(255,255,255,0.15); border-color: var(--accent); }
+    .win-logo { width: 18px; height: 18px; fill: var(--accent); }
+
+    .taskbar-item { background: rgba(255,255,255,0.06); border: 1px solid var(--border); color: #fff; padding: 6px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 6px; white-space: nowrap; }
+    .taskbar-item.active { border-color: var(--accent); background: rgba(255,255,255,0.18); box-shadow: 0 0 8px rgba(16, 185, 129, 0.3); }
+    
+    /* Windows-Style Start Menu Popup */
+    #start-menu { 
+      position: absolute; 
+      bottom: 54px; 
+      left: 10px; 
+      width: 340px; 
+      max-height: 500px; 
+      overflow-y: auto; 
+      background: var(--window-bg); 
+      border: 1px solid var(--border); 
+      border-radius: 10px; 
+      backdrop-filter: blur(24px); 
+      padding: 14px; 
+      display: none; 
+      flex-direction: column; 
+      gap: 6px; 
+      box-shadow: 0 20px 40px rgba(0,0,0,0.8); 
+      z-index: 1001; 
+    }
+    .menu-item { padding: 9px 12px; border-radius: 6px; display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 13px; color: #fff; }
+    .menu-item:hover { background: rgba(255, 255, 255, 0.12); color: var(--accent); }
 
     /* Notifications */
     #toast-container { position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
@@ -262,6 +311,7 @@
 </head>
 <body>
 
+  <!-- Auth Screen Overlay -->
   <div id="auth-overlay">
     <div class="auth-card">
       <h2 style="color: var(--accent);">⚡ NautilusOS Login</h2>
@@ -282,12 +332,21 @@
   <div id="toast-container"></div>
   <div id="desktop"></div>
 
+  <!-- Windows Style Start Menu Popup -->
   <div id="start-menu"></div>
 
+  <!-- Horizontal Taskbar -->
   <div id="taskbar">
     <div class="taskbar-left">
-      <button class="start-btn" onclick="toggleStartMenu()">⚡ NautilusOS</button>
-      <button class="browser-btn" id="drag-mode-toggle" onclick="toggleGlobalDragMode()">🖐️ Drag Mode: OFF</button>
+      <!-- Windows-style Start Button -->
+      <button class="win-start-btn" onclick="toggleStartMenu()">
+        <svg class="win-logo" viewBox="0 0 88 88">
+          <path d="M0 12.402l35.687-4.86.016 34.423-35.67.203zm35.67 33.529l.028 34.453L0 75.525l.033-29.4zm4.326-39.043L87.414 0v41.527l-47.418.375zm47.429 39.035L87.414 88l-47.407-6.709-.011-35.253z"/>
+        </svg>
+        <span>Start</span>
+      </button>
+
+      <button class="browser-btn" id="drag-mode-toggle" onclick="toggleGlobalDragMode()">🖐️ Drag: OFF</button>
       <div id="running-tasks" style="display:flex; gap:6px;"></div>
     </div>
     <div style="display:flex; align-items:center; gap:12px;">
@@ -297,6 +356,7 @@
     </div>
   </div>
 
+  <!-- Firebase Auth Engine -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { 
@@ -362,6 +422,7 @@
     });
   </script>
 
+  <!-- Desktop Operating System Script -->
   <script>
     /* Time Spent Engine */
     let sessionSeconds = 0;
@@ -384,7 +445,6 @@
       totalSecondsSpent++;
       localStorage.setItem('nautilus_time_spent', totalSecondsSpent.toString());
 
-      // Live update settings display if Settings is open
       const sessionElem = document.getElementById('session-time-display');
       const totalElem = document.getElementById('total-time-display');
 
@@ -394,6 +454,8 @@
 
     /* Full App Catalog */
     const baseAppsCatalog = [
+      { id: 'aihandwriting', name: 'AI HANDWRITING', category: 'Utilities', icon: '<path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>', url: 'https://secret-lemon-five.vercel.app/' },
+      { id: 'etacollection', name: 'The ETA Collection', category: 'Starter', icon: '<path d="M4 6h16v2H4zm2 4h12v2H6zm-2 4h16v2H4zm2 4h12v2H6z"/>' },
       { id: 'browser', name: 'Nautilus Search', category: 'Starter', icon: '<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>' },
       { id: 'codeshare', name: 'Code Share', category: 'Developer', icon: '<path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/>', url: 'https://codeshare-eta.vercel.app/' },
       { id: 'creator', name: 'Web App Creator', category: 'Developer', icon: '<path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>' },
@@ -410,7 +472,7 @@
     ];
 
     let customApps = JSON.parse(localStorage.getItem('nautilus_custom_apps')) || [];
-    let installedApps = JSON.parse(localStorage.getItem('nautilus_installed_apps')) || ['browser', 'codeshare', 'creator', 'htmlviewer', 'files', 'terminal', 'store', 'entertainment', 'ai', 'photos', 'notes', 'settings', 'achievements'];
+    let installedApps = JSON.parse(localStorage.getItem('nautilus_installed_apps')) || ['aihandwriting', 'etacollection', 'browser', 'codeshare', 'creator', 'htmlviewer', 'files', 'terminal', 'store', 'entertainment', 'ai', 'photos', 'notes', 'settings', 'achievements'];
     let userProfile = JSON.parse(localStorage.getItem('nautilus_profile')) || { username: 'NautilusUser', theme: 'emerald' };
     let fileSystem = JSON.parse(localStorage.getItem('nautilus_files')) || { 'index.html': '<h1>Welcome to NautilusOS</h1>\n<p>Double click me in Files to view!</p>' };
     let userNotes = localStorage.getItem('nautilus_notes') || 'Welcome to Notes!\nType anything here and it auto-saves.';
@@ -447,11 +509,16 @@
       menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
     }
 
+    // Close start menu when clicking on desktop
+    document.getElementById('desktop').addEventListener('click', () => {
+      document.getElementById('start-menu').style.display = 'none';
+    });
+
     function toggleGlobalDragMode() {
       globalDragMode = !globalDragMode;
       document.body.classList.toggle('drag-mode-active', globalDragMode);
       const btn = document.getElementById('drag-mode-toggle');
-      btn.innerText = globalDragMode ? '🖐️ Drag Mode: ON' : '🖐️ Drag Mode: OFF';
+      btn.innerText = globalDragMode ? '🖐️ Drag: ON' : '🖐️ Drag: OFF';
       showToast(globalDragMode ? 'Drag Mode Enabled!' : 'Drag Mode Locked!');
     }
 
@@ -486,7 +553,7 @@
         defaultY += 105;
         if (defaultY > window.innerHeight - 160) {
           defaultY = 20;
-          defaultX += 100;
+          defaultX += 105;
         }
       });
 
@@ -521,14 +588,14 @@
       const menu = document.getElementById('start-menu');
       const categories = ['Starter', 'Utilities', 'Developer', 'Games', 'Media', 'Custom Web Apps'];
       const fullCatalog = [...baseAppsCatalog, ...customApps];
-      let html = '';
+      let html = '<div style="font-size:14px; font-weight:bold; color:var(--accent); margin-bottom:8px;">⚡ Nautilus Apps</div>';
 
       categories.forEach(cat => {
         const catApps = fullCatalog.filter(a => a.category === cat && installedApps.includes(a.id));
         if (catApps.length > 0) {
           html += `<div class="category-title">${cat}</div>`;
           catApps.forEach(app => {
-            html += `<div class="menu-item" onclick="openApp('${app.id}'); toggleStartMenu();">${app.name}</div>`;
+            html += `<div class="menu-item" onclick="openApp('${app.id}'); toggleStartMenu();">🚀 ${app.name}</div>`;
           });
         }
       });
@@ -555,7 +622,48 @@
       let title = appObj ? appObj.name : 'Application';
       let content = '';
 
-      if (appId === 'browser') {
+      if (appId === 'etacollection') {
+        content = `
+          <div class="app-container">
+            <h2>📦 The ETA Collection</h2>
+            <p style="color:#94a3b8; font-size:13px;">Instant access to all your connected apps and iframe experiences:</p>
+            <div class="app-grid" style="margin-top:10px;">
+              <div class="app-card">
+                <h3>✍️ AI HANDWRITING</h3>
+                <p style="font-size:12px; color:#94a3b8;">AI handwriting recognition tool</p>
+                <button class="browser-btn" onclick="openApp('aihandwriting')">Launch App</button>
+              </div>
+              <div class="app-card">
+                <h3>💻 Code Share</h3>
+                <p style="font-size:12px; color:#94a3b8;">Share code snippets globally</p>
+                <button class="browser-btn" onclick="openApp('codeshare')">Launch App</button>
+              </div>
+              <div class="app-card">
+                <h3>🎮 Games Center</h3>
+                <p style="font-size:12px; color:#94a3b8;">Entertainment & Web Arcade</p>
+                <button class="browser-btn" onclick="openApp('entertainment')">Launch App</button>
+              </div>
+              <div class="app-card">
+                <h3>🌐 Nautilus Search</h3>
+                <p style="font-size:12px; color:#94a3b8;">Browse and embed web apps</p>
+                <button class="browser-btn" onclick="openApp('browser')">Launch App</button>
+              </div>
+              <div class="app-card">
+                <h3>🔨 App Creator</h3>
+                <p style="font-size:12px; color:#94a3b8;">Add custom iframes to desktop</p>
+                <button class="browser-btn" onclick="openApp('creator')">Launch App</button>
+              </div>
+            </div>
+          </div>
+        `;
+
+      } else if (appId === 'aihandwriting') {
+        content = `<iframe src="https://secret-lemon-five.vercel.app/" style="width:100%; height:100%; border:none;"></iframe>`;
+
+      } else if (appId === 'codeshare') {
+        content = `<iframe src="https://codeshare-eta.vercel.app/" style="width:100%; height:100%; border:none;"></iframe>`;
+
+      } else if (appId === 'browser') {
         content = `
           <div class="browser-bar">
             <input type="text" class="browser-input" placeholder="Search Bing or enter URL..." id="url-${winId}" onkeydown="if(event.key==='Enter') executeSearch('${winId}')">
@@ -566,9 +674,6 @@
             <iframe id="frame-${winId}" style="width:100%; height:100%; border:none;" src="https://www.bing.com"></iframe>
           </div>
         `;
-
-      } else if (appId === 'codeshare') {
-        content = `<iframe src="https://codeshare-eta.vercel.app/" style="width:100%; height:100%; border:none;"></iframe>`;
 
       } else if (appId === 'creator') {
         content = `
@@ -582,7 +687,7 @@
               <input type="text" id="custom-app-icon" class="browser-input" placeholder="🚀">
               
               <label>Web URL</label>
-              <input type="text" id="custom-app-url" class="browser-input" placeholder="https://codeshare-eta.vercel.app/">
+              <input type="text" id="custom-app-url" class="browser-input" placeholder="https://secret-lemon-five.vercel.app/">
               
               <button class="browser-btn" onclick="createCustomApp()">Create & Pin to Desktop</button>
             </div>
@@ -613,7 +718,7 @@
       } else if (appId === 'terminal') {
         content = `
           <div class="terminal-container" id="term-box-${winId}">
-            <div class="terminal-output" id="term-out-${winId}">NautilusOS Terminal v5.2\nType 'help' for commands.\n</div>
+            <div class="terminal-output" id="term-out-${winId}">NautilusOS Terminal v5.3\nType 'help' for commands.\n</div>
             <div class="terminal-input-row">
               <span class="terminal-prompt">${userProfile.username.toLowerCase()}@nautilusos:~$</span>
               <input type="text" class="terminal-input" id="term-in-${winId}" onkeydown="handleTerminalCommand(event, '${winId}')" autofocus>
@@ -644,6 +749,11 @@
                 <h3>Code Share</h3>
                 <p>Post and view public code snippet creations!</p>
                 <button class="browser-btn" onclick="openApp('codeshare')">Launch Code Share</button>
+              </div>
+              <div class="app-card">
+                <h3>AI Handwriting</h3>
+                <p>Interactive handwriting web application!</p>
+                <button class="browser-btn" onclick="openApp('aihandwriting')">Launch Handwriting</button>
               </div>
             </div>
           </div>
@@ -914,7 +1024,7 @@
             try { outputElem.innerText += `= ${eval(args.slice(1).join(' '))}\n`; } catch { outputElem.innerText += `Invalid calculation.\n`; }
             break;
           case 'sysinfo':
-            outputElem.innerText += `NautilusOS v5.2\nTime Logged Total: ${formatFormattedTime(totalSecondsSpent)}\nInstalled Apps: ${installedApps.length}\nFiles: ${Object.keys(fileSystem).length}\n`;
+            outputElem.innerText += `NautilusOS v5.3\nTime Logged Total: ${formatFormattedTime(totalSecondsSpent)}\nInstalled Apps: ${installedApps.length}\nFiles: ${Object.keys(fileSystem).length}\n`;
             break;
           case 'clear':
             outputElem.innerText = '';
@@ -934,6 +1044,7 @@
         <div class="app-container">
           <h2>OS Settings</h2>
 
+          <!-- Real Time Tracker Panel -->
           <div style="background:#1e293b; padding:14px; border-radius:8px; border:1px solid var(--border);">
             <h3>⏱️ Time Spent Tracker</h3>
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:10px;">
