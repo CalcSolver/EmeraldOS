@@ -7,7 +7,7 @@
   <style>
     :root {
       --bg-color: #030712;
-      --panel-bg: rgba(15, 23, 42, 0.88);
+      --panel-bg: rgba(15, 23, 42, 0.90);
       --panel-border: rgba(16, 185, 129, 0.4);
       --accent-color: #10b981;
       --accent-hover: #059669;
@@ -37,11 +37,11 @@
       width: 100vw;
       height: 100vh;
       position: relative;
-      background: radial-gradient(circle at center, #065f46 0%, #022c22 40%, #030712 100%);
+      background: radial-gradient(circle at center, #065f46 0%, #022c22 45%, #030712 100%);
       overflow: hidden;
     }
 
-    /* 3D World Canvas */
+    /* 3D Background Canvas */
     #world3d-container {
       position: absolute;
       inset: 0;
@@ -74,7 +74,7 @@
       width: 100px;
       height: 100px;
       border-radius: 14px;
-      background: rgba(15, 23, 42, 0.6);
+      background: rgba(15, 23, 42, 0.65);
       backdrop-filter: blur(12px);
       border: 1px solid rgba(16, 185, 129, 0.25);
       color: var(--text-main);
@@ -106,19 +106,19 @@
     /* Window System */
     .window {
       position: absolute;
-      width: 640px;
-      height: 440px;
+      width: 700px;
+      height: 480px;
       background: var(--panel-bg);
       backdrop-filter: blur(16px);
       border: 1px solid var(--panel-border);
       border-radius: 12px;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.7);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.8);
       display: flex;
       flex-direction: column;
       overflow: hidden;
       z-index: 20;
-      min-width: 320px;
-      min-height: 220px;
+      min-width: 340px;
+      min-height: 240px;
       animation: winOpen 0.2s ease-out;
     }
 
@@ -170,6 +170,78 @@
       background: rgba(2, 6, 23, 0.7);
     }
 
+    .iframe-container {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .iframe-bar {
+      display: flex;
+      gap: 8px;
+    }
+
+    .iframe-bar input {
+      flex: 1;
+    }
+
+    iframe.app-iframe {
+      width: 100%;
+      height: 100%;
+      flex: 1;
+      border: 1px solid var(--panel-border);
+      border-radius: 8px;
+      background: #fff;
+    }
+
+    /* Start Menu Popup */
+    #start-menu {
+      position: absolute;
+      bottom: 60px;
+      left: 16px;
+      width: 320px;
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--panel-border);
+      border-radius: 14px;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.8);
+      z-index: 200;
+      display: none;
+      flex-direction: column;
+      padding: 14px;
+      gap: 10px;
+    }
+
+    #start-menu.active {
+      display: flex;
+    }
+
+    .start-menu-header {
+      font-weight: 800;
+      color: var(--accent-color);
+      font-size: 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      padding-bottom: 8px;
+    }
+
+    .start-menu-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 13px;
+      transition: background 0.2s;
+    }
+
+    .start-menu-item:hover {
+      background: rgba(16, 185, 129, 0.25);
+    }
+
     /* Taskbar */
     #taskbar {
       position: absolute;
@@ -177,7 +249,7 @@
       left: 0;
       width: 100%;
       height: 52px;
-      background: rgba(2, 6, 23, 0.92);
+      background: rgba(2, 6, 23, 0.94);
       backdrop-filter: blur(16px);
       border-top: 1px solid var(--panel-border);
       display: flex;
@@ -201,7 +273,7 @@
 
     #start-btn:hover {
       background: var(--accent-hover);
-      transform: scale(1.05);
+      transform: scale(1.04);
     }
 
     .taskbar-items {
@@ -238,7 +310,7 @@
       letter-spacing: 1px;
     }
 
-    /* UI Inputs & Buttons */
+    /* Controls & Utilities */
     .btn {
       background: var(--accent-color);
       color: #000;
@@ -252,7 +324,6 @@
 
     .btn:hover {
       background: var(--accent-hover);
-      transform: translateY(-1px);
     }
 
     input[type="text"], input[type="file"], select {
@@ -276,7 +347,7 @@
       justify-content: space-between;
     }
 
-    /* Notifications & Achievements */
+    /* Achievements Notification */
     #achievement-toast {
       position: absolute;
       top: 20px;
@@ -299,46 +370,54 @@
 <body>
 
   <div id="desktop">
-    <!-- 3D Background Canvas -->
+    <!-- 3D World Canvas -->
     <div id="world3d-container">
       <canvas id="world3d"></canvas>
     </div>
 
-    <!-- Desktop Icons Container -->
+    <!-- Desktop Icons -->
     <div id="desktop-icons"></div>
+
+    <!-- JavaScript Popup Start Menu -->
+    <div id="start-menu">
+      <div class="start-menu-header">Emerald OS Menu</div>
+      <div id="start-menu-list"></div>
+    </div>
 
     <!-- Taskbar -->
     <div id="taskbar">
-      <button id="start-btn">Emerald OS</button>
+      <button id="start-btn" onclick="toggleStartMenu()">Emerald</button>
       <div class="taskbar-items" id="taskbar-items"></div>
       <div id="system-time">--:-- --</div>
     </div>
   </div>
 
-  <!-- Notification Toast for Achievements -->
+  <!-- Achievement Toast -->
   <div id="achievement-toast">🏆 Achievement Unlocked!</div>
 
   <script>
-    // --- OS State & App Catalog ---
+    // --- System State & App Catalog ---
     const state = {
       activeWindow: null,
       achievements: new Set()
     };
 
     const apps = [
-      { id: 'gameshare', name: 'GameShare TUESDAE', icon: '🎮', render: renderGameShare },
+      { id: 'gameshare', name: 'GameShare TUESDAE', icon: '🎮', render: renderGameShareIframe },
+      { id: 'handwriter', name: 'AI Handwriter', icon: '✍️', render: renderHandwriterIframe },
+      { id: 'radio', name: 'Triple M Live Radio', icon: '📻', render: renderRadio },
       { id: 'ultimatesys', name: 'Ultimate Ent System', icon: '🎰', render: renderUltimateEnt },
       { id: 'dash', name: 'Dash Experience', icon: '🏎️', render: renderDash },
-      { id: 'handwriter', name: 'AI Handwriter', icon: '✍️', render: renderHandwriter },
       { id: 'appstore', name: 'Emerald App Store', icon: '🛍️', render: renderAppStore },
-      { id: 'radio', name: 'Live Radio', icon: '📻', render: renderRadio },
       { id: 'music', name: 'Music Player', icon: '🎵', render: renderMusic },
       { id: 'cursors', name: 'Custom Cursors', icon: '🖱️', render: renderCursorManager },
+      { id: 'settings', name: 'System Settings', icon: '⚙️', render: renderSettings },
       { id: 'achievements', name: 'Achievements', icon: '🏆', render: renderAchievements }
     ];
 
     // --- Core Window Manager ---
     function openApp(appId) {
+      closeStartMenu();
       const app = apps.find(a => a.id === appId);
       if (!app) return;
 
@@ -352,8 +431,8 @@
       const win = document.createElement('div');
       win.id = `win-${appId}`;
       win.className = 'window';
-      win.style.left = `${80 + Math.random() * 100}px`;
-      win.style.top = `${40 + Math.random() * 80}px`;
+      win.style.left = `${60 + Math.random() * 80}px`;
+      win.style.top = `${30 + Math.random() * 60}px`;
 
       win.innerHTML = `
         <div class="window-header">
@@ -372,7 +451,7 @@
       focusWindow(win);
       updateTaskbar();
 
-      triggerAchievement('Opened ' + app.name, `Explorer: Launched ${app.name}`);
+      triggerAchievement('Opened ' + app.name, `Explorer: Opened ${app.name}`);
     }
 
     function closeWindow(appId) {
@@ -412,6 +491,28 @@
       document.addEventListener('mouseup', () => isDragging = false);
     }
 
+    // --- Taskbar & Start Menu ---
+    function toggleStartMenu() {
+      const menu = document.getElementById('start-menu');
+      menu.classList.toggle('active');
+    }
+
+    function closeStartMenu() {
+      document.getElementById('start-menu').classList.remove('active');
+    }
+
+    function renderStartMenu() {
+      const list = document.getElementById('start-menu-list');
+      list.innerHTML = '';
+      apps.forEach(app => {
+        const item = document.createElement('div');
+        item.className = 'start-menu-item';
+        item.innerHTML = `<span>${app.icon}</span> <span>${app.name}</span>`;
+        item.onclick = () => openApp(app.id);
+        list.appendChild(item);
+      });
+    }
+
     function updateTaskbar() {
       const container = document.getElementById('taskbar-items');
       container.innerHTML = '';
@@ -434,7 +535,6 @@
       });
     }
 
-    // --- Render Desktop Icons ---
     function renderDesktopIcons() {
       const container = document.getElementById('desktop-icons');
       container.innerHTML = '';
@@ -447,27 +547,73 @@
       });
     }
 
-    // --- App Renderers ---
-    function renderGameShare(el) {
+    // --- Specific App Renderers ---
+    function renderGameShareIframe(el) {
+      el.style.padding = '8px';
       el.innerHTML = `
-        <h3>GameShare TUESDAE</h3>
-        <p style="color:var(--text-muted)">Multiplayer local arcade portal & session host.</p>
-        <div style="display:flex; gap:10px; margin-top:10px;">
-          <button class="btn" onclick="alert('Game room session active!')">Host Game Room</button>
-          <button class="btn" style="background:#3b82f6; color:#fff" onclick="alert('Searching for TUESDAE peers...')">Find Local Peer</button>
+        <div class="iframe-container">
+          <div class="iframe-bar">
+            <input type="text" id="gameshare-url" value="https://tuesdae.io" placeholder="Paste GameShare TUESDAE Website URL..." />
+            <button class="btn" onclick="document.getElementById('gs-frame').src=document.getElementById('gameshare-url').value">Load Site</button>
+          </div>
+          <iframe id="gs-frame" class="app-iframe" src="https://tuesdae.io" allow="autoplay; fullscreen"></iframe>
         </div>
       `;
+    }
+
+    function renderHandwriterIframe(el) {
+      el.style.padding = '8px';
+      el.innerHTML = `
+        <div class="iframe-container">
+          <div class="iframe-bar">
+            <input type="text" id="handwriter-url" value="https://www.calligrapher.ai" placeholder="Paste AI Handwriter URL..." />
+            <button class="btn" onclick="document.getElementById('hw-frame').src=document.getElementById('handwriter-url').value">Load AI</button>
+          </div>
+          <iframe id="hw-frame" class="app-iframe" src="https://www.calligrapher.ai"></iframe>
+        </div>
+      `;
+    }
+
+    function renderRadio(el) {
+      el.innerHTML = `
+        <h3>📻 Triple M Radio Network</h3>
+        <p style="color:var(--text-muted)">Live Australian Rock, Sport, and Entertainment.</p>
+        <select id="radio-select">
+          <option value="https://triplem.listnr.com/sydney/">Triple M Sydney 104.9 FM</option>
+          <option value="https://triplem.listnr.com/melbourne/">Triple M Melbourne 105.1 FM</option>
+          <option value="https://triplem.listnr.com/brisbane/">Triple M Brisbane 104.5 FM</option>
+          <option value="https://s3.vocalware.com/g/groove.mp3">Alternative Classic Rock Stream</option>
+        </select>
+        <div style="margin-top:10px;">
+          <button class="btn" onclick="window.open(document.getElementById('radio-select').value, '_blank')">Launch Station Player</button>
+        </div>
+        <audio id="radio-audio" controls style="width:100%; margin-top:14px;"></audio>
+      `;
+      setTimeout(() => {
+        const select = document.getElementById('radio-select');
+        const player = document.getElementById('radio-audio');
+        if (select && player) {
+          select.onchange = () => {
+            if (select.value.endsWith('.mp3')) {
+              player.src = select.value;
+              player.play();
+            } else {
+              window.open(select.value, '_blank');
+            }
+          };
+        }
+      }, 50);
     }
 
     function renderUltimateEnt(el) {
       el.innerHTML = `
         <h3>The Ultimate Entertainment System</h3>
-        <p style="color:var(--text-muted)">Entertainment dashboard & media center.</p>
+        <p style="color:var(--text-muted)">Hub for local media, cloud arcade, and media streams.</p>
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px;">
           <div class="app-card">🕹️ Retro Arcade</div>
           <div class="app-card">🎬 Emerald Cinema</div>
-          <div class="app-card">🎮 Cloud Stream</div>
-          <div class="app-card">🎧 Spatial Audio</div>
+          <div class="app-card">🎮 Cloud Gaming Hub</div>
+          <div class="app-card">🎧 3D Spatial Sound</div>
         </div>
       `;
     }
@@ -475,74 +621,32 @@
     function renderDash(el) {
       el.innerHTML = `
         <h3>Dash for an Amazing Experience</h3>
-        <p style="color:var(--text-muted)">Turbocharge performance and optimize Emerald OS.</p>
-        <button class="btn" onclick="triggerAchievement('Turbo Boost', 'Speed Demon: Boosted OS!'); alert('System Turbo Boost Activated!')">Activate Turbo Boost</button>
+        <p style="color:var(--text-muted)">System Turbo Engine and OS Cleaner.</p>
+        <button class="btn" onclick="triggerAchievement('Turbo Dash', 'Speedster: Optimized system!'); alert('Emerald OS performance boosted!')">Boost OS Speed</button>
       `;
-    }
-
-    function renderHandwriter(el) {
-      el.innerHTML = `
-        <h3>AI Handwriter</h3>
-        <p style="color:var(--text-muted)">Type text to simulate natural handwriting output.</p>
-        <input type="text" placeholder="Type text here..." id="hw-input" />
-        <div style="font-family:'Courier New', cursive, monospace; background:#fff; color:#000; padding:15px; border-radius:8px; min-height:80px;" id="hw-output">
-          Type above to simulate handwritten strokes...
-        </div>
-      `;
-      setTimeout(() => {
-        const inp = document.getElementById('hw-input');
-        if (inp) {
-          inp.oninput = (e) => {
-            document.getElementById('hw-output').innerText = e.target.value || 'Type above to simulate handwritten strokes...';
-          };
-        }
-      }, 50);
     }
 
     function renderAppStore(el) {
       el.innerHTML = `
         <h3>Emerald App Store</h3>
-        <p style="color:var(--text-muted)">Browse and install apps to your system.</p>
+        <p style="color:var(--text-muted)">Discover and install additional Emerald applications.</p>
         <div style="display:flex; flex-direction:column; gap:10px; margin-top:10px;">
           <div class="app-card">
-            <span>🎨 Pixel Painter Pro</span>
-            <button class="btn" onclick="alert('App installed successfully!')">Install</button>
+            <span>🎨 Pixel Studio Pro</span>
+            <button class="btn" onclick="alert('Installed Pixel Studio!')">Install</button>
           </div>
           <div class="app-card">
             <span>🌐 Web VR Browser</span>
-            <button class="btn" onclick="alert('App installed successfully!')">Install</button>
+            <button class="btn" onclick="alert('Installed Web VR Browser!')">Install</button>
           </div>
         </div>
       `;
     }
 
-    function renderRadio(el) {
-      el.innerHTML = `
-        <h3>Live Radio Streams</h3>
-        <p style="color:var(--text-muted)">Select a stream link to start listening live.</p>
-        <select id="radio-select">
-          <option value="https://s3.vocalware.com/g/groove.mp3">Groove Ambient Channel</option>
-          <option value="https://ice1.somafm.com/indiepop-128-mp3">Indie Pop Live</option>
-        </select>
-        <audio id="radio-player" controls style="width:100%; margin-top:12px;"></audio>
-      `;
-      setTimeout(() => {
-        const select = document.getElementById('radio-select');
-        const player = document.getElementById('radio-player');
-        if (select && player) {
-          select.onchange = () => {
-            player.src = select.value;
-            player.play();
-            triggerAchievement('Live Radio', 'DJ Master: Played live radio!');
-          };
-        }
-      }, 50);
-    }
-
     function renderMusic(el) {
       el.innerHTML = `
         <h3>Emerald Music Player</h3>
-        <p style="color:var(--text-muted)">Upload local MP3, WAV, or audio files from your device.</p>
+        <p style="color:var(--text-muted)">Play custom audio files directly from your computer library.</p>
         <input type="file" id="music-file-input" accept="audio/*" />
         <audio id="local-audio-player" controls style="width:100%; margin-top:12px;"></audio>
       `;
@@ -555,7 +659,7 @@
             if (file) {
               player.src = URL.createObjectURL(file);
               player.play();
-              triggerAchievement('Custom Music', 'Maestro: Loaded custom local audio!');
+              triggerAchievement('Local Track', 'Audio Maestro: Uploaded local song!');
             }
           };
         }
@@ -564,11 +668,11 @@
 
     function renderCursorManager(el) {
       el.innerHTML = `
-        <h3>Custom Cursor Gallery</h3>
+        <h3>Custom Cursor Manager</h3>
         <p style="color:var(--text-muted)">Upload any picture from your photo library to set as cursor.</p>
         <input type="file" id="cursor-file" accept="image/*" />
         <div style="margin-top:12px;">
-          <button class="btn" id="reset-cursor">Reset to Default Cursor</button>
+          <button class="btn" id="reset-cursor">Reset Default Cursor</button>
         </div>
       `;
       setTimeout(() => {
@@ -581,7 +685,7 @@
               const reader = new FileReader();
               reader.onload = (evt) => {
                 document.body.style.cursor = `url(${evt.target.result}), auto`;
-                triggerAchievement('Custom Cursor', 'Style Icon: Applied photo cursor!');
+                triggerAchievement('Custom Photo Cursor', 'Designer: Changed photo cursor!');
               };
               reader.readAsDataURL(file);
             }
@@ -593,6 +697,17 @@
           };
         }
       }, 50);
+    }
+
+    function renderSettings(el) {
+      el.innerHTML = `
+        <h3>System Settings</h3>
+        <p style="color:var(--text-muted)">Configure background wallpaper and OS performance.</p>
+        <div style="display:flex; flex-direction:column; gap:10px; margin-top:10px;">
+          <button class="btn" onclick="document.getElementById('desktop').style.background='#030712'">Dark Theme</button>
+          <button class="btn" style="background:#065f46; color:#fff" onclick="document.getElementById('desktop').style.background='radial-gradient(circle at center, #065f46 0%, #022c22 45%, #030712 100%)'">Emerald Gradient</button>
+        </div>
+      `;
     }
 
     function renderAchievements(el) {
@@ -627,7 +742,7 @@
       }
     }
 
-    // --- Lightweight Canvas 3D Flight Background ---
+    // --- 3D Grid Canvas Background ---
     function init3DWorld() {
       const canvas = document.getElementById('world3d');
       if (!canvas) return;
@@ -646,14 +761,14 @@
         const cx = canvas.width / 2;
         const cy = canvas.height / 2;
 
-        offset += 1.5;
-        for (let i = 0; i < 40; i++) {
+        offset += 1.2;
+        for (let i = 0; i < 35; i++) {
           let z = (i * 30 - (offset % 30));
           if (z <= 0) continue;
           let k = 200 / z;
           let r = 500 * k;
 
-          ctx.strokeStyle = `rgba(16, 185, 129, ${Math.max(0, 0.4 - z / 800)})`;
+          ctx.strokeStyle = `rgba(16, 185, 129, ${Math.max(0, 0.35 - z / 800)})`;
           ctx.lineWidth = 1.5;
           ctx.beginPath();
           ctx.arc(cx, cy, r, 0, Math.PI * 2);
@@ -665,7 +780,7 @@
       render();
     }
 
-    // --- Live System Clock ---
+    // --- System Time Clock ---
     function updateTime() {
       const now = new Date();
       const el = document.getElementById('system-time');
@@ -674,12 +789,19 @@
       }
     }
 
-    // --- Startup Initialization ---
+    // --- OS Startup ---
     window.addEventListener('DOMContentLoaded', () => {
       renderDesktopIcons();
+      renderStartMenu();
       init3DWorld();
       updateTime();
       setInterval(updateTime, 1000);
+
+      document.addEventListener('click', (e) => {
+        if (!e.target.closest('#start-menu') && !e.target.closest('#start-btn')) {
+          closeStartMenu();
+        }
+      });
     });
   </script>
 </body>
