@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NautilusOS v9.0 Ultimate</title>
+  <title>NautilusOS v10.0 Pro</title>
   <style>
     :root {
       --bg-gradient: radial-gradient(circle at center, #062016 0%, #020617 100%);
@@ -15,27 +15,17 @@
       --text: #f8fafc;
       --border: rgba(16, 185, 129, 0.35);
       --term-text: #34d399;
-      --cursor-style: auto;
     }
 
-    /* System Themes */
     body.theme-cyber {
       --bg-gradient: radial-gradient(circle at center, #2e1065 0%, #090514 100%);
       --accent: #06b6d4;
       --border: rgba(6, 182, 212, 0.4);
-      --term-text: #22d3ee;
     }
     body.theme-midnight {
       --bg-gradient: linear-gradient(135deg, #0f172a 0%, #020617 100%);
       --accent: #6366f1;
       --border: rgba(99, 102, 241, 0.4);
-      --term-text: #818cf8;
-    }
-    body.theme-sunset {
-      --bg-gradient: radial-gradient(circle at center, #451a03 0%, #020617 100%);
-      --accent: #f97316;
-      --border: rgba(249, 115, 22, 0.4);
-      --term-text: #fb923c;
     }
     body.custom-cursor { cursor: crosshair !important; }
 
@@ -49,18 +39,11 @@
       overflow: hidden; 
       color: var(--text); 
       position: relative;
-      transition: background 0.4s ease;
     }
 
-    /* Canvas Overlays for Cool Things */
-    #fx-canvas {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 1;
-    }
+    #fx-canvas { position: fixed; inset: 0; pointer-events: none; z-index: 1; }
 
-    /* Boot Screen Animation */
+    /* Boot Screen */
     #boot-screen {
       position: fixed;
       inset: 0;
@@ -71,35 +54,13 @@
       align-items: center;
       justify-content: center;
       gap: 20px;
-      animation: fadeOutBoot 0.8s ease 3.2s forwards;
+      animation: fadeOutBoot 0.6s ease 2.2s forwards;
     }
-
-    .boot-logo {
-      width: 100px;
-      height: 100px;
-      fill: var(--accent);
-      filter: drop-shadow(0 0 25px var(--accent));
-      animation: pulseNautilus 2s ease-in-out infinite alternate, spinIntro 1.2s ease-out;
-    }
-
-    .boot-text {
-      font-size: 20px;
-      letter-spacing: 2px;
-      color: #e2e8f0;
-      overflow: hidden;
-      white-space: nowrap;
-      border-right: 2px solid var(--accent);
-      width: 0;
-      animation: typingText 2.2s steps(40, end) 0.5s forwards, blinkCursor 0.75s step-end infinite;
-    }
-
-    @keyframes spinIntro { from { transform: scale(0) rotate(-180deg); opacity: 0; } to { transform: scale(1) rotate(0); opacity: 1; } }
-    @keyframes pulseNautilus { from { transform: scale(0.95); } to { transform: scale(1.05); } }
-    @keyframes typingText { from { width: 0; } to { width: 420px; } }
-    @keyframes blinkCursor { from, to { border-color: transparent; } 50% { border-color: var(--accent); } }
+    .boot-logo { width: 80px; height: 80px; fill: var(--accent); filter: drop-shadow(0 0 20px var(--accent)); }
+    .boot-text { font-size: 18px; letter-spacing: 2px; color: #e2e8f0; }
     @keyframes fadeOutBoot { to { opacity: 0; visibility: hidden; pointer-events: none; } }
 
-    /* Desktop Grid Area */
+    /* Desktop Layout */
     #desktop {
       width: 100vw;
       height: calc(100vh - 80px);
@@ -127,14 +88,13 @@
       border-radius: 8px;
       transition: all 0.2s;
       border: 1px solid transparent;
-      background: rgba(0,0,0,0.15);
+      background: rgba(0,0,0,0.2);
     }
-
     .desktop-icon:hover { background: rgba(255, 255, 255, 0.1); border-color: var(--border); transform: scale(1.05); }
     .icon-svg { width: 34px; height: 34px; fill: var(--accent); pointer-events: none; }
-    .icon-label { font-size: 11px; text-align: center; text-shadow: 0 1px 3px rgba(0,0,0,0.9); pointer-events: none; word-break: break-word; line-height: 1.2; }
+    .icon-label { font-size: 11px; text-align: center; text-shadow: 0 1px 3px rgba(0,0,0,0.9); pointer-events: none; word-break: break-word; }
 
-    /* Draggable JavaScript Floating Toolbar */
+    /* Draggable Floating JS Bar */
     #js-menu-bar {
       position: fixed;
       top: 20px;
@@ -145,107 +105,42 @@
       padding: 8px 16px;
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
       z-index: 9000;
       box-shadow: 0 10px 25px rgba(0,0,0,0.6);
       cursor: move;
       backdrop-filter: blur(10px);
     }
-
-    .js-menu-title { font-size: 12px; font-weight: bold; color: var(--accent); white-space: nowrap; }
+    .js-menu-title { font-size: 12px; font-weight: bold; color: var(--accent); }
     .js-btn { background: rgba(255,255,255,0.08); border: 1px solid var(--border); color: #fff; padding: 4px 10px; border-radius: 12px; font-size: 11px; cursor: pointer; }
     .js-btn:hover { background: var(--accent); color: #000; }
 
-    /* Background Watermark */
-    #nautilus-bg-watermark {
-      position: absolute;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      width: 580px; height: 580px;
-      opacity: 0.04;
-      pointer-events: none;
-      z-index: 0;
-      fill: var(--accent);
-    }
-
-    /* Start Launcher Overlay Window */
+    /* Start Launcher Overlay */
     #start-modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.5);
-      z-index: 20000;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      backdrop-filter: blur(8px);
+      position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 20000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(8px);
     }
-
     #start-launcher {
-      width: 760px;
-      max-height: 85vh;
-      background: #0d1520;
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      box-shadow: 0 25px 60px rgba(0,0,0,0.8);
-      display: flex;
-      flex-direction: column;
-      padding: 24px;
-      gap: 20px;
-      overflow: hidden;
+      width: 760px; max-height: 85vh; background: #0d1520; border: 1px solid var(--border); border-radius: 16px; box-shadow: 0 25px 60px rgba(0,0,0,0.8); display: flex; flex-direction: column; padding: 24px; gap: 20px;
     }
-
-    .launcher-user-bar { display: flex; align-items: center; justify-content: space-between; }
-    .user-info { display: flex; align-items: center; gap: 12px; }
-    .user-avatar { width: 46px; height: 46px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; color: #000; }
-    .user-details h3 { font-size: 16px; font-weight: 700; color: #fff; }
-    .user-details span { font-size: 12px; color: #94a3b8; }
-    .launcher-actions { display: flex; gap: 10px; }
-    .action-btn { background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: #fff; padding: 8px 14px; border-radius: 8px; cursor: pointer; font-size: 13px; display: flex; align-items: center; gap: 6px; }
-    .action-btn:hover { background: rgba(255,255,255,0.12); }
-    .action-btn.shutdown { background: rgba(239, 68, 68, 0.2); border-color: rgba(239, 68, 68, 0.4); color: #fca5a5; }
-
-    .launcher-search-box { position: relative; display: flex; align-items: center; }
-    .launcher-search-input { width: 100%; background: rgba(15, 23, 42, 0.8); border: 1px solid var(--border); border-radius: 10px; padding: 12px 42px 12px 16px; color: #fff; font-size: 14px; outline: none; }
-    .launcher-search-icon { position: absolute; right: 14px; fill: #94a3b8; width: 20px; height: 20px; }
-
-    .launcher-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; overflow-y: auto; max-height: 420px; padding-right: 4px; }
-    .launcher-card { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; padding: 18px 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; cursor: pointer; transition: all 0.2s ease; }
-    .launcher-card:hover { background: rgba(16, 185, 129, 0.1); border-color: var(--accent); transform: translateY(-2px); }
-    .launcher-card-svg { width: 32px; height: 32px; fill: var(--accent); }
-    .launcher-card-title { font-size: 12px; font-weight: 500; color: #e2e8f0; text-align: center; }
+    .launcher-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; overflow-y: auto; max-height: 420px; }
+    .launcher-card { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; padding: 18px 10px; display: flex; flex-direction: column; align-items: center; gap: 10px; cursor: pointer; }
+    .launcher-card:hover { background: rgba(16, 185, 129, 0.1); border-color: var(--accent); }
 
     /* Taskbar Dock */
     #dock-container { position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); z-index: 10000; }
-    #capsule-dock { height: 56px; background: #09111e; border: 1px solid var(--border); border-radius: 28px; backdrop-filter: blur(20px); display: flex; align-items: center; padding: 0 18px; gap: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.7); }
-    .dock-btn-wrapper { position: relative; display: flex; flex-direction: column; align-items: center; }
-    .dock-btn { background: transparent; border: none; color: var(--accent); cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 8px; border-radius: 50%; transition: transform 0.2s; }
-    .dock-btn:hover { transform: translateY(-2px); background: rgba(255, 255, 255, 0.08); }
-    .dock-indicator { position: absolute; bottom: -2px; width: 16px; height: 3px; background: var(--accent); border-radius: 2px; box-shadow: 0 0 8px var(--accent); display: none; }
-    .dock-btn-wrapper.active .dock-indicator { display: block; }
+    #capsule-dock { height: 56px; background: #09111e; border: 1px solid var(--border); border-radius: 28px; backdrop-filter: blur(20px); display: flex; align-items: center; padding: 0 18px; gap: 10px; }
+    .dock-btn { background: transparent; border: none; color: var(--accent); cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 8px; border-radius: 50%; }
+    .dock-btn:hover { background: rgba(255, 255, 255, 0.08); }
     .dock-svg { width: 22px; height: 22px; fill: var(--accent); }
     .dock-divider { width: 1px; height: 24px; background: rgba(255, 255, 255, 0.15); margin: 0 4px; }
-    .dock-clock { font-size: 13px; color: #f8fafc; font-weight: 500; margin-left: 6px; }
+    .dock-clock { font-size: 13px; color: #f8fafc; font-weight: 500; }
 
-    /* Floating Windows */
+    /* Windows */
     .window {
-      position: absolute;
-      width: 780px;
-      height: 520px;
-      max-width: 95vw;
-      max-height: 85vh;
-      background: var(--window-bg);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8);
-      backdrop-filter: blur(16px);
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      z-index: 10;
+      position: absolute; width: 780px; height: 520px; max-width: 95vw; max-height: 85vh; background: var(--window-bg); border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8); backdrop-filter: blur(16px); display: flex; flex-direction: column; overflow: hidden; z-index: 10;
     }
-
     .window-header { height: 38px; background: rgba(0, 0, 0, 0.4); display: flex; align-items: center; justify-content: space-between; padding: 0 12px; cursor: move; border-bottom: 1px solid var(--border); }
-    .window-title { font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+    .window-title { font-size: 13px; font-weight: 600; }
     .window-controls { display: flex; gap: 8px; }
     .control-btn { width: 12px; height: 12px; border-radius: 50%; border: none; cursor: pointer; }
     .btn-close { background: #ef4444; }
@@ -255,122 +150,55 @@
     .window-content { flex: 1; display: flex; flex-direction: column; overflow: auto; background: #080c14; position: relative; }
     .app-container { padding: 20px; height: 100%; overflow-y: auto; display: flex; flex-direction: column; gap: 14px; }
 
-    /* Specific App Toolbars & Elements */
-    .browser-bar { display: flex; gap: 8px; padding: 10px; background: #111827; border-bottom: 1px solid var(--border); align-items: center; }
     .browser-btn { background: #1f2937; border: 1px solid var(--border); color: #fff; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 12px; }
     .browser-btn:hover { background: var(--accent); color: #000; }
-    .browser-input { flex: 1; background: #1f2937; border: 1px solid var(--border); color: #fff; padding: 7px 12px; border-radius: 6px; font-size: 13px; outline: none; }
+    .browser-input { background: #1f2937; border: 1px solid var(--border); color: #fff; padding: 8px 12px; border-radius: 6px; font-size: 13px; outline: none; }
 
     .app-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; }
     .app-card { background: #1e293b; border: 1px solid var(--border); padding: 14px; border-radius: 10px; display: flex; flex-direction: column; gap: 8px; text-align: center; align-items: center; justify-content: space-between; }
 
-    .store-tab-bar { display: flex; gap: 8px; border-bottom: 1px solid var(--border); padding-bottom: 10px; margin-bottom: 12px; overflow-x: auto; }
-    .store-tab { padding: 6px 12px; border-radius: 6px; background: rgba(255,255,255,0.05); font-size: 12px; cursor: pointer; white-space: nowrap; }
-    .store-tab.active { background: var(--accent); color: #000; font-weight: bold; }
-
     #toast-container { position: fixed; top: 20px; right: 20px; z-index: 99999; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
-    .toast { background: var(--accent); color: #000; padding: 12px 20px; border-radius: 8px; font-weight: bold; box-shadow: 0 5px 15px rgba(0,0,0,0.4); pointer-events: auto; }
+    .toast { background: var(--accent); color: #000; padding: 12px 20px; border-radius: 8px; font-weight: bold; }
   </style>
 </head>
 <body>
 
-  <!-- Cool Effects Overlay Canvas -->
   <canvas id="fx-canvas"></canvas>
 
-  <!-- Animated Boot Sequence Screen -->
   <div id="boot-screen">
-    <svg class="boot-logo" viewBox="0 0 512 512">
-      <path d="M256,0C114.6,0,0,114.6,0,256s114.6,256,256,256,256-114.6,256-256S397.4,0,256,0Zm0,464C141.1,464,48,370.9,48,256S141.1,48,256,48,464,141.1,464,256,370.9,464,256,464ZM256,96c-88.4,0-160,71.6-160,160s71.6,160,160,160,160-71.6,160-160S344.4,96,256,96Zm0,272c-61.9,0-112-50.1-112-112s50.1-112,112-112,112,50.1,112,112S317.9,368,256,368Zm0-176c-35.3,0-64,28.7-64,64s28.7,64,64,64,64-28.7,64-64S291.3,192,256,192Z"/>
-    </svg>
-    <div class="boot-text">All apps in one, one account for all apps</div>
+    <svg class="boot-logo" viewBox="0 0 512 512"><path d="M256,0C114.6,0,0,114.6,0,256s114.6,256,256,256,256-114.6,256-256S397.4,0,256,0Zm0,464C141.1,464,48,370.9,48,256S141.1,48,256,48,464,141.1,464,256,370.9,464,256,464Z"/></svg>
+    <div class="boot-text">Loading NautilusOS v10.0 Pro...</div>
   </div>
 
-  <!-- Draggable JavaScript Toolbar Widget -->
   <div id="js-menu-bar" onmousedown="dragJSMenu(event)">
     <span class="js-menu-title">⚡ JS Quick Menu</span>
+    <button class="js-btn" onclick="openApp('emeraldworld')">Emerald World 3D</button>
     <button class="js-btn" onclick="openApp('store')">App Store</button>
     <button class="js-btn" onclick="triggerMatrixEffect()">Matrix</button>
-    <button class="js-btn" onclick="triggerFireworks()">Fireworks</button>
     <button class="js-btn" onclick="openApp('settings')">Settings</button>
   </div>
 
-  <!-- Desktop Environment -->
   <div id="desktop"></div>
 
-  <!-- Start Launcher Modal -->
   <div id="start-modal-overlay" onclick="closeLauncher(event)">
     <div id="start-launcher" onclick="event.stopPropagation()">
-      <div class="launcher-user-bar">
-        <div class="user-info">
-          <div class="user-avatar">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-          </div>
-          <div class="user-details">
-            <h3>Harrythehacker</h3>
-            <span>Standard User</span>
-          </div>
-        </div>
-        <div class="launcher-actions">
-          <button class="action-btn" onclick="window.open('https://github.com')">GitHub</button>
-          <button class="action-btn" onclick="showToast('Signed Out')">Sign Out</button>
-          <button class="action-btn shutdown" onclick="showToast('Shutting Down NautilusOS...')">Shut Down</button>
-        </div>
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <h3>Harrythehacker</h3>
+        <button class="browser-btn" onclick="showToast('Signed Out')">Sign Out</button>
       </div>
-
-      <div class="launcher-search-box">
-        <input type="text" id="launcher-search" class="launcher-search-input" placeholder="Search 50+ apps..." oninput="filterLauncherApps()">
-        <svg class="launcher-search-icon" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-      </div>
-
+      <input type="text" id="launcher-search" class="browser-input" placeholder="Search apps..." oninput="filterLauncherApps()">
       <div class="launcher-grid" id="launcher-grid"></div>
     </div>
   </div>
 
-  <!-- Dock Taskbar -->
   <div id="dock-container">
     <div id="capsule-dock">
-      <div class="dock-btn-wrapper">
-        <button class="dock-btn" onclick="toggleLauncherModal()" title="Launcher">
-          <svg class="dock-svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
-        </button>
-      </div>
+      <button class="dock-btn" onclick="toggleLauncherModal()"><svg class="dock-svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg></button>
       <div class="dock-divider"></div>
-
-      <div class="dock-btn-wrapper" id="dock-wrapper-store">
-        <button class="dock-btn" onclick="openApp('store')" title="App Store">
-          <svg class="dock-svg" viewBox="0 0 24 24"><path d="M19 6h-2c0-2.76-2.24-5-5-5S7 3.24 7 6H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-7-3c1.66 0 3 1.34 3 3H9c0-1.66 1.34-3 3-3zm7 17H5V8h14v12z"/></svg>
-        </button>
-        <div class="dock-indicator"></div>
-      </div>
-
-      <div class="dock-btn-wrapper" id="dock-wrapper-files">
-        <button class="dock-btn" onclick="openApp('files')" title="Files">
-          <svg class="dock-svg" viewBox="0 0 24 24"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
-        </button>
-        <div class="dock-indicator"></div>
-      </div>
-
-      <div class="dock-btn-wrapper" id="dock-wrapper-music">
-        <button class="dock-btn" onclick="openApp('music')" title="Spotify Music">
-          <svg class="dock-svg" viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
-        </button>
-        <div class="dock-indicator"></div>
-      </div>
-
-      <div class="dock-btn-wrapper" id="dock-wrapper-photos">
-        <button class="dock-btn" onclick="openApp('photos')" title="Photos Library">
-          <svg class="dock-svg" viewBox="0 0 24 24"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
-        </button>
-        <div class="dock-indicator"></div>
-      </div>
-
-      <div class="dock-btn-wrapper" id="dock-wrapper-settings">
-        <button class="dock-btn" onclick="openApp('settings')" title="Settings">
-          <svg class="dock-svg" viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6-3.6z"/></svg>
-        </button>
-        <div class="dock-indicator"></div>
-      </div>
-
+      <button class="dock-btn" onclick="openApp('emeraldworld')"><svg class="dock-svg" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zm0 9L2 6v11l10 5 10-5V6l-10 5z"/></svg></button>
+      <button class="dock-btn" onclick="openApp('store')"><svg class="dock-svg" viewBox="0 0 24 24"><path d="M19 6h-2c0-2.76-2.24-5-5-5S7 3.24 7 6H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2z"/></svg></button>
+      <button class="dock-btn" onclick="openApp('photos')"><svg class="dock-svg" viewBox="0 0 24 24"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2z"/></svg></button>
+      <button class="dock-btn" onclick="openApp('tasks')"><svg class="dock-svg" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></button>
       <div class="dock-divider"></div>
       <div class="dock-clock" id="dock-clock">12:00 PM</div>
     </div>
@@ -379,76 +207,27 @@
   <div id="toast-container"></div>
 
   <script>
-    /* Full Master Applications Catalog (50+ Useful Apps) */
     const baseAppsCatalog = [
-      // Core System
-      { id: 'store', name: 'App Store', cat: 'util', icon: '<path d="M19 6h-2c0-2.76-2.24-5-5-5S7 3.24 7 6H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-7-3c1.66 0 3 1.34 3 3H9c0-1.66 1.34-3 3-3zm7 17H5V8h14v12z"/>' },
-      { id: 'files', name: 'Files', cat: 'util', icon: '<path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>' },
-      { id: 'terminal', name: 'Terminal', cat: 'util', icon: '<path d="M20 4H4c-1.11 0-2 .89-2 2v12c0 1.1.89 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.11-.9-2-2-2zm0 14H4V8h16v10zm-2-1h-6v-2h6v2zm-9.41-1.41L11.17 13l-2.58-2.59L10 9l4 4-4 4-1.41-1.41z"/>' },
-      { id: 'browser', name: 'Browser', cat: 'util', icon: '<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>' },
-      { id: 'settings', name: 'Settings', cat: 'util', icon: '<path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6-3.6z"/>' },
-      { id: 'music', name: 'Spotify Music', cat: 'media', icon: '<path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>' },
-      { id: 'photos', name: 'Photos', cat: 'media', icon: '<path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>' },
-      { id: 'texteditor', name: 'Text Editor', cat: 'prod', icon: '<path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>' },
-      { id: 'whatsnew', name: 'What\'s New', cat: 'util', icon: '<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>' },
-
-      // Productivity & Dev
-      { id: 'calculator', name: 'Calculator', cat: 'prod', icon: '<path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-6 14h-2v-2h2v2zm0-4h-2v-2h2v2zm0-4h-2V7h2v2zm4 8h-2v-2h2v2zm0-4h-2v-2h2v2zm0-4h-2V7h2v2z"/>' },
-      { id: 'notes', name: 'Quick Notes', cat: 'prod', icon: '<path d="M3 18h12v-2H3v2zM3 6v2h18V6H3zm0 7h18v-2H3v2z"/>' },
-      { id: 'codepad', name: 'JS CodePad', cat: 'prod', icon: '<path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/>' },
+      { id: 'emeraldworld', name: 'Emerald World 3D', cat: 'media', icon: '<path d="M12 2L2 7l10 5 10-5-10-5zm0 9L2 6v11l10 5 10-5V6l-10 5z"/>' },
+      { id: 'store', name: 'App Store', cat: 'util', icon: '<path d="M19 6h-2c0-2.76-2.24-5-5-5S7 3.24 7 6H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2z"/>' },
       { id: 'tasks', name: 'Task Board', cat: 'prod', icon: '<path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>' },
-      { id: 'clock', name: 'World Clock', cat: 'prod', icon: '<path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/>' },
-      { id: 'markdown', name: 'MD Studio', cat: 'prod', icon: '<path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM7 15v-6h2l2 3 2-3h2v6h-2v-3.5l-2 3-2-3V15H7z"/>' },
+      { id: 'terminal', name: 'Terminal', cat: 'util', icon: '<path d="M20 4H4c-1.11 0-2 .89-2 2v12c0 1.1.89 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.11-.9-2-2-2z"/>' },
+      { id: 'codepad', name: 'JS CodePad', cat: 'prod', icon: '<path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/>' },
       { id: 'paint', name: 'Paint Lab', cat: 'prod', icon: '<path d="M12 3c-4.97 0-9 4.03-9 9 0 2.12.74 4.07 1.97 5.61.43.54 1.03.89 1.7.89h1.83c.83 0 1.5-.67 1.5-1.5 0-.39-.15-.74-.39-1.01-.23-.26-.37-.61-.37-1 0-.83.67-1.5 1.5-1.5H15c2.76 0 5-2.24 5-5 0-4.42-3.58-8-8-8z"/>' },
-      
-      // Games & Media
+      { id: 'photos', name: 'Photos', cat: 'media', icon: '<path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2z"/>' },
       { id: 'snake', name: 'Retro Snake', cat: 'media', icon: '<path d="M7 18h2V6H7v12zm4 0h2V6h-2v12zm4 0h2V6h-2v12z"/>' },
-      { id: 'tictactoe', name: 'TicTacToe', cat: 'media', icon: '<path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/>' },
-      { id: 'radio', name: 'LoFi Radio', cat: 'media', icon: '<path d="M20 6H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-6 11c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3z"/>' },
-      { id: 'weather', name: 'Weather Today', cat: 'util', icon: '<path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/>' },
-
-      // ACMEMES Community Apps
-      { id: 'memegen', name: 'Meme Generator', cat: 'acmemes', icon: '<path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>' },
-      { id: 'asciiart', name: 'ASCII Art Studio', cat: 'acmemes', icon: '<path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/>' },
-      { id: 'soundboard', name: 'Meme Soundboard', cat: 'acmemes', icon: '<path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>' },
-      { id: 'dankquotes', name: 'Dank Quotes', cat: 'acmemes', icon: '<path d="M6 17h3l2-4V7H5v6h3zm8 0h3l2-4V7h-6v6h3z"/>' }
+      { id: 'tictactoe', name: 'TicTacToe', cat: 'media', icon: '<path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/>' },
+      { id: 'calculator', name: 'Calculator', cat: 'prod', icon: '<path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/>' },
+      { id: 'music', name: 'Spotify Music', cat: 'media', icon: '<path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>' },
+      { id: 'browser', name: 'Browser', cat: 'util', icon: '<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/>' },
+      { id: 'settings', name: 'Settings', cat: 'util', icon: '<path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58z"/>' },
+      { id: 'memegen', name: 'Meme Generator', cat: 'acmemes', icon: '<path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2z"/>' }
     ];
 
-    // Generate remaining apps dynamically to reach 50+ useful working tools
-    for (let i = 1; i <= 30; i++) {
-      baseAppsCatalog.push({
-        id: `tool_${i}`,
-        name: `Utility Tool ${i}`,
-        cat: i % 2 === 0 ? 'prod' : 'acmemes',
-        icon: '<path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.4-2.4c.4-.4.4-1 0-1.3z"/>'
-      });
-    }
-
-    let installedApps = JSON.parse(localStorage.getItem('nautilus_installed_v9')) || ['store', 'files', 'terminal', 'browser', 'settings', 'music', 'photos', 'texteditor', 'whatsnew', 'calculator', 'memegen'];
+    let installedApps = ['emeraldworld', 'store', 'tasks', 'terminal', 'codepad', 'paint', 'photos', 'snake', 'tictactoe', 'calculator', 'music', 'settings', 'memegen'];
     let openWindows = {};
     let activeZIndex = 100;
-    let currentStoreTab = 'all';
-
-    /* Spotify Integration Script Implementation */
-    const spotifyToken = 'BQCKk5LOtTcQOvqfg4zjv2EE6HWNgjEuNOb5gzIVpbC2QDEfn6mj4n3aKmttz2vvaf-bZqrCoYrOkQfcOwv9qib7mRxurm8h7OXTjHeAKCL9e48Gxq3LKwWnQ6qfbgfxYzhlh9vIiHq5QWXORC5fjsBj1lY_e1NyoiUi3U0i8GddeGM6yGM1knm9NbPhQWhHfXPsSnpZFCno2NFAO5Btepw0F4cwlo4rblRq6qEm7xmC-6EGHSQ-47tPdWynxiDQiwofEqXh_wPV0daHTGU1_zBml9HBoCsl4JzaMSbDPx679xmNB2FzTGIu2m4o_QSp2evpqMU';
-
-    async function fetchWebApi(endpoint, method, body) {
-      const res = await fetch(`https://api.spotify.com/${endpoint}`, {
-        headers: { Authorization: `Bearer ${spotifyToken}` },
-        method,
-        body: JSON.stringify(body)
-      });
-      return await res.json();
-    }
-
-    async function getTopTracks() {
-      try {
-        const data = await fetchWebApi('v1/me/top/tracks?time_range=long_term&limit=5', 'GET');
-        return data.items;
-      } catch (err) {
-        return null;
-      }
-    }
+    let taskList = [{ text: 'Explore Emerald World 3D', done: true }, { text: 'Set Custom Photo Wallpaper', done: false }];
 
     function showToast(msg) {
       const container = document.getElementById('toast-container');
@@ -471,9 +250,7 @@
       if (overlay.style.display === 'flex') renderLauncherGrid();
     }
 
-    function closeLauncher(e) {
-      document.getElementById('start-modal-overlay').style.display = 'none';
-    }
+    function closeLauncher() { document.getElementById('start-modal-overlay').style.display = 'none'; }
 
     function renderLauncherGrid(filter = '') {
       const grid = document.getElementById('launcher-grid');
@@ -482,14 +259,12 @@
         const card = document.createElement('div');
         card.className = 'launcher-card';
         card.onclick = () => { openApp(app.id); closeLauncher(); };
-        card.innerHTML = `<svg class="launcher-card-svg" viewBox="0 0 24 24">${app.icon}</svg><span class="launcher-card-title">${app.name}</span>`;
+        card.innerHTML = `<svg class="icon-svg" viewBox="0 0 24 24">${app.icon}</svg><span>${app.name}</span>`;
         grid.appendChild(card);
       });
     }
 
-    function filterLauncherApps() {
-      renderLauncherGrid(document.getElementById('launcher-search').value);
-    }
+    function filterLauncherApps() { renderLauncherGrid(document.getElementById('launcher-search').value); }
 
     function renderDesktop() {
       const desktop = document.getElementById('desktop');
@@ -505,14 +280,6 @@
       });
     }
 
-    function updateTaskbarIndicators() {
-      baseAppsCatalog.forEach(app => {
-        const wrapper = document.getElementById(`dock-wrapper-${app.id}`);
-        if (wrapper) wrapper.classList.toggle('active', !!openWindows[app.id]);
-      });
-    }
-
-    /* Draggable Menu Bar */
     function dragJSMenu(e) {
       const bar = document.getElementById('js-menu-bar');
       let shiftX = e.clientX - bar.getBoundingClientRect().left;
@@ -525,155 +292,141 @@
       document.onmouseup = () => document.onmousemove = null;
     }
 
-    /* App Engine Switcher */
+    /* Master App Launcher Engine */
     function openApp(appId) {
       if (openWindows[appId]) {
-        const existingWin = document.getElementById(openWindows[appId]);
-        if (existingWin) {
-          existingWin.style.display = 'flex';
-          existingWin.style.zIndex = ++activeZIndex;
-          return;
-        }
+        const existing = document.getElementById(openWindows[appId]);
+        if (existing) { existing.style.display = 'flex'; existing.style.zIndex = ++activeZIndex; return; }
       }
 
       const winId = 'win-' + Date.now();
       openWindows[appId] = winId;
-      updateTaskbarIndicators();
-
-      const appObj = baseAppsCatalog.find(a => a.id === appId) || { name: 'Application' };
+      const appObj = baseAppsCatalog.find(a => a.id === appId) || { name: 'App' };
       let content = '';
 
-      if (appId === 'whatsnew') {
+      if (appId === 'emeraldworld') {
         content = `
-          <div class="app-container">
-            <h2 style="color:var(--accent);">⚡ What's New in v9.0</h2>
-            <hr style="border-color:var(--border);">
-            <ul style="line-height:1.8; font-size:13px; padding-left:20px;">
-              <li><b>Spotify Web API Engine:</b> Built-in Spotify API client for Music.</li>
-              <li><b>Photos Permission Prompt:</b> Real local photos library file browser.</li>
-              <li><b>50+ Useful Apps:</b> Huge catalog including ACMEMES community apps.</li>
-              <li><b>Draggable JS Menu:</b> Floating widget to trigger scripts desktop-wide.</li>
-              <li><b>Customization Engine:</b> Custom wallpapers, cursors, fireworks, matrix.</li>
-            </ul>
+          <div style="width:100%; height:100%; position:relative; overflow:hidden;" id="ew-container-${winId}">
+            <canvas id="ew-canvas-${winId}" style="width:100%; height:100%; display:block;"></canvas>
+            <div style="position:absolute; top:20px; left:20px; background:rgba(0,0,0,0.7); padding:12px; border-radius:8px; border:1px solid var(--accent); max-width:300px;">
+              <h3 style="color:var(--accent);">Emerald World 3D</h3>
+              <p style="font-size:12px; color:#cbd5e1; margin-top:4px;">Scroll UP / DOWN anywhere to navigate through the 3D Emerald Grid space.</p>
+            </div>
           </div>`;
 
-      } else if (appId === 'music') {
+      } else if (appId === 'tasks') {
         content = `
-          <div class="app-container" style="align-items:center; text-align:center;">
-            <svg width="60" height="60" viewBox="0 0 24 24" fill="var(--accent)"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
-            <h2>Spotify Player & API Hub</h2>
-            <p style="color:#94a3b8; font-size:12px;">Fetch top tracks via Spotify Web API authorization token</p>
-            <div style="display:flex; gap:10px; margin:10px 0;">
-              <button class="browser-btn" onclick="loadSpotifyTopTracks('${winId}')">▶ Load Top Spotify Tracks</button>
+          <div class="app-container">
+            <h2>⚡ Task Board</h2>
+            <div style="display:flex; gap:8px;">
+              <input type="text" id="task-input-${winId}" class="browser-input" placeholder="New Task..." style="flex:1;">
+              <button class="browser-btn" onclick="addTask('${winId}')">Add Task</button>
             </div>
-            <div id="spotify-output-${winId}" style="text-align:left; width:100%; background:#020617; padding:12px; border-radius:8px; border:1px solid var(--border); font-size:12px; font-family:monospace;">
-              Ready to load tracks...
-            </div>
+            <div id="task-list-${winId}" style="display:flex; flex-direction:column; gap:8px; margin-top:10px;"></div>
           </div>`;
 
       } else if (appId === 'photos') {
         content = `
-          <div class="app-container" id="photos-container-${winId}">
-            <h2>🖼️ Photos Library Access</h2>
-            <p style="font-size:13px; color:#94a3b8;">NautilusOS needs permission to access your device's actual photo library.</p>
-            <div style="background:#1e293b; padding:20px; border-radius:10px; border:1px solid var(--border); text-align:center;">
-              <button class="browser-btn" onclick="requestPhotosAccess('${winId}')">Grant Access & Select Local Photos</button>
-            </div>
-            <div class="app-grid" id="photo-gallery-${winId}" style="margin-top:14px;"></div>
+          <div class="app-container">
+            <h2>🖼️ Photos Library</h2>
+            <p style="font-size:12px; color:#94a3b8;">Select images from your computer and click "Set as Wallpaper" on any photo.</p>
+            <button class="browser-btn" onclick="uploadLocalPhotos('${winId}')">📂 Select Local Photos</button>
+            <div class="app-grid" id="photo-grid-${winId}" style="margin-top:10px;"></div>
           </div>`;
 
-      } else if (appId === 'settings') {
+      } else if (appId === 'terminal') {
         content = `
-          <div class="app-container">
-            <h2>⚙️ Nautilus Settings</h2>
-            
-            <h3 style="color:var(--accent); margin-top:10px;">🎨 Customisation</h3>
-            <div style="display:flex; flex-direction:column; gap:8px;">
-              <label style="font-size:12px;">Custom Wallpaper URL:
-                <input type="text" class="browser-input" placeholder="https://example.com/wallpaper.jpg" onchange="document.body.style.backgroundImage='url('+this.value+')'">
-              </label>
-              <div style="display:flex; gap:10px; align-items:center;">
-                <button class="browser-btn" onclick="document.body.classList.toggle('custom-cursor')">Toggle Crosshair Cursor</button>
-                <button class="browser-btn" onclick="document.body.className='theme-cyber'">Cyber Theme</button>
-                <button class="browser-btn" onclick="document.body.className='theme-midnight'">Midnight Theme</button>
-                <button class="browser-btn" onclick="document.body.className=''">Emerald Theme</button>
-              </div>
-            </div>
-
-            <h3 style="color:var(--accent); margin-top:16px;">✨ Cool Things</h3>
-            <div style="display:flex; gap:10px; flex-wrap:wrap;">
-              <button class="browser-btn" onclick="triggerFireworks()">🎆 Fireworks Show</button>
-              <button class="browser-btn" onclick="triggerMatrixEffect()">🟢 Matrix Hack Rain</button>
-              <button class="browser-btn" onclick="clearEffects()">❌ Clear Effects</button>
+          <div style="background:#020617; color:var(--term-text); font-family:monospace; padding:12px; height:100%; display:flex; flex-direction:column;">
+            <div id="term-out-${winId}" style="flex:1; overflow-y:auto; line-height:1.5;">Welcome to Nautilus Shell v10.0<br>Type 'help' for available commands.</div>
+            <div style="display:flex; gap:6px; margin-top:8px;">
+              <span>$</span>
+              <input type="text" id="term-in-${winId}" style="background:transparent; border:none; outline:none; color:inherit; width:100%; font-family:monospace;" onkeydown="if(event.key==='Enter') runTermCmd('${winId}')">
             </div>
           </div>`;
 
-      } else if (appId === 'memegen') {
+      } else if (appId === 'codepad') {
         content = `
-          <div class="app-container">
-            <h2>🔥 ACMEMES Meme Generator</h2>
-            <input type="text" id="meme-top" class="browser-input" placeholder="Top Text...">
-            <input type="text" id="meme-bottom" class="browser-input" placeholder="Bottom Text...">
-            <div style="background:#334155; height:200px; border-radius:8px; display:flex; flex-direction:column; justify-content:space-between; padding:16px; text-align:center; font-weight:bold; font-size:24px; color:#fff; text-shadow:2px 2px 0 #000;">
-              <span id="meme-out-top">TOP TEXT</span>
-              <span id="meme-out-bottom">BOTTOM TEXT</span>
+          <div class="app-container" style="height:100%;">
+            <h2>💻 JS CodePad Studio</h2>
+            <textarea id="code-in-${winId}" class="browser-input" style="height:180px; font-family:monospace; resize:none;">console.log("Hello from Nautilus CodePad!");</textarea>
+            <button class="browser-btn" onclick="runPadCode('${winId}')">▶ Run Code</button>
+            <div id="code-out-${winId}" style="background:#020617; border:1px solid var(--border); padding:10px; border-radius:6px; font-family:monospace; font-size:12px; min-height:80px; color:#34d399;">Console output...</div>
+          </div>`;
+
+      } else if (appId === 'paint') {
+        content = `
+          <div class="app-container" style="align-items:center;">
+            <div style="display:flex; gap:10px; align-items:center; width:100%;">
+              <input type="color" id="paint-color-${winId}" value="#10b981">
+              <button class="browser-btn" onclick="clearCanvas('${winId}')">Clear Canvas</button>
             </div>
-            <button class="browser-btn" onclick="document.getElementById('meme-out-top').innerText=document.getElementById('meme-top').value; document.getElementById('meme-out-bottom').innerText=document.getElementById('meme-bottom').value;">Generate Meme</button>
+            <canvas id="paint-canvas-${winId}" width="680" height="340" style="background:#fff; border-radius:8px; cursor:crosshair; margin-top:10px;"></canvas>
+          </div>`;
+
+      } else if (appId === 'snake') {
+        content = `
+          <div class="app-container" style="align-items:center; text-align:center;">
+            <h2>🐍 Retro Snake Game</h2>
+            <canvas id="snake-canvas-${winId}" width="300" height="300" style="background:#000; border:1px solid var(--border); border-radius:8px;"></canvas>
+            <button class="browser-btn" onclick="startSnakeGame('${winId}')" style="margin-top:8px;">Start New Game</button>
+          </div>`;
+
+      } else if (appId === 'tictactoe') {
+        content = `
+          <div class="app-container" style="align-items:center;">
+            <h2>❌ TicTacToe vs AI ⭕</h2>
+            <div id="ttt-board-${winId}" style="display:grid; grid-template-columns:repeat(3,70px); gap:6px; margin-top:14px;"></div>
+            <button class="browser-btn" onclick="resetTTT('${winId}')" style="margin-top:12px;">Reset Game</button>
           </div>`;
 
       } else if (appId === 'calculator') {
         content = `
           <div class="app-container" style="max-width:300px; margin:0 auto;">
-            <input type="text" id="calc-display" class="browser-input" style="font-size:20px; text-align:right;" readonly value="0">
-            <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:6px;">
-              <button class="browser-btn" onclick="calcAppend('7')">7</button>
-              <button class="browser-btn" onclick="calcAppend('8')">8</button>
-              <button class="browser-btn" onclick="calcAppend('9')">9</button>
-              <button class="browser-btn" onclick="calcAppend('/')">/</button>
-              <button class="browser-btn" onclick="calcAppend('4')">4</button>
-              <button class="browser-btn" onclick="calcAppend('5')">5</button>
-              <button class="browser-btn" onclick="calcAppend('6')">6</button>
-              <button class="browser-btn" onclick="calcAppend('*')">*</button>
-              <button class="browser-btn" onclick="calcAppend('1')">1</button>
-              <button class="browser-btn" onclick="calcAppend('2')">2</button>
-              <button class="browser-btn" onclick="calcAppend('3')">3</button>
-              <button class="browser-btn" onclick="calcAppend('-')">-</button>
-              <button class="browser-btn" onclick="document.getElementById('calc-display').value='0'">C</button>
-              <button class="browser-btn" onclick="calcAppend('0')">0</button>
-              <button class="browser-btn" onclick="calcEval()">=</button>
-              <button class="browser-btn" onclick="calcAppend('+')">+</button>
+            <input type="text" id="calc-disp-${winId}" class="browser-input" style="font-size:20px; text-align:right;" readonly value="0">
+            <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:6px; margin-top:10px;">
+              <button class="browser-btn" onclick="calcNum('${winId}','7')">7</button>
+              <button class="browser-btn" onclick="calcNum('${winId}','8')">8</button>
+              <button class="browser-btn" onclick="calcNum('${winId}','9')">9</button>
+              <button class="browser-btn" onclick="calcNum('${winId}','/')">/</button>
+              <button class="browser-btn" onclick="calcNum('${winId}','4')">4</button>
+              <button class="browser-btn" onclick="calcNum('${winId}','5')">5</button>
+              <button class="browser-btn" onclick="calcNum('${winId}','6')">6</button>
+              <button class="browser-btn" onclick="calcNum('${winId}','*')">*</button>
+              <button class="browser-btn" onclick="calcNum('${winId}','1')">1</button>
+              <button class="browser-btn" onclick="calcNum('${winId}','2')">2</button>
+              <button class="browser-btn" onclick="calcNum('${winId}','3')">3</button>
+              <button class="browser-btn" onclick="calcNum('${winId}','-')">-</button>
+              <button class="browser-btn" onclick="document.getElementById('calc-disp-${winId}').value='0'">C</button>
+              <button class="browser-btn" onclick="calcNum('${winId}','0')">0</button>
+              <button class="browser-btn" onclick="calcEval('${winId}')">=</button>
+              <button class="browser-btn" onclick="calcNum('${winId}','+')">+</button>
             </div>
           </div>`;
 
       } else if (appId === 'store') {
         content = `
           <div class="app-container">
-            <h2>🛒 Nautilus App Store (50+ Apps)</h2>
-            <div class="store-tab-bar">
-              <div class="store-tab active" onclick="switchStoreTab(this, 'all', '${winId}')">All Apps</div>
-              <div class="store-tab" onclick="switchStoreTab(this, 'prod', '${winId}')">Productivity</div>
-              <div class="store-tab" onclick="switchStoreTab(this, 'media', '${winId}')">Media & Games</div>
-              <div class="store-tab" onclick="switchStoreTab(this, 'acmemes', '${winId}')">ACMEMES Community</div>
-            </div>
+            <h2>🛒 Nautilus App Store</h2>
             <div class="app-grid" id="store-grid-${winId}"></div>
           </div>`;
 
-      } else if (appId === 'browser') {
+      } else if (appId === 'settings') {
         content = `
-          <div class="browser-bar">
-            <input type="text" class="browser-input" placeholder="Search Google or enter URL..." id="url-${winId}" onkeydown="if(event.key==='Enter') executeNav('${winId}')">
-            <button class="browser-btn" onclick="executeNav('${winId}')">Go</button>
-          </div>
-          <div class="window-content">
-            <iframe id="frame-${winId}" style="width:100%; height:100%; border:none; background:#fff;" src="https://en.m.wikipedia.org"></iframe>
+          <div class="app-container">
+            <h2>⚙️ System Settings</h2>
+            <h3>🎨 Customisation</h3>
+            <div style="display:flex; gap:10px; margin-top:6px;">
+              <button class="browser-btn" onclick="document.body.className='theme-cyber'">Cyber Theme</button>
+              <button class="browser-btn" onclick="document.body.className='theme-midnight'">Midnight Theme</button>
+              <button class="browser-btn" onclick="document.body.className=''">Emerald Theme</button>
+            </div>
           </div>`;
 
       } else {
         content = `
           <div class="app-container">
-            <h2>⚡ ${appObj.name}</h2>
-            <p style="color:#94a3b8; font-size:13px;">Fully functional application instance running inside NautilusOS sandbox engine.</p>
-            <button class="browser-btn" onclick="showToast('Action Executed in ${appObj.name}')">Run Application Command</button>
+            <h2>${appObj.name}</h2>
+            <p>Application active in sandbox environment.</p>
           </div>`;
       }
 
@@ -698,181 +451,221 @@
       win.onmousedown = () => { win.style.zIndex = ++activeZIndex; };
       document.body.appendChild(win);
 
-      if (appId === 'store') renderStoreGrid(winId, 'all');
+      // App Initializers
+      if (appId === 'emeraldworld') initEmeraldWorld3D(winId);
+      if (appId === 'tasks') renderTaskList(winId);
+      if (appId === 'paint') initPaint(winId);
+      if (appId === 'tictactoe') resetTTT(winId);
+      if (appId === 'store') renderStore(winId);
     }
 
-    /* Spotify Integration Callback */
-    async function loadSpotifyTopTracks(winId) {
-      const out = document.getElementById(`spotify-output-${winId}`);
-      out.innerText = "Connecting to Spotify Web API...";
-      const tracks = await getTopTracks();
-      if (tracks && tracks.length > 0) {
-        out.innerText = tracks.map(t => `🎵 ${t.name} - ${t.artists.map(a => a.name).join(', ')}`).join('\n');
-      } else {
-        out.innerText = "Spotify API Token expired or restricted. (Check console logs for details).\nFallback: Top Track -> Emerald Waves by Nautilus Team";
-      }
+    function closeWindow(appId, winId) { document.getElementById(winId)?.remove(); delete openWindows[appId]; }
+    function maximizeWindow(id) { const win = document.getElementById(id); win.style.width = win.style.width === '100vw' ? '780px' : '100vw'; win.style.height = win.style.height === 'calc(100vh - 80px)' ? '520px' : 'calc(100vh - 80px)'; }
+    function dragWindow(e, id) { const win = document.getElementById(id); let shiftX = e.clientX - win.getBoundingClientRect().left; let shiftY = e.clientY - win.getBoundingClientRect().top; document.onmousemove = (e) => { win.style.left = (e.clientX - shiftX) + 'px'; win.style.top = (e.clientY - shiftY) + 'px'; }; document.onmouseup = () => document.onmousemove = null; }
+
+    /* Emerald World 3D Scroll Canvas Engine */
+    function initEmeraldWorld3D(winId) {
+      setTimeout(() => {
+        const canvas = document.getElementById(`ew-canvas-${winId}`);
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        canvas.width = canvas.parentElement.clientWidth;
+        canvas.height = canvas.parentElement.clientHeight;
+
+        let zOffset = 0;
+        canvas.addEventListener('wheel', (e) => {
+          e.preventDefault();
+          zOffset += e.deltaY * 0.5;
+        });
+
+        function render() {
+          ctx.fillStyle = '#020617';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+          const cx = canvas.width / 2;
+          const cy = canvas.height / 2;
+
+          for (let i = 0; i < 200; i++) {
+            let x = (Math.sin(i * 99) * 2000);
+            let y = (Math.cos(i * 33) * 2000);
+            let z = (i * 40 - zOffset) % 2000;
+            if (z <= 0) z += 2000;
+
+            let k = 300 / z;
+            let px = x * k + cx;
+            let py = y * k + cy;
+            let size = Math.max(1, (1 - z / 2000) * 12);
+
+            if (px > 0 && px < canvas.width && py > 0 && py < canvas.height) {
+              ctx.fillStyle = i % 2 === 0 ? '#10b981' : '#34d399';
+              ctx.beginPath();
+              ctx.arc(px, py, size, 0, Math.PI * 2);
+              ctx.fill();
+            }
+          }
+          if (document.getElementById(`ew-canvas-${winId}`)) requestAnimationFrame(render);
+        }
+        render();
+      }, 100);
     }
 
-    /* Photos Access Permission Engine */
-    function requestPhotosAccess(winId) {
+    /* Tasks App Engine */
+    function renderTaskList(winId) {
+      const container = document.getElementById(`task-list-${winId}`);
+      if (!container) return;
+      container.innerHTML = '';
+      taskList.forEach((t, i) => {
+        const item = document.createElement('div');
+        item.style.cssText = 'background:#1e293b; padding:10px; border-radius:6px; display:flex; justify-shadow:space-between; align-items:center;';
+        item.innerHTML = `
+          <span style="${t.done ? 'text-decoration:line-through; color:#64748b;' : ''}">${t.text}</span>
+          <button class="browser-btn" onclick="toggleTask(${i}, '${winId}')">${t.done ? 'Undo' : 'Done'}</button>`;
+        container.appendChild(item);
+      });
+    }
+    function addTask(winId) {
+      const inp = document.getElementById(`task-input-${winId}`);
+      if (inp.value) { taskList.push({ text: inp.value, done: false }); inp.value = ''; renderTaskList(winId); }
+    }
+    function toggleTask(i, winId) { taskList[i].done = !taskList[i].done; renderTaskList(winId); }
+
+    /* Photos Access & Wallpaper Engine */
+    function uploadLocalPhotos(winId) {
       const input = document.createElement('input');
-      input.type = 'file';
-      input.multiple = true;
-      input.accept = 'image/*';
+      input.type = 'file'; input.multiple = true; input.accept = 'image/*';
       input.onchange = (e) => {
-        const gallery = document.getElementById(`photo-gallery-${winId}`);
-        gallery.innerHTML = '';
+        const grid = document.getElementById(`photo-grid-${winId}`);
+        grid.innerHTML = '';
         Array.from(e.target.files).forEach(file => {
           const reader = new FileReader();
           reader.onload = (ev) => {
             const card = document.createElement('div');
-            card.style.background = '#1e293b';
-            card.style.padding = '6px';
-            card.style.borderRadius = '6px';
-            card.innerHTML = `<img src="${ev.target.result}" style="width:100%; height:100px; object-fit:cover; border-radius:4px;"><p style="font-size:10px; margin-top:4px;">${file.name}</p>`;
-            gallery.appendChild(card);
+            card.className = 'app-card';
+            card.innerHTML = `
+              <img src="${ev.target.result}" style="width:100%; height:100px; object-fit:cover; border-radius:6px;">
+              <button class="browser-btn" onclick="setAsWallpaper('${ev.target.result}')">Set as Wallpaper</button>`;
+            grid.appendChild(card);
           };
           reader.readAsDataURL(file);
         });
-        showToast('Photos Library Synchronized!');
       };
       input.click();
     }
+    function setAsWallpaper(src) {
+      document.body.style.backgroundImage = `url(${src})`;
+      showToast('Desktop Wallpaper Updated!');
+    }
+
+    /* Paint Engine */
+    function initPaint(winId) {
+      setTimeout(() => {
+        const canvas = document.getElementById(`paint-canvas-${winId}`);
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        let drawing = false;
+        canvas.onmousedown = () => drawing = true;
+        canvas.onmouseup = () => { drawing = false; ctx.beginPath(); };
+        canvas.onmousemove = (e) => {
+          if (!drawing) return;
+          const rect = canvas.getBoundingClientRect();
+          ctx.lineWidth = 4; ctx.lineCap = 'round';
+          ctx.strokeStyle = document.getElementById(`paint-color-${winId}`).value;
+          ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+          ctx.stroke(); ctx.beginPath(); ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+        };
+      }, 100);
+    }
+    function clearCanvas(winId) { const canvas = document.getElementById(`paint-canvas-${winId}`); canvas.getContext('2d').clearRect(0,0,canvas.width,canvas.height); }
 
     /* Calculator Helpers */
-    function calcAppend(val) {
-      const disp = document.getElementById('calc-display');
-      if (disp.value === '0') disp.value = '';
-      disp.value += val;
-    }
-    function calcEval() {
-      const disp = document.getElementById('calc-display');
-      try { disp.value = eval(disp.value); } catch(e) { disp.value = 'Error'; }
+    function calcNum(winId, val) { const d = document.getElementById(`calc-disp-${winId}`); if (d.value === '0') d.value = ''; d.value += val; }
+    function calcEval(winId) { const d = document.getElementById(`calc-disp-${winId}`); try { d.value = eval(d.value); } catch(e) { d.value = 'Error'; } }
+
+    /* Terminal Runner */
+    function runTermCmd(winId) {
+      const inp = document.getElementById(`term-in-${winId}`);
+      const out = document.getElementById(`term-out-${winId}`);
+      const cmd = inp.value.trim().toLowerCase();
+      out.innerHTML += `<br>$ ${inp.value}`;
+      if (cmd === 'help') out.innerHTML += '<br>Commands: help, ls, clear, date, matrix';
+      else if (cmd === 'ls') out.innerHTML += '<br>emerald_world.3d photos.lib system_config.sys';
+      else if (cmd === 'clear') out.innerHTML = '';
+      else if (cmd === 'date') out.innerHTML += `<br>${new Date().toString()}`;
+      else if (cmd === 'matrix') triggerMatrixEffect();
+      else out.innerHTML += `<br>Command not found: ${cmd}`;
+      inp.value = '';
     }
 
-    /* App Store Filter Tabs */
-    function switchStoreTab(elem, cat, winId) {
-      document.querySelectorAll('.store-tab').forEach(t => t.classList.remove('active'));
-      elem.classList.add('active');
-      renderStoreGrid(winId, cat);
+    /* JS CodePad Runner */
+    function runPadCode(winId) {
+      const code = document.getElementById(`code-in-${winId}`).value;
+      const out = document.getElementById(`code-out-${winId}`);
+      try {
+        let logs = [];
+        const customConsole = { log: (...args) => logs.push(args.join(' ')) };
+        new Function('console', code)(customConsole);
+        out.innerText = logs.join('\n') || 'Executed successfully with no output.';
+      } catch(err) { out.innerText = 'Runtime Error: ' + err.message; }
     }
 
-    function renderStoreGrid(winId, category = 'all') {
+    /* TicTacToe Engine */
+    let tttState = Array(9).fill(null);
+    function resetTTT(winId) {
+      tttState = Array(9).fill(null);
+      const board = document.getElementById(`ttt-board-${winId}`);
+      if (!board) return;
+      board.innerHTML = '';
+      for (let i = 0; i < 9; i++) {
+        const btn = document.createElement('button');
+        btn.className = 'browser-btn'; btn.style.height = '60px'; btn.style.fontSize = '20px';
+        btn.onclick = () => playTTT(i, winId);
+        board.appendChild(btn);
+      }
+    }
+    function playTTT(i, winId) {
+      if (tttState[i]) return;
+      tttState[i] = 'X';
+      const board = document.getElementById(`ttt-board-${winId}`);
+      board.children[i].innerText = 'X';
+      let empty = tttState.map((v, idx) => v === null ? idx : null).filter(v => v !== null);
+      if (empty.length > 0) {
+        let aiChoice = empty[Math.floor(Math.random() * empty.length)];
+        tttState[aiChoice] = 'O';
+        board.children[aiChoice].innerText = 'O';
+      }
+    }
+
+    /* App Store Engine */
+    function renderStore(winId) {
       const grid = document.getElementById(`store-grid-${winId}`);
       if (!grid) return;
       grid.innerHTML = '';
-
-      baseAppsCatalog.filter(app => category === 'all' || app.cat === category).forEach(app => {
+      baseAppsCatalog.forEach(app => {
         const card = document.createElement('div');
         card.className = 'app-card';
-        const isInstalled = installedApps.includes(app.id);
-        card.innerHTML = `
-          <h4 style="font-size:13px;">${app.name}</h4>
-          <button class="browser-btn" style="${isInstalled ? 'background:#ef4444;' : ''}" onclick="toggleAppInstall('${app.id}', '${winId}')">
-            ${isInstalled ? 'Uninstall' : 'Install'}
-          </button>`;
+        card.innerHTML = `<h4>${app.name}</h4><button class="browser-btn" onclick="openApp('${app.id}')">Launch App</button>`;
         grid.appendChild(card);
       });
     }
 
-    function toggleAppInstall(appId, winId) {
-      if (installedApps.includes(appId)) {
-        installedApps = installedApps.filter(id => id !== appId);
-        showToast(`Uninstalled ${appId}`);
-      } else {
-        installedApps.push(appId);
-        showToast(`Installed ${appId}`);
-      }
-      localStorage.setItem('nautilus_installed_v9', JSON.stringify(installedApps));
-      renderDesktop();
-      renderStoreGrid(winId, 'all');
-    }
-
-    function closeWindow(appId, winId) {
-      document.getElementById(winId)?.remove();
-      delete openWindows[appId];
-      updateTaskbarIndicators();
-    }
-
-    function executeNav(winId) {
-      let val = document.getElementById(`url-${winId}`).value.trim();
-      if (!val) return;
-      if (!val.startsWith('http')) val = `https://www.bing.com/search?q=${encodeURIComponent(val)}`;
-      document.getElementById(`frame-${winId}`).src = val;
-    }
-
-    function dragWindow(e, id) {
-      const win = document.getElementById(id);
-      let shiftX = e.clientX - win.getBoundingClientRect().left;
-      let shiftY = e.clientY - win.getBoundingClientRect().top;
-      document.onmousemove = (e) => {
-        win.style.left = (e.clientX - shiftX) + 'px';
-        win.style.top = (e.clientY - shiftY) + 'px';
-      };
-      document.onmouseup = () => document.onmousemove = null;
-    }
-
-    function maximizeWindow(id) {
-      const win = document.getElementById(id);
-      win.style.width = win.style.width === '100vw' ? '780px' : '100vw';
-      win.style.height = win.style.height === 'calc(100vh - 80px)' ? '520px' : 'calc(100vh - 80px)';
-    }
-
-    /* Cool Canvas Effects Engine */
-    let fxInterval = null;
-    function clearEffects() {
-      clearInterval(fxInterval);
-      const canvas = document.getElementById('fx-canvas');
-      const ctx = canvas.getContext('2d');
-      ctx.clearRect(0,0,canvas.width,canvas.height);
-    }
-
+    /* Canvas Matrix Background Effect */
     function triggerMatrixEffect() {
-      clearEffects();
       const canvas = document.getElementById('fx-canvas');
       const ctx = canvas.getContext('2d');
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-      const chars = '0110101010111';
+      canvas.width = window.innerWidth; canvas.height = window.innerHeight;
       const drops = Array(Math.floor(canvas.width / 20)).fill(1);
-
-      fxInterval = setInterval(() => {
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = '#10b981';
-        ctx.font = '15px monospace';
+      setInterval(() => {
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.05)'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = '#10b981'; ctx.font = '15px monospace';
         drops.forEach((y, i) => {
-          const text = chars[Math.floor(Math.random() * chars.length)];
-          ctx.fillText(text, i * 20, y * 20);
+          ctx.fillText(Math.random() > 0.5 ? '1' : '0', i * 20, y * 20);
           if (y * 20 > canvas.height && Math.random() > 0.975) drops[i] = 0;
           drops[i]++;
         });
       }, 33);
     }
 
-    function triggerFireworks() {
-      clearEffects();
-      const canvas = document.getElementById('fx-canvas');
-      const ctx = canvas.getContext('2d');
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-
-      fxInterval = setInterval(() => {
-        ctx.fillStyle = 'rgba(0,0,0,0.2)';
-        ctx.fillRect(0,0,canvas.width,canvas.height);
-        ctx.fillStyle = `hsl(${Math.random()*360}, 100%, 50%)`;
-        const x = Math.random() * canvas.width;
-        const y = Math.random() * canvas.height / 2;
-        for (let i = 0; i < 30; i++) {
-          ctx.beginPath();
-          ctx.arc(x + (Math.random()-0.5)*100, y + (Math.random()-0.5)*100, 3, 0, Math.PI*2);
-          ctx.fill();
-        }
-      }, 300);
-    }
-
     renderDesktop();
-    setTimeout(() => { openApp('whatsnew'); }, 3500);
   </script>
 </body>
 </html>
