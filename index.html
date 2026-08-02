@@ -3,806 +3,669 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Emerald OS</title>
+  <title>NautilusOS v10.0 Pro</title>
   <style>
     :root {
-      --bg-color: #030712;
-      --panel-bg: rgba(15, 23, 42, 0.90);
-      --panel-border: rgba(16, 185, 129, 0.4);
-      --accent-color: #10b981;
+      --bg-gradient: radial-gradient(circle at center, #062016 0%, #020617 100%);
+      --accent: #10b981;
       --accent-hover: #059669;
-      --text-main: #f8fafc;
-      --text-muted: #94a3b8;
-      --window-header: linear-gradient(90deg, #064e3b, #047857);
+      --panel-bg: #0d1520;
+      --window-bg: rgba(11, 20, 32, 0.96);
+      --card-bg: rgba(15, 23, 42, 0.7);
+      --text: #f8fafc;
+      --border: rgba(16, 185, 129, 0.35);
+      --term-text: #34d399;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      user-select: none;
-      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    body.theme-cyber {
+      --bg-gradient: radial-gradient(circle at center, #2e1065 0%, #090514 100%);
+      --accent: #06b6d4;
+      --border: rgba(6, 182, 212, 0.4);
     }
-
-    body, html {
-      width: 100vw;
-      height: 100vh;
-      overflow: hidden;
-      background: var(--bg-color);
-      color: var(--text-main);
+    body.theme-midnight {
+      --bg-gradient: linear-gradient(135deg, #0f172a 0%, #020617 100%);
+      --accent: #6366f1;
+      --border: rgba(99, 102, 241, 0.4);
     }
+    body.custom-cursor { cursor: crosshair !important; }
 
-    /* Desktop background */
-    #desktop {
-      width: 100vw;
-      height: 100vh;
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; font-family: 'Segoe UI', system-ui, sans-serif; }
+    
+    body { 
+      background: var(--bg-gradient); 
+      background-size: cover;
+      background-position: center;
+      height: 100vh; 
+      overflow: hidden; 
+      color: var(--text); 
       position: relative;
-      background: radial-gradient(circle at center, #065f46 0%, #022c22 45%, #030712 100%);
-      overflow: hidden;
     }
 
-    /* 3D Background Canvas */
-    #world3d-container {
-      position: absolute;
+    #fx-canvas { position: fixed; inset: 0; pointer-events: none; z-index: 1; }
+
+    /* Boot Screen */
+    #boot-screen {
+      position: fixed;
       inset: 0;
-      z-index: 1;
-    }
-
-    canvas#world3d {
-      width: 100%;
-      height: 100%;
-      display: block;
-    }
-
-    /* Desktop Icons Overlay */
-    #desktop-icons {
-      position: absolute;
-      top: 24px;
-      left: 24px;
-      display: grid;
-      grid-template-columns: repeat(auto-fill, 110px);
-      grid-gap: 20px;
-      z-index: 10;
-      max-height: calc(100vh - 80px);
-    }
-
-    .icon-btn {
+      background: #020617;
+      z-index: 50000;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      width: 100px;
-      height: 100px;
-      border-radius: 14px;
-      background: rgba(15, 23, 42, 0.65);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(16, 185, 129, 0.25);
-      color: var(--text-main);
-      cursor: pointer;
-      transition: all 0.2s ease;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+      gap: 20px;
+      animation: fadeOutBoot 0.6s ease 2.2s forwards;
     }
+    .boot-logo { width: 80px; height: 80px; fill: var(--accent); filter: drop-shadow(0 0 20px var(--accent)); }
+    .boot-text { font-size: 18px; letter-spacing: 2px; color: #e2e8f0; }
+    @keyframes fadeOutBoot { to { opacity: 0; visibility: hidden; pointer-events: none; } }
 
-    .icon-btn:hover {
-      background: rgba(16, 185, 129, 0.25);
-      border-color: var(--accent-color);
-      transform: translateY(-3px) scale(1.03);
-      box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
-    }
-
-    .icon-btn span {
-      font-size: 32px;
-      margin-bottom: 6px;
-    }
-
-    .icon-btn label {
-      font-size: 11px;
-      text-align: center;
-      font-weight: 600;
-      pointer-events: none;
-      line-height: 1.2;
-    }
-
-    /* Window System */
-    .window {
-      position: absolute;
-      width: 700px;
-      height: 480px;
-      background: var(--panel-bg);
-      backdrop-filter: blur(16px);
-      border: 1px solid var(--panel-border);
-      border-radius: 12px;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+    /* Desktop Layout */
+    #desktop {
+      width: 100vw;
+      height: calc(100vh - 80px);
+      position: relative;
+      padding: 20px;
+      z-index: 2;
       display: flex;
       flex-direction: column;
-      overflow: hidden;
-      z-index: 20;
-      min-width: 340px;
-      min-height: 240px;
-      animation: winOpen 0.2s ease-out;
-    }
-
-    @keyframes winOpen {
-      from { transform: scale(0.92); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
-    }
-
-    .window-header {
-      height: 40px;
-      background: var(--window-header);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 14px;
-      cursor: move;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .window-title {
-      font-size: 13px;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-    }
-
-    .window-controls {
-      display: flex;
-      gap: 8px;
-    }
-
-    .win-btn {
-      width: 14px;
-      height: 14px;
-      border-radius: 50%;
-      border: none;
-      cursor: pointer;
-    }
-
-    .win-close { background: #ef4444; }
-    .win-minimize { background: #f59e0b; }
-
-    .window-body {
-      flex: 1;
-      padding: 18px;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-      background: rgba(2, 6, 23, 0.7);
-    }
-
-    .iframe-container {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .iframe-bar {
-      display: flex;
-      gap: 8px;
-    }
-
-    .iframe-bar input {
-      flex: 1;
-    }
-
-    iframe.app-iframe {
-      width: 100%;
-      height: 100%;
-      flex: 1;
-      border: 1px solid var(--panel-border);
-      border-radius: 8px;
-      background: #fff;
-    }
-
-    /* Start Menu Popup */
-    #start-menu {
-      position: absolute;
-      bottom: 60px;
-      left: 16px;
-      width: 320px;
-      background: rgba(15, 23, 42, 0.95);
-      backdrop-filter: blur(20px);
-      border: 1px solid var(--panel-border);
-      border-radius: 14px;
-      box-shadow: 0 15px 40px rgba(0,0,0,0.8);
-      z-index: 200;
-      display: none;
-      flex-direction: column;
-      padding: 14px;
-      gap: 10px;
-    }
-
-    #start-menu.active {
-      display: flex;
-    }
-
-    .start-menu-header {
-      font-weight: 800;
-      color: var(--accent-color);
-      font-size: 16px;
-      border-bottom: 1px solid rgba(255,255,255,0.1);
-      padding-bottom: 8px;
-    }
-
-    .start-menu-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 8px 12px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 600;
-      font-size: 13px;
-      transition: background 0.2s;
-    }
-
-    .start-menu-item:hover {
-      background: rgba(16, 185, 129, 0.25);
-    }
-
-    /* Taskbar */
-    #taskbar {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 52px;
-      background: rgba(2, 6, 23, 0.94);
-      backdrop-filter: blur(16px);
-      border-top: 1px solid var(--panel-border);
-      display: flex;
-      align-items: center;
-      padding: 0 16px;
-      z-index: 100;
-    }
-
-    #start-btn {
-      background: var(--accent-color);
-      color: #000;
-      border: none;
-      padding: 8px 18px;
-      border-radius: 8px;
-      font-weight: 800;
-      cursor: pointer;
-      margin-right: 16px;
-      font-size: 13px;
-      transition: all 0.2s;
-    }
-
-    #start-btn:hover {
-      background: var(--accent-hover);
-      transform: scale(1.04);
-    }
-
-    .taskbar-items {
-      display: flex;
-      gap: 10px;
-      flex: 1;
+      flex-wrap: wrap;
+      align-content: flex-start;
+      gap: 15px;
       overflow-x: auto;
     }
 
-    .task-item {
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      padding: 6px 14px;
-      border-radius: 8px;
-      font-size: 12px;
-      font-weight: 600;
-      cursor: pointer;
+    .desktop-icon {
+      width: 90px;
+      height: 90px;
       display: flex;
+      flex-direction: column;
       align-items: center;
-      gap: 8px;
-      transition: all 0.2s;
-    }
-
-    .task-item:hover {
-      background: rgba(16, 185, 129, 0.3);
-      border-color: var(--accent-color);
-    }
-
-    #system-time {
-      font-size: 13px;
-      font-weight: 700;
-      margin-left: auto;
-      color: var(--accent-color);
-      letter-spacing: 1px;
-    }
-
-    /* Controls & Utilities */
-    .btn {
-      background: var(--accent-color);
-      color: #000;
-      border: none;
-      padding: 10px 18px;
-      border-radius: 8px;
-      font-weight: 700;
+      justify-content: center;
+      gap: 6px;
       cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .btn:hover {
-      background: var(--accent-hover);
-    }
-
-    input[type="text"], input[type="file"], select {
-      background: rgba(15, 23, 42, 0.8);
-      border: 1px solid var(--panel-border);
-      color: #fff;
-      padding: 10px 12px;
+      padding: 8px;
       border-radius: 8px;
-      width: 100%;
-      font-size: 13px;
-      outline: none;
+      transition: all 0.2s;
+      border: 1px solid transparent;
+      background: rgba(0,0,0,0.2);
     }
+    .desktop-icon:hover { background: rgba(255, 255, 255, 0.1); border-color: var(--border); transform: scale(1.05); }
+    .icon-svg { width: 34px; height: 34px; fill: var(--accent); pointer-events: none; }
+    .icon-label { font-size: 11px; text-align: center; text-shadow: 0 1px 3px rgba(0,0,0,0.9); pointer-events: none; word-break: break-word; }
 
-    .app-card {
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(16, 185, 129, 0.2);
-      padding: 14px;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    /* Achievements Notification */
-    #achievement-toast {
-      position: absolute;
+    /* Draggable Floating JS Bar */
+    #js-menu-bar {
+      position: fixed;
       top: 20px;
-      right: -350px;
-      background: var(--accent-color);
-      color: #000;
-      padding: 14px 24px;
-      border-radius: 10px;
-      font-weight: 800;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-      transition: right 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      z-index: 1000;
-    }
-
-    #achievement-toast.show {
       right: 20px;
+      background: #0d1520;
+      border: 1px solid var(--border);
+      border-radius: 30px;
+      padding: 8px 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      z-index: 9000;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+      cursor: move;
+      backdrop-filter: blur(10px);
     }
+    .js-menu-title { font-size: 12px; font-weight: bold; color: var(--accent); }
+    .js-btn { background: rgba(255,255,255,0.08); border: 1px solid var(--border); color: #fff; padding: 4px 10px; border-radius: 12px; font-size: 11px; cursor: pointer; }
+    .js-btn:hover { background: var(--accent); color: #000; }
+
+    /* Start Launcher Overlay */
+    #start-modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 20000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(8px);
+    }
+    #start-launcher {
+      width: 760px; max-height: 85vh; background: #0d1520; border: 1px solid var(--border); border-radius: 16px; box-shadow: 0 25px 60px rgba(0,0,0,0.8); display: flex; flex-direction: column; padding: 24px; gap: 20px;
+    }
+    .launcher-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; overflow-y: auto; max-height: 420px; }
+    .launcher-card { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; padding: 18px 10px; display: flex; flex-direction: column; align-items: center; gap: 10px; cursor: pointer; }
+    .launcher-card:hover { background: rgba(16, 185, 129, 0.1); border-color: var(--accent); }
+
+    /* Taskbar Dock */
+    #dock-container { position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); z-index: 10000; }
+    #capsule-dock { height: 56px; background: #09111e; border: 1px solid var(--border); border-radius: 28px; backdrop-filter: blur(20px); display: flex; align-items: center; padding: 0 18px; gap: 10px; }
+    .dock-btn { background: transparent; border: none; color: var(--accent); cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 8px; border-radius: 50%; }
+    .dock-btn:hover { background: rgba(255, 255, 255, 0.08); }
+    .dock-svg { width: 22px; height: 22px; fill: var(--accent); }
+    .dock-divider { width: 1px; height: 24px; background: rgba(255, 255, 255, 0.15); margin: 0 4px; }
+    .dock-clock { font-size: 13px; color: #f8fafc; font-weight: 500; }
+
+    /* Windows */
+    .window {
+      position: absolute; width: 780px; height: 520px; max-width: 95vw; max-height: 85vh; background: var(--window-bg); border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8); backdrop-filter: blur(16px); display: flex; flex-direction: column; overflow: hidden; z-index: 10;
+    }
+    .window-header { height: 38px; background: rgba(0, 0, 0, 0.4); display: flex; align-items: center; justify-content: space-between; padding: 0 12px; cursor: move; border-bottom: 1px solid var(--border); }
+    .window-title { font-size: 13px; font-weight: 600; }
+    .window-controls { display: flex; gap: 8px; }
+    .control-btn { width: 12px; height: 12px; border-radius: 50%; border: none; cursor: pointer; }
+    .btn-close { background: #ef4444; }
+    .btn-min { background: #f59e0b; }
+    .btn-max { background: var(--accent); }
+
+    .window-content { flex: 1; display: flex; flex-direction: column; overflow: auto; background: #080c14; position: relative; }
+    .app-container { padding: 20px; height: 100%; overflow-y: auto; display: flex; flex-direction: column; gap: 14px; }
+
+    .browser-btn { background: #1f2937; border: 1px solid var(--border); color: #fff; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 12px; }
+    .browser-btn:hover { background: var(--accent); color: #000; }
+    .browser-input { background: #1f2937; border: 1px solid var(--border); color: #fff; padding: 8px 12px; border-radius: 6px; font-size: 13px; outline: none; }
+
+    .app-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; }
+    .app-card { background: #1e293b; border: 1px solid var(--border); padding: 14px; border-radius: 10px; display: flex; flex-direction: column; gap: 8px; text-align: center; align-items: center; justify-content: space-between; }
+
+    #toast-container { position: fixed; top: 20px; right: 20px; z-index: 99999; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
+    .toast { background: var(--accent); color: #000; padding: 12px 20px; border-radius: 8px; font-weight: bold; }
   </style>
 </head>
 <body>
 
-  <div id="desktop">
-    <!-- 3D World Canvas -->
-    <div id="world3d-container">
-      <canvas id="world3d"></canvas>
-    </div>
+  <canvas id="fx-canvas"></canvas>
 
-    <!-- Desktop Icons -->
-    <div id="desktop-icons"></div>
+  <div id="boot-screen">
+    <svg class="boot-logo" viewBox="0 0 512 512"><path d="M256,0C114.6,0,0,114.6,0,256s114.6,256,256,256,256-114.6,256-256S397.4,0,256,0Zm0,464C141.1,464,48,370.9,48,256S141.1,48,256,48,464,141.1,464,256,370.9,464,256,464Z"/></svg>
+    <div class="boot-text">Loading NautilusOS v10.0 Pro...</div>
+  </div>
 
-    <!-- JavaScript Popup Start Menu -->
-    <div id="start-menu">
-      <div class="start-menu-header">Emerald OS Menu</div>
-      <div id="start-menu-list"></div>
-    </div>
+  <div id="js-menu-bar" onmousedown="dragJSMenu(event)">
+    <span class="js-menu-title">⚡ JS Quick Menu</span>
+    <button class="js-btn" onclick="openApp('emeraldworld')">Emerald World 3D</button>
+    <button class="js-btn" onclick="openApp('store')">App Store</button>
+    <button class="js-btn" onclick="triggerMatrixEffect()">Matrix</button>
+    <button class="js-btn" onclick="openApp('settings')">Settings</button>
+  </div>
 
-    <!-- Taskbar -->
-    <div id="taskbar">
-      <button id="start-btn" onclick="toggleStartMenu()">Emerald</button>
-      <div class="taskbar-items" id="taskbar-items"></div>
-      <div id="system-time">--:-- --</div>
+  <div id="desktop"></div>
+
+  <div id="start-modal-overlay" onclick="closeLauncher(event)">
+    <div id="start-launcher" onclick="event.stopPropagation()">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <h3>Harrythehacker</h3>
+        <button class="browser-btn" onclick="showToast('Signed Out')">Sign Out</button>
+      </div>
+      <input type="text" id="launcher-search" class="browser-input" placeholder="Search apps..." oninput="filterLauncherApps()">
+      <div class="launcher-grid" id="launcher-grid"></div>
     </div>
   </div>
 
-  <!-- Achievement Toast -->
-  <div id="achievement-toast">🏆 Achievement Unlocked!</div>
+  <div id="dock-container">
+    <div id="capsule-dock">
+      <button class="dock-btn" onclick="toggleLauncherModal()"><svg class="dock-svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg></button>
+      <div class="dock-divider"></div>
+      <button class="dock-btn" onclick="openApp('emeraldworld')"><svg class="dock-svg" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zm0 9L2 6v11l10 5 10-5V6l-10 5z"/></svg></button>
+      <button class="dock-btn" onclick="openApp('store')"><svg class="dock-svg" viewBox="0 0 24 24"><path d="M19 6h-2c0-2.76-2.24-5-5-5S7 3.24 7 6H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2z"/></svg></button>
+      <button class="dock-btn" onclick="openApp('photos')"><svg class="dock-svg" viewBox="0 0 24 24"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2z"/></svg></button>
+      <button class="dock-btn" onclick="openApp('tasks')"><svg class="dock-svg" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></button>
+      <div class="dock-divider"></div>
+      <div class="dock-clock" id="dock-clock">12:00 PM</div>
+    </div>
+  </div>
+
+  <div id="toast-container"></div>
 
   <script>
-    // --- System State & App Catalog ---
-    const state = {
-      activeWindow: null,
-      achievements: new Set()
-    };
-
-    const apps = [
-      { id: 'gameshare', name: 'GameShare TUESDAE', icon: '🎮', render: renderGameShareIframe },
-      { id: 'handwriter', name: 'AI Handwriter', icon: '✍️', render: renderHandwriterIframe },
-      { id: 'radio', name: 'Triple M Live Radio', icon: '📻', render: renderRadio },
-      { id: 'ultimatesys', name: 'Ultimate Ent System', icon: '🎰', render: renderUltimateEnt },
-      { id: 'dash', name: 'Dash Experience', icon: '🏎️', render: renderDash },
-      { id: 'appstore', name: 'Emerald App Store', icon: '🛍️', render: renderAppStore },
-      { id: 'music', name: 'Music Player', icon: '🎵', render: renderMusic },
-      { id: 'cursors', name: 'Custom Cursors', icon: '🖱️', render: renderCursorManager },
-      { id: 'settings', name: 'System Settings', icon: '⚙️', render: renderSettings },
-      { id: 'achievements', name: 'Achievements', icon: '🏆', render: renderAchievements }
+    const baseAppsCatalog = [
+      { id: 'emeraldworld', name: 'Emerald World 3D', cat: 'media', icon: '<path d="M12 2L2 7l10 5 10-5-10-5zm0 9L2 6v11l10 5 10-5V6l-10 5z"/>' },
+      { id: 'store', name: 'App Store', cat: 'util', icon: '<path d="M19 6h-2c0-2.76-2.24-5-5-5S7 3.24 7 6H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2z"/>' },
+      { id: 'tasks', name: 'Task Board', cat: 'prod', icon: '<path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>' },
+      { id: 'terminal', name: 'Terminal', cat: 'util', icon: '<path d="M20 4H4c-1.11 0-2 .89-2 2v12c0 1.1.89 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.11-.9-2-2-2z"/>' },
+      { id: 'codepad', name: 'JS CodePad', cat: 'prod', icon: '<path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/>' },
+      { id: 'paint', name: 'Paint Lab', cat: 'prod', icon: '<path d="M12 3c-4.97 0-9 4.03-9 9 0 2.12.74 4.07 1.97 5.61.43.54 1.03.89 1.7.89h1.83c.83 0 1.5-.67 1.5-1.5 0-.39-.15-.74-.39-1.01-.23-.26-.37-.61-.37-1 0-.83.67-1.5 1.5-1.5H15c2.76 0 5-2.24 5-5 0-4.42-3.58-8-8-8z"/>' },
+      { id: 'photos', name: 'Photos', cat: 'media', icon: '<path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2z"/>' },
+      { id: 'snake', name: 'Retro Snake', cat: 'media', icon: '<path d="M7 18h2V6H7v12zm4 0h2V6h-2v12zm4 0h2V6h-2v12z"/>' },
+      { id: 'tictactoe', name: 'TicTacToe', cat: 'media', icon: '<path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/>' },
+      { id: 'calculator', name: 'Calculator', cat: 'prod', icon: '<path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/>' },
+      { id: 'music', name: 'Spotify Music', cat: 'media', icon: '<path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>' },
+      { id: 'browser', name: 'Browser', cat: 'util', icon: '<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/>' },
+      { id: 'settings', name: 'Settings', cat: 'util', icon: '<path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58z"/>' },
+      { id: 'memegen', name: 'Meme Generator', cat: 'acmemes', icon: '<path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2z"/>' }
     ];
 
-    // --- Core Window Manager ---
-    function openApp(appId) {
-      closeStartMenu();
-      const app = apps.find(a => a.id === appId);
-      if (!app) return;
+    let installedApps = ['emeraldworld', 'store', 'tasks', 'terminal', 'codepad', 'paint', 'photos', 'snake', 'tictactoe', 'calculator', 'music', 'settings', 'memegen'];
+    let openWindows = {};
+    let activeZIndex = 100;
+    let taskList = [{ text: 'Explore Emerald World 3D', done: true }, { text: 'Set Custom Photo Wallpaper', done: false }];
 
-      const existingWin = document.getElementById(`win-${appId}`);
-      if (existingWin) {
-        existingWin.style.display = 'flex';
-        focusWindow(existingWin);
-        return;
+    function showToast(msg) {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.innerText = msg;
+      container.appendChild(toast);
+      setTimeout(() => toast.remove(), 2500);
+    }
+
+    function updateClock() {
+      document.getElementById('dock-clock').innerText = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    function toggleLauncherModal() {
+      const overlay = document.getElementById('start-modal-overlay');
+      overlay.style.display = overlay.style.display === 'flex' ? 'none' : 'flex';
+      if (overlay.style.display === 'flex') renderLauncherGrid();
+    }
+
+    function closeLauncher() { document.getElementById('start-modal-overlay').style.display = 'none'; }
+
+    function renderLauncherGrid(filter = '') {
+      const grid = document.getElementById('launcher-grid');
+      grid.innerHTML = '';
+      baseAppsCatalog.filter(app => installedApps.includes(app.id) && app.name.toLowerCase().includes(filter.toLowerCase())).forEach(app => {
+        const card = document.createElement('div');
+        card.className = 'launcher-card';
+        card.onclick = () => { openApp(app.id); closeLauncher(); };
+        card.innerHTML = `<svg class="icon-svg" viewBox="0 0 24 24">${app.icon}</svg><span>${app.name}</span>`;
+        grid.appendChild(card);
+      });
+    }
+
+    function filterLauncherApps() { renderLauncherGrid(document.getElementById('launcher-search').value); }
+
+    function renderDesktop() {
+      const desktop = document.getElementById('desktop');
+      desktop.innerHTML = '';
+      installedApps.forEach(appId => {
+        const app = baseAppsCatalog.find(a => a.id === appId);
+        if (!app) return;
+        const icon = document.createElement('div');
+        icon.className = 'desktop-icon';
+        icon.ondblclick = () => openApp(app.id);
+        icon.innerHTML = `<svg class="icon-svg" viewBox="0 0 24 24">${app.icon}</svg><span class="icon-label">${app.name}</span>`;
+        desktop.appendChild(icon);
+      });
+    }
+
+    function dragJSMenu(e) {
+      const bar = document.getElementById('js-menu-bar');
+      let shiftX = e.clientX - bar.getBoundingClientRect().left;
+      let shiftY = e.clientY - bar.getBoundingClientRect().top;
+      document.onmousemove = (e) => {
+        bar.style.left = (e.clientX - shiftX) + 'px';
+        bar.style.top = (e.clientY - shiftY) + 'px';
+        bar.style.right = 'auto';
+      };
+      document.onmouseup = () => document.onmousemove = null;
+    }
+
+    /* Master App Launcher Engine */
+    function openApp(appId) {
+      if (openWindows[appId]) {
+        const existing = document.getElementById(openWindows[appId]);
+        if (existing) { existing.style.display = 'flex'; existing.style.zIndex = ++activeZIndex; return; }
+      }
+
+      const winId = 'win-' + Date.now();
+      openWindows[appId] = winId;
+      const appObj = baseAppsCatalog.find(a => a.id === appId) || { name: 'App' };
+      let content = '';
+
+      if (appId === 'emeraldworld') {
+        content = `
+          <div style="width:100%; height:100%; position:relative; overflow:hidden;" id="ew-container-${winId}">
+            <canvas id="ew-canvas-${winId}" style="width:100%; height:100%; display:block;"></canvas>
+            <div style="position:absolute; top:20px; left:20px; background:rgba(0,0,0,0.7); padding:12px; border-radius:8px; border:1px solid var(--accent); max-width:300px;">
+              <h3 style="color:var(--accent);">Emerald World 3D</h3>
+              <p style="font-size:12px; color:#cbd5e1; margin-top:4px;">Scroll UP / DOWN anywhere to navigate through the 3D Emerald Grid space.</p>
+            </div>
+          </div>`;
+
+      } else if (appId === 'tasks') {
+        content = `
+          <div class="app-container">
+            <h2>⚡ Task Board</h2>
+            <div style="display:flex; gap:8px;">
+              <input type="text" id="task-input-${winId}" class="browser-input" placeholder="New Task..." style="flex:1;">
+              <button class="browser-btn" onclick="addTask('${winId}')">Add Task</button>
+            </div>
+            <div id="task-list-${winId}" style="display:flex; flex-direction:column; gap:8px; margin-top:10px;"></div>
+          </div>`;
+
+      } else if (appId === 'photos') {
+        content = `
+          <div class="app-container">
+            <h2>🖼️ Photos Library</h2>
+            <p style="font-size:12px; color:#94a3b8;">Select images from your computer and click "Set as Wallpaper" on any photo.</p>
+            <button class="browser-btn" onclick="uploadLocalPhotos('${winId}')">📂 Select Local Photos</button>
+            <div class="app-grid" id="photo-grid-${winId}" style="margin-top:10px;"></div>
+          </div>`;
+
+      } else if (appId === 'terminal') {
+        content = `
+          <div style="background:#020617; color:var(--term-text); font-family:monospace; padding:12px; height:100%; display:flex; flex-direction:column;">
+            <div id="term-out-${winId}" style="flex:1; overflow-y:auto; line-height:1.5;">Welcome to Nautilus Shell v10.0<br>Type 'help' for available commands.</div>
+            <div style="display:flex; gap:6px; margin-top:8px;">
+              <span>$</span>
+              <input type="text" id="term-in-${winId}" style="background:transparent; border:none; outline:none; color:inherit; width:100%; font-family:monospace;" onkeydown="if(event.key==='Enter') runTermCmd('${winId}')">
+            </div>
+          </div>`;
+
+      } else if (appId === 'codepad') {
+        content = `
+          <div class="app-container" style="height:100%;">
+            <h2>💻 JS CodePad Studio</h2>
+            <textarea id="code-in-${winId}" class="browser-input" style="height:180px; font-family:monospace; resize:none;">console.log("Hello from Nautilus CodePad!");</textarea>
+            <button class="browser-btn" onclick="runPadCode('${winId}')">▶ Run Code</button>
+            <div id="code-out-${winId}" style="background:#020617; border:1px solid var(--border); padding:10px; border-radius:6px; font-family:monospace; font-size:12px; min-height:80px; color:#34d399;">Console output...</div>
+          </div>`;
+
+      } else if (appId === 'paint') {
+        content = `
+          <div class="app-container" style="align-items:center;">
+            <div style="display:flex; gap:10px; align-items:center; width:100%;">
+              <input type="color" id="paint-color-${winId}" value="#10b981">
+              <button class="browser-btn" onclick="clearCanvas('${winId}')">Clear Canvas</button>
+            </div>
+            <canvas id="paint-canvas-${winId}" width="680" height="340" style="background:#fff; border-radius:8px; cursor:crosshair; margin-top:10px;"></canvas>
+          </div>`;
+
+      } else if (appId === 'snake') {
+        content = `
+          <div class="app-container" style="align-items:center; text-align:center;">
+            <h2>🐍 Retro Snake Game</h2>
+            <canvas id="snake-canvas-${winId}" width="300" height="300" style="background:#000; border:1px solid var(--border); border-radius:8px;"></canvas>
+            <button class="browser-btn" onclick="startSnakeGame('${winId}')" style="margin-top:8px;">Start New Game</button>
+          </div>`;
+
+      } else if (appId === 'tictactoe') {
+        content = `
+          <div class="app-container" style="align-items:center;">
+            <h2>❌ TicTacToe vs AI ⭕</h2>
+            <div id="ttt-board-${winId}" style="display:grid; grid-template-columns:repeat(3,70px); gap:6px; margin-top:14px;"></div>
+            <button class="browser-btn" onclick="resetTTT('${winId}')" style="margin-top:12px;">Reset Game</button>
+          </div>`;
+
+      } else if (appId === 'calculator') {
+        content = `
+          <div class="app-container" style="max-width:300px; margin:0 auto;">
+            <input type="text" id="calc-disp-${winId}" class="browser-input" style="font-size:20px; text-align:right;" readonly value="0">
+            <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:6px; margin-top:10px;">
+              <button class="browser-btn" onclick="calcNum('${winId}','7')">7</button>
+              <button class="browser-btn" onclick="calcNum('${winId}','8')">8</button>
+              <button class="browser-btn" onclick="calcNum('${winId}','9')">9</button>
+              <button class="browser-btn" onclick="calcNum('${winId}','/')">/</button>
+              <button class="browser-btn" onclick="calcNum('${winId}','4')">4</button>
+              <button class="browser-btn" onclick="calcNum('${winId}','5')">5</button>
+              <button class="browser-btn" onclick="calcNum('${winId}','6')">6</button>
+              <button class="browser-btn" onclick="calcNum('${winId}','*')">*</button>
+              <button class="browser-btn" onclick="calcNum('${winId}','1')">1</button>
+              <button class="browser-btn" onclick="calcNum('${winId}','2')">2</button>
+              <button class="browser-btn" onclick="calcNum('${winId}','3')">3</button>
+              <button class="browser-btn" onclick="calcNum('${winId}','-')">-</button>
+              <button class="browser-btn" onclick="document.getElementById('calc-disp-${winId}').value='0'">C</button>
+              <button class="browser-btn" onclick="calcNum('${winId}','0')">0</button>
+              <button class="browser-btn" onclick="calcEval('${winId}')">=</button>
+              <button class="browser-btn" onclick="calcNum('${winId}','+')">+</button>
+            </div>
+          </div>`;
+
+      } else if (appId === 'store') {
+        content = `
+          <div class="app-container">
+            <h2>🛒 Nautilus App Store</h2>
+            <div class="app-grid" id="store-grid-${winId}"></div>
+          </div>`;
+
+      } else if (appId === 'settings') {
+        content = `
+          <div class="app-container">
+            <h2>⚙️ System Settings</h2>
+            <h3>🎨 Customisation</h3>
+            <div style="display:flex; gap:10px; margin-top:6px;">
+              <button class="browser-btn" onclick="document.body.className='theme-cyber'">Cyber Theme</button>
+              <button class="browser-btn" onclick="document.body.className='theme-midnight'">Midnight Theme</button>
+              <button class="browser-btn" onclick="document.body.className=''">Emerald Theme</button>
+            </div>
+          </div>`;
+
+      } else {
+        content = `
+          <div class="app-container">
+            <h2>${appObj.name}</h2>
+            <p>Application active in sandbox environment.</p>
+          </div>`;
       }
 
       const win = document.createElement('div');
-      win.id = `win-${appId}`;
       win.className = 'window';
-      win.style.left = `${60 + Math.random() * 80}px`;
-      win.style.top = `${30 + Math.random() * 60}px`;
+      win.id = winId;
+      win.style.top = `${40 + (Object.keys(openWindows).length * 15)}px`;
+      win.style.left = `${50 + (Object.keys(openWindows).length * 15)}px`;
+      win.style.zIndex = ++activeZIndex;
 
       win.innerHTML = `
-        <div class="window-header">
-          <span class="window-title">${app.icon} ${app.name}</span>
+        <div class="window-header" onmousedown="dragWindow(event, '${winId}')">
+          <div class="window-title">⚡ ${appObj.name}</div>
           <div class="window-controls">
-            <button class="win-btn win-minimize" onclick="minimizeWindow('${appId}')"></button>
-            <button class="win-btn win-close" onclick="closeWindow('${appId}')"></button>
+            <button class="control-btn btn-min" onclick="document.getElementById('${winId}').style.display='none'"></button>
+            <button class="control-btn btn-max" onclick="maximizeWindow('${winId}')"></button>
+            <button class="control-btn btn-close" onclick="closeWindow('${appId}', '${winId}')"></button>
           </div>
         </div>
-        <div class="window-body" id="body-${appId}"></div>
-      `;
+        <div class="window-content">${content}</div>`;
 
-      document.getElementById('desktop').appendChild(win);
-      makeDraggable(win);
-      app.render(document.getElementById(`body-${appId}`));
-      focusWindow(win);
-      updateTaskbar();
+      win.onmousedown = () => { win.style.zIndex = ++activeZIndex; };
+      document.body.appendChild(win);
 
-      triggerAchievement('Opened ' + app.name, `Explorer: Opened ${app.name}`);
+      // App Initializers
+      if (appId === 'emeraldworld') initEmeraldWorld3D(winId);
+      if (appId === 'tasks') renderTaskList(winId);
+      if (appId === 'paint') initPaint(winId);
+      if (appId === 'tictactoe') resetTTT(winId);
+      if (appId === 'store') renderStore(winId);
     }
 
-    function closeWindow(appId) {
-      const win = document.getElementById(`win-${appId}`);
-      if (win) win.remove();
-      updateTaskbar();
-    }
+    function closeWindow(appId, winId) { document.getElementById(winId)?.remove(); delete openWindows[appId]; }
+    function maximizeWindow(id) { const win = document.getElementById(id); win.style.width = win.style.width === '100vw' ? '780px' : '100vw'; win.style.height = win.style.height === 'calc(100vh - 80px)' ? '520px' : 'calc(100vh - 80px)'; }
+    function dragWindow(e, id) { const win = document.getElementById(id); let shiftX = e.clientX - win.getBoundingClientRect().left; let shiftY = e.clientY - win.getBoundingClientRect().top; document.onmousemove = (e) => { win.style.left = (e.clientX - shiftX) + 'px'; win.style.top = (e.clientY - shiftY) + 'px'; }; document.onmouseup = () => document.onmousemove = null; }
 
-    function minimizeWindow(appId) {
-      const win = document.getElementById(`win-${appId}`);
-      if (win) win.style.display = 'none';
-    }
+    /* Emerald World 3D Scroll Canvas Engine */
+    function initEmeraldWorld3D(winId) {
+      setTimeout(() => {
+        const canvas = document.getElementById(`ew-canvas-${winId}`);
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        canvas.width = canvas.parentElement.clientWidth;
+        canvas.height = canvas.parentElement.clientHeight;
 
-    function focusWindow(win) {
-      document.querySelectorAll('.window').forEach(w => w.style.zIndex = 20);
-      win.style.zIndex = 30;
-      state.activeWindow = win;
-    }
+        let zOffset = 0;
+        canvas.addEventListener('wheel', (e) => {
+          e.preventDefault();
+          zOffset += e.deltaY * 0.5;
+        });
 
-    function makeDraggable(win) {
-      const header = win.querySelector('.window-header');
-      let isDragging = false, offsetWX = 0, offsetWY = 0;
+        function render() {
+          ctx.fillStyle = '#020617';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      header.addEventListener('mousedown', (e) => {
-        isDragging = true;
-        offsetWX = e.clientX - win.offsetLeft;
-        offsetWY = e.clientY - win.offsetTop;
-        focusWindow(win);
-      });
+          const cx = canvas.width / 2;
+          const cy = canvas.height / 2;
 
-      document.addEventListener('mousemove', (e) => {
-        if (!isDragging) return;
-        win.style.left = `${e.clientX - offsetWX}px`;
-        win.style.top = `${e.clientY - offsetWY}px`;
-      });
+          for (let i = 0; i < 200; i++) {
+            let x = (Math.sin(i * 99) * 2000);
+            let y = (Math.cos(i * 33) * 2000);
+            let z = (i * 40 - zOffset) % 2000;
+            if (z <= 0) z += 2000;
 
-      document.addEventListener('mouseup', () => isDragging = false);
-    }
+            let k = 300 / z;
+            let px = x * k + cx;
+            let py = y * k + cy;
+            let size = Math.max(1, (1 - z / 2000) * 12);
 
-    // --- Taskbar & Start Menu ---
-    function toggleStartMenu() {
-      const menu = document.getElementById('start-menu');
-      menu.classList.toggle('active');
-    }
-
-    function closeStartMenu() {
-      document.getElementById('start-menu').classList.remove('active');
-    }
-
-    function renderStartMenu() {
-      const list = document.getElementById('start-menu-list');
-      list.innerHTML = '';
-      apps.forEach(app => {
-        const item = document.createElement('div');
-        item.className = 'start-menu-item';
-        item.innerHTML = `<span>${app.icon}</span> <span>${app.name}</span>`;
-        item.onclick = () => openApp(app.id);
-        list.appendChild(item);
-      });
-    }
-
-    function updateTaskbar() {
-      const container = document.getElementById('taskbar-items');
-      container.innerHTML = '';
-      document.querySelectorAll('.window').forEach(win => {
-        const id = win.id.replace('win-', '');
-        const app = apps.find(a => a.id === id);
-        if (!app) return;
-        const item = document.createElement('div');
-        item.className = 'task-item';
-        item.innerHTML = `${app.icon} ${app.name}`;
-        item.onclick = () => {
-          if (win.style.display === 'none') {
-            win.style.display = 'flex';
-            focusWindow(win);
-          } else {
-            minimizeWindow(id);
+            if (px > 0 && px < canvas.width && py > 0 && py < canvas.height) {
+              ctx.fillStyle = i % 2 === 0 ? '#10b981' : '#34d399';
+              ctx.beginPath();
+              ctx.arc(px, py, size, 0, Math.PI * 2);
+              ctx.fill();
+            }
           }
-        };
+          if (document.getElementById(`ew-canvas-${winId}`)) requestAnimationFrame(render);
+        }
+        render();
+      }, 100);
+    }
+
+    /* Tasks App Engine */
+    function renderTaskList(winId) {
+      const container = document.getElementById(`task-list-${winId}`);
+      if (!container) return;
+      container.innerHTML = '';
+      taskList.forEach((t, i) => {
+        const item = document.createElement('div');
+        item.style.cssText = 'background:#1e293b; padding:10px; border-radius:6px; display:flex; justify-shadow:space-between; align-items:center;';
+        item.innerHTML = `
+          <span style="${t.done ? 'text-decoration:line-through; color:#64748b;' : ''}">${t.text}</span>
+          <button class="browser-btn" onclick="toggleTask(${i}, '${winId}')">${t.done ? 'Undo' : 'Done'}</button>`;
         container.appendChild(item);
       });
     }
-
-    function renderDesktopIcons() {
-      const container = document.getElementById('desktop-icons');
-      container.innerHTML = '';
-      apps.forEach(app => {
-        const btn = document.createElement('div');
-        btn.className = 'icon-btn';
-        btn.innerHTML = `<span>${app.icon}</span><label>${app.name}</label>`;
-        btn.onclick = () => openApp(app.id);
-        container.appendChild(btn);
-      });
+    function addTask(winId) {
+      const inp = document.getElementById(`task-input-${winId}`);
+      if (inp.value) { taskList.push({ text: inp.value, done: false }); inp.value = ''; renderTaskList(winId); }
     }
+    function toggleTask(i, winId) { taskList[i].done = !taskList[i].done; renderTaskList(winId); }
 
-    // --- Specific App Renderers ---
-    function renderGameShareIframe(el) {
-      el.style.padding = '8px';
-      el.innerHTML = `
-        <div class="iframe-container">
-          <div class="iframe-bar">
-            <input type="text" id="gameshare-url" value="https://tuesdae.io" placeholder="Paste GameShare TUESDAE Website URL..." />
-            <button class="btn" onclick="document.getElementById('gs-frame').src=document.getElementById('gameshare-url').value">Load Site</button>
-          </div>
-          <iframe id="gs-frame" class="app-iframe" src="https://tuesdae.io" allow="autoplay; fullscreen"></iframe>
-        </div>
-      `;
-    }
-
-    function renderHandwriterIframe(el) {
-      el.style.padding = '8px';
-      el.innerHTML = `
-        <div class="iframe-container">
-          <div class="iframe-bar">
-            <input type="text" id="handwriter-url" value="https://www.calligrapher.ai" placeholder="Paste AI Handwriter URL..." />
-            <button class="btn" onclick="document.getElementById('hw-frame').src=document.getElementById('handwriter-url').value">Load AI</button>
-          </div>
-          <iframe id="hw-frame" class="app-iframe" src="https://www.calligrapher.ai"></iframe>
-        </div>
-      `;
-    }
-
-    function renderRadio(el) {
-      el.innerHTML = `
-        <h3>📻 Triple M Radio Network</h3>
-        <p style="color:var(--text-muted)">Live Australian Rock, Sport, and Entertainment.</p>
-        <select id="radio-select">
-          <option value="https://triplem.listnr.com/sydney/">Triple M Sydney 104.9 FM</option>
-          <option value="https://triplem.listnr.com/melbourne/">Triple M Melbourne 105.1 FM</option>
-          <option value="https://triplem.listnr.com/brisbane/">Triple M Brisbane 104.5 FM</option>
-          <option value="https://s3.vocalware.com/g/groove.mp3">Alternative Classic Rock Stream</option>
-        </select>
-        <div style="margin-top:10px;">
-          <button class="btn" onclick="window.open(document.getElementById('radio-select').value, '_blank')">Launch Station Player</button>
-        </div>
-        <audio id="radio-audio" controls style="width:100%; margin-top:14px;"></audio>
-      `;
-      setTimeout(() => {
-        const select = document.getElementById('radio-select');
-        const player = document.getElementById('radio-audio');
-        if (select && player) {
-          select.onchange = () => {
-            if (select.value.endsWith('.mp3')) {
-              player.src = select.value;
-              player.play();
-            } else {
-              window.open(select.value, '_blank');
-            }
+    /* Photos Access & Wallpaper Engine */
+    function uploadLocalPhotos(winId) {
+      const input = document.createElement('input');
+      input.type = 'file'; input.multiple = true; input.accept = 'image/*';
+      input.onchange = (e) => {
+        const grid = document.getElementById(`photo-grid-${winId}`);
+        grid.innerHTML = '';
+        Array.from(e.target.files).forEach(file => {
+          const reader = new FileReader();
+          reader.onload = (ev) => {
+            const card = document.createElement('div');
+            card.className = 'app-card';
+            card.innerHTML = `
+              <img src="${ev.target.result}" style="width:100%; height:100px; object-fit:cover; border-radius:6px;">
+              <button class="browser-btn" onclick="setAsWallpaper('${ev.target.result}')">Set as Wallpaper</button>`;
+            grid.appendChild(card);
           };
-        }
-      }, 50);
+          reader.readAsDataURL(file);
+        });
+      };
+      input.click();
+    }
+    function setAsWallpaper(src) {
+      document.body.style.backgroundImage = `url(${src})`;
+      showToast('Desktop Wallpaper Updated!');
     }
 
-    function renderUltimateEnt(el) {
-      el.innerHTML = `
-        <h3>The Ultimate Entertainment System</h3>
-        <p style="color:var(--text-muted)">Hub for local media, cloud arcade, and media streams.</p>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px;">
-          <div class="app-card">🕹️ Retro Arcade</div>
-          <div class="app-card">🎬 Emerald Cinema</div>
-          <div class="app-card">🎮 Cloud Gaming Hub</div>
-          <div class="app-card">🎧 3D Spatial Sound</div>
-        </div>
-      `;
-    }
-
-    function renderDash(el) {
-      el.innerHTML = `
-        <h3>Dash for an Amazing Experience</h3>
-        <p style="color:var(--text-muted)">System Turbo Engine and OS Cleaner.</p>
-        <button class="btn" onclick="triggerAchievement('Turbo Dash', 'Speedster: Optimized system!'); alert('Emerald OS performance boosted!')">Boost OS Speed</button>
-      `;
-    }
-
-    function renderAppStore(el) {
-      el.innerHTML = `
-        <h3>Emerald App Store</h3>
-        <p style="color:var(--text-muted)">Discover and install additional Emerald applications.</p>
-        <div style="display:flex; flex-direction:column; gap:10px; margin-top:10px;">
-          <div class="app-card">
-            <span>🎨 Pixel Studio Pro</span>
-            <button class="btn" onclick="alert('Installed Pixel Studio!')">Install</button>
-          </div>
-          <div class="app-card">
-            <span>🌐 Web VR Browser</span>
-            <button class="btn" onclick="alert('Installed Web VR Browser!')">Install</button>
-          </div>
-        </div>
-      `;
-    }
-
-    function renderMusic(el) {
-      el.innerHTML = `
-        <h3>Emerald Music Player</h3>
-        <p style="color:var(--text-muted)">Play custom audio files directly from your computer library.</p>
-        <input type="file" id="music-file-input" accept="audio/*" />
-        <audio id="local-audio-player" controls style="width:100%; margin-top:12px;"></audio>
-      `;
+    /* Paint Engine */
+    function initPaint(winId) {
       setTimeout(() => {
-        const input = document.getElementById('music-file-input');
-        const player = document.getElementById('local-audio-player');
-        if (input && player) {
-          input.onchange = (e) => {
-            const file = e.target.files[0];
-            if (file) {
-              player.src = URL.createObjectURL(file);
-              player.play();
-              triggerAchievement('Local Track', 'Audio Maestro: Uploaded local song!');
-            }
-          };
-        }
-      }, 50);
+        const canvas = document.getElementById(`paint-canvas-${winId}`);
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        let drawing = false;
+        canvas.onmousedown = () => drawing = true;
+        canvas.onmouseup = () => { drawing = false; ctx.beginPath(); };
+        canvas.onmousemove = (e) => {
+          if (!drawing) return;
+          const rect = canvas.getBoundingClientRect();
+          ctx.lineWidth = 4; ctx.lineCap = 'round';
+          ctx.strokeStyle = document.getElementById(`paint-color-${winId}`).value;
+          ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+          ctx.stroke(); ctx.beginPath(); ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+        };
+      }, 100);
+    }
+    function clearCanvas(winId) { const canvas = document.getElementById(`paint-canvas-${winId}`); canvas.getContext('2d').clearRect(0,0,canvas.width,canvas.height); }
+
+    /* Calculator Helpers */
+    function calcNum(winId, val) { const d = document.getElementById(`calc-disp-${winId}`); if (d.value === '0') d.value = ''; d.value += val; }
+    function calcEval(winId) { const d = document.getElementById(`calc-disp-${winId}`); try { d.value = eval(d.value); } catch(e) { d.value = 'Error'; } }
+
+    /* Terminal Runner */
+    function runTermCmd(winId) {
+      const inp = document.getElementById(`term-in-${winId}`);
+      const out = document.getElementById(`term-out-${winId}`);
+      const cmd = inp.value.trim().toLowerCase();
+      out.innerHTML += `<br>$ ${inp.value}`;
+      if (cmd === 'help') out.innerHTML += '<br>Commands: help, ls, clear, date, matrix';
+      else if (cmd === 'ls') out.innerHTML += '<br>emerald_world.3d photos.lib system_config.sys';
+      else if (cmd === 'clear') out.innerHTML = '';
+      else if (cmd === 'date') out.innerHTML += `<br>${new Date().toString()}`;
+      else if (cmd === 'matrix') triggerMatrixEffect();
+      else out.innerHTML += `<br>Command not found: ${cmd}`;
+      inp.value = '';
     }
 
-    function renderCursorManager(el) {
-      el.innerHTML = `
-        <h3>Custom Cursor Manager</h3>
-        <p style="color:var(--text-muted)">Upload any picture from your photo library to set as cursor.</p>
-        <input type="file" id="cursor-file" accept="image/*" />
-        <div style="margin-top:12px;">
-          <button class="btn" id="reset-cursor">Reset Default Cursor</button>
-        </div>
-      `;
-      setTimeout(() => {
-        const fileInp = document.getElementById('cursor-file');
-        const resetBtn = document.getElementById('reset-cursor');
-        if (fileInp) {
-          fileInp.onchange = (e) => {
-            const file = e.target.files[0];
-            if (file) {
-              const reader = new FileReader();
-              reader.onload = (evt) => {
-                document.body.style.cursor = `url(${evt.target.result}), auto`;
-                triggerAchievement('Custom Photo Cursor', 'Designer: Changed photo cursor!');
-              };
-              reader.readAsDataURL(file);
-            }
-          };
-        }
-        if (resetBtn) {
-          resetBtn.onclick = () => {
-            document.body.style.cursor = 'default';
-          };
-        }
-      }, 50);
+    /* JS CodePad Runner */
+    function runPadCode(winId) {
+      const code = document.getElementById(`code-in-${winId}`).value;
+      const out = document.getElementById(`code-out-${winId}`);
+      try {
+        let logs = [];
+        const customConsole = { log: (...args) => logs.push(args.join(' ')) };
+        new Function('console', code)(customConsole);
+        out.innerText = logs.join('\n') || 'Executed successfully with no output.';
+      } catch(err) { out.innerText = 'Runtime Error: ' + err.message; }
     }
 
-    function renderSettings(el) {
-      el.innerHTML = `
-        <h3>System Settings</h3>
-        <p style="color:var(--text-muted)">Configure background wallpaper and OS performance.</p>
-        <div style="display:flex; flex-direction:column; gap:10px; margin-top:10px;">
-          <button class="btn" onclick="document.getElementById('desktop').style.background='#030712'">Dark Theme</button>
-          <button class="btn" style="background:#065f46; color:#fff" onclick="document.getElementById('desktop').style.background='radial-gradient(circle at center, #065f46 0%, #022c22 45%, #030712 100%)'">Emerald Gradient</button>
-        </div>
-      `;
+    /* TicTacToe Engine */
+    let tttState = Array(9).fill(null);
+    function resetTTT(winId) {
+      tttState = Array(9).fill(null);
+      const board = document.getElementById(`ttt-board-${winId}`);
+      if (!board) return;
+      board.innerHTML = '';
+      for (let i = 0; i < 9; i++) {
+        const btn = document.createElement('button');
+        btn.className = 'browser-btn'; btn.style.height = '60px'; btn.style.fontSize = '20px';
+        btn.onclick = () => playTTT(i, winId);
+        board.appendChild(btn);
+      }
     }
-
-    function renderAchievements(el) {
-      el.innerHTML = `
-        <h3>Achievements Tracker</h3>
-        <p style="color:var(--text-muted)">Unlocked system milestones:</p>
-        <ul id="achievements-list" style="margin-left:20px; margin-top:10px; display:flex; flex-direction:column; gap:6px;"></ul>
-      `;
-      setTimeout(() => {
-        const list = document.getElementById('achievements-list');
-        if (!list) return;
-        if (state.achievements.size === 0) {
-          list.innerHTML = '<li style="color:var(--text-muted)">No achievements unlocked yet. Explore Emerald OS!</li>';
-        } else {
-          list.innerHTML = '';
-          state.achievements.forEach(ach => {
-            const li = document.createElement('li');
-            li.innerText = '🏆 ' + ach;
-            list.appendChild(li);
-          });
-        }
-      }, 50);
-    }
-
-    function triggerAchievement(id, title) {
-      if (!state.achievements.has(title)) {
-        state.achievements.add(title);
-        const toast = document.getElementById('achievement-toast');
-        toast.innerText = `🏆 ${title}`;
-        toast.classList.add('show');
-        setTimeout(() => toast.classList.remove('show'), 3000);
+    function playTTT(i, winId) {
+      if (tttState[i]) return;
+      tttState[i] = 'X';
+      const board = document.getElementById(`ttt-board-${winId}`);
+      board.children[i].innerText = 'X';
+      let empty = tttState.map((v, idx) => v === null ? idx : null).filter(v => v !== null);
+      if (empty.length > 0) {
+        let aiChoice = empty[Math.floor(Math.random() * empty.length)];
+        tttState[aiChoice] = 'O';
+        board.children[aiChoice].innerText = 'O';
       }
     }
 
-    // --- 3D Grid Canvas Background ---
-    function init3DWorld() {
-      const canvas = document.getElementById('world3d');
-      if (!canvas) return;
+    /* App Store Engine */
+    function renderStore(winId) {
+      const grid = document.getElementById(`store-grid-${winId}`);
+      if (!grid) return;
+      grid.innerHTML = '';
+      baseAppsCatalog.forEach(app => {
+        const card = document.createElement('div');
+        card.className = 'app-card';
+        card.innerHTML = `<h4>${app.name}</h4><button class="browser-btn" onclick="openApp('${app.id}')">Launch App</button>`;
+        grid.appendChild(card);
+      });
+    }
+
+    /* Canvas Matrix Background Effect */
+    function triggerMatrixEffect() {
+      const canvas = document.getElementById('fx-canvas');
       const ctx = canvas.getContext('2d');
-
-      function resize() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-      }
-      resize();
-      window.addEventListener('resize', resize);
-
-      let offset = 0;
-      function render() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        const cx = canvas.width / 2;
-        const cy = canvas.height / 2;
-
-        offset += 1.2;
-        for (let i = 0; i < 35; i++) {
-          let z = (i * 30 - (offset % 30));
-          if (z <= 0) continue;
-          let k = 200 / z;
-          let r = 500 * k;
-
-          ctx.strokeStyle = `rgba(16, 185, 129, ${Math.max(0, 0.35 - z / 800)})`;
-          ctx.lineWidth = 1.5;
-          ctx.beginPath();
-          ctx.arc(cx, cy, r, 0, Math.PI * 2);
-          ctx.stroke();
-        }
-
-        requestAnimationFrame(render);
-      }
-      render();
+      canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+      const drops = Array(Math.floor(canvas.width / 20)).fill(1);
+      setInterval(() => {
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.05)'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = '#10b981'; ctx.font = '15px monospace';
+        drops.forEach((y, i) => {
+          ctx.fillText(Math.random() > 0.5 ? '1' : '0', i * 20, y * 20);
+          if (y * 20 > canvas.height && Math.random() > 0.975) drops[i] = 0;
+          drops[i]++;
+        });
+      }, 33);
     }
 
-    // --- System Time Clock ---
-    function updateTime() {
-      const now = new Date();
-      const el = document.getElementById('system-time');
-      if (el) {
-        el.innerText = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-      }
-    }
-
-    // --- OS Startup ---
-    window.addEventListener('DOMContentLoaded', () => {
-      renderDesktopIcons();
-      renderStartMenu();
-      init3DWorld();
-      updateTime();
-      setInterval(updateTime, 1000);
-
-      document.addEventListener('click', (e) => {
-        if (!e.target.closest('#start-menu') && !e.target.closest('#start-btn')) {
-          closeStartMenu();
-        }
-      });
-    });
+    renderDesktop();
   </script>
 </body>
 </html>
