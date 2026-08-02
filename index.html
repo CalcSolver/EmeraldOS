@@ -6,13 +6,13 @@
   <title>Emerald OS</title>
   <style>
     :root {
-      --bg-color: #0b0f19;
-      --panel-bg: rgba(20, 27, 45, 0.75);
-      --panel-border: rgba(16, 185, 129, 0.3);
+      --bg-color: #030712;
+      --panel-bg: rgba(15, 23, 42, 0.88);
+      --panel-border: rgba(16, 185, 129, 0.4);
       --accent-color: #10b981;
       --accent-hover: #059669;
-      --text-main: #f3f4f6;
-      --text-muted: #9ca3af;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
       --window-header: linear-gradient(90deg, #064e3b, #047857);
     }
 
@@ -21,16 +21,15 @@
       margin: 0;
       padding: 0;
       user-select: none;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
     }
 
     body, html {
-      width: 100%;
-      height: 100%;
+      width: 100vw;
+      height: 100vh;
       overflow: hidden;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background: var(--bg-color);
       color: var(--text-main);
-      cursor: default;
     }
 
     /* Desktop background */
@@ -38,17 +37,14 @@
       width: 100vw;
       height: 100vh;
       position: relative;
-      background: radial-gradient(circle at center, #111827 0%, #030712 100%);
+      background: radial-gradient(circle at center, #065f46 0%, #022c22 40%, #030712 100%);
       overflow: hidden;
     }
 
     /* 3D World Canvas */
     #world3d-container {
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      inset: 0;
       z-index: 1;
     }
 
@@ -61,12 +57,13 @@
     /* Desktop Icons Overlay */
     #desktop-icons {
       position: absolute;
-      top: 20px;
-      left: 20px;
+      top: 24px;
+      left: 24px;
       display: grid;
-      grid-template-columns: repeat(auto-fill, 100px);
+      grid-template-columns: repeat(auto-fill, 110px);
       grid-gap: 20px;
       z-index: 10;
+      max-height: calc(100vh - 80px);
     }
 
     .icon-btn {
@@ -74,72 +71,76 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      width: 90px;
-      height: 90px;
-      border-radius: 12px;
-      background: rgba(255, 255, 255, 0.05);
-      backdrop-filter: blur(8px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      width: 100px;
+      height: 100px;
+      border-radius: 14px;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(16, 185, 129, 0.25);
       color: var(--text-main);
       cursor: pointer;
       transition: all 0.2s ease;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.4);
     }
 
     .icon-btn:hover {
-      background: rgba(16, 185, 129, 0.2);
+      background: rgba(16, 185, 129, 0.25);
       border-color: var(--accent-color);
-      transform: translateY(-2px);
+      transform: translateY(-3px) scale(1.03);
+      box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
     }
 
     .icon-btn span {
-      font-size: 28px;
+      font-size: 32px;
       margin-bottom: 6px;
     }
 
     .icon-btn label {
       font-size: 11px;
       text-align: center;
+      font-weight: 600;
       pointer-events: none;
+      line-height: 1.2;
     }
 
     /* Window System */
     .window {
       position: absolute;
-      width: 600px;
-      height: 400px;
+      width: 640px;
+      height: 440px;
       background: var(--panel-bg);
       backdrop-filter: blur(16px);
       border: 1px solid var(--panel-border);
-      border-radius: 10px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      border-radius: 12px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.7);
       display: flex;
       flex-direction: column;
       overflow: hidden;
       z-index: 20;
-      min-width: 300px;
-      min-height: 200px;
-      animation: winOpen 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      min-width: 320px;
+      min-height: 220px;
+      animation: winOpen 0.2s ease-out;
     }
 
     @keyframes winOpen {
-      from { transform: scale(0.85); opacity: 0; }
+      from { transform: scale(0.92); opacity: 0; }
       to { transform: scale(1); opacity: 1; }
     }
 
     .window-header {
-      height: 36px;
+      height: 40px;
       background: var(--window-header);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 12px;
+      padding: 0 14px;
       cursor: move;
       border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     .window-title {
       font-size: 13px;
-      font-weight: 600;
+      font-weight: 700;
       letter-spacing: 0.5px;
     }
 
@@ -161,11 +162,12 @@
 
     .window-body {
       flex: 1;
-      padding: 16px;
+      padding: 18px;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 14px;
+      background: rgba(2, 6, 23, 0.7);
     }
 
     /* Taskbar */
@@ -174,13 +176,13 @@
       bottom: 0;
       left: 0;
       width: 100%;
-      height: 48px;
-      background: rgba(10, 15, 26, 0.9);
-      backdrop-filter: blur(12px);
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      height: 52px;
+      background: rgba(2, 6, 23, 0.92);
+      backdrop-filter: blur(16px);
+      border-top: 1px solid var(--panel-border);
       display: flex;
       align-items: center;
-      padding: 0 12px;
+      padding: 0 16px;
       z-index: 100;
     }
 
@@ -188,94 +190,104 @@
       background: var(--accent-color);
       color: #000;
       border: none;
-      padding: 6px 14px;
-      border-radius: 6px;
-      font-weight: bold;
+      padding: 8px 18px;
+      border-radius: 8px;
+      font-weight: 800;
       cursor: pointer;
-      margin-right: 15px;
+      margin-right: 16px;
+      font-size: 13px;
+      transition: all 0.2s;
+    }
+
+    #start-btn:hover {
+      background: var(--accent-hover);
+      transform: scale(1.05);
     }
 
     .taskbar-items {
       display: flex;
-      gap: 8px;
+      gap: 10px;
       flex: 1;
+      overflow-x: auto;
     }
 
     .task-item {
-      background: rgba(255, 255, 255, 0.1);
-      padding: 6px 12px;
-      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 6px 14px;
+      border-radius: 8px;
       font-size: 12px;
+      font-weight: 600;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+
+    .task-item:hover {
+      background: rgba(16, 185, 129, 0.3);
+      border-color: var(--accent-color);
     }
 
     #system-time {
-      font-size: 12px;
+      font-size: 13px;
+      font-weight: 700;
       margin-left: auto;
-      color: var(--text-muted);
+      color: var(--accent-color);
+      letter-spacing: 1px;
     }
 
-    /* Components & UI Extras */
-    button.btn {
+    /* UI Inputs & Buttons */
+    .btn {
       background: var(--accent-color);
       color: #000;
       border: none;
-      padding: 8px 16px;
-      border-radius: 6px;
-      font-weight: 600;
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-weight: 700;
       cursor: pointer;
-      transition: background 0.2s;
+      transition: all 0.2s;
     }
 
-    button.btn:hover {
+    .btn:hover {
       background: var(--accent-hover);
+      transform: translateY(-1px);
     }
 
     input[type="text"], input[type="file"], select {
-      background: rgba(0,0,0,0.3);
+      background: rgba(15, 23, 42, 0.8);
       border: 1px solid var(--panel-border);
       color: #fff;
-      padding: 8px;
-      border-radius: 6px;
+      padding: 10px 12px;
+      border-radius: 8px;
       width: 100%;
+      font-size: 13px;
+      outline: none;
     }
 
-    /* App Store Styles */
     .app-card {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      padding: 12px;
-      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      padding: 14px;
+      border-radius: 10px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-    }
-
-    /* Custom Cursor Container */
-    .cursor-preview {
-      width: 32px;
-      height: 32px;
-      border: 1px dashed var(--accent-color);
-      display: inline-block;
-      vertical-align: middle;
-      margin-left: 10px;
     }
 
     /* Notifications & Achievements */
     #achievement-toast {
       position: absolute;
       top: 20px;
-      right: -300px;
-      background: rgba(16, 185, 129, 0.9);
+      right: -350px;
+      background: var(--accent-color);
       color: #000;
-      padding: 12px 20px;
-      border-radius: 8px;
-      font-weight: bold;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-      transition: right 0.4s ease-in-out;
+      padding: 14px 24px;
+      border-radius: 10px;
+      font-weight: 800;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      transition: right 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       z-index: 1000;
     }
 
@@ -283,24 +295,23 @@
       right: 20px;
     }
   </style>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
 
   <div id="desktop">
-    <!-- 3D Background World -->
+    <!-- 3D Background Canvas -->
     <div id="world3d-container">
       <canvas id="world3d"></canvas>
     </div>
 
-    <!-- Desktop Apps Container -->
+    <!-- Desktop Icons Container -->
     <div id="desktop-icons"></div>
 
     <!-- Taskbar -->
     <div id="taskbar">
-      <button id="start-btn">Emerald</button>
+      <button id="start-btn">Emerald OS</button>
       <div class="taskbar-items" id="taskbar-items"></div>
-      <div id="system-time">00:00 AM</div>
+      <div id="system-time">--:-- --</div>
     </div>
   </div>
 
@@ -308,28 +319,25 @@
   <div id="achievement-toast">🏆 Achievement Unlocked!</div>
 
   <script>
-    // --- System State & App Definitions ---
+    // --- OS State & App Catalog ---
     const state = {
-      windows: [],
       activeWindow: null,
-      achievements: new Set(),
-      customCursors: [],
-      3dWorldActive: true
+      achievements: new Set()
     };
 
     const apps = [
       { id: 'gameshare', name: 'GameShare TUESDAE', icon: '🎮', render: renderGameShare },
-      { id: 'ultimatesys', name: 'The Ultimate Ent System', icon: '🎰', render: renderUltimateEnt },
-      { id: 'dash', name: 'Dash for Amazing Experience', icon: '🏎️', render: renderDash },
+      { id: 'ultimatesys', name: 'Ultimate Ent System', icon: '🎰', render: renderUltimateEnt },
+      { id: 'dash', name: 'Dash Experience', icon: '🏎️', render: renderDash },
       { id: 'handwriter', name: 'AI Handwriter', icon: '✍️', render: renderHandwriter },
       { id: 'appstore', name: 'Emerald App Store', icon: '🛍️', render: renderAppStore },
-      { id: 'radio', name: 'Live Web Radio', icon: '📻', render: renderRadio },
+      { id: 'radio', name: 'Live Radio', icon: '📻', render: renderRadio },
       { id: 'music', name: 'Music Player', icon: '🎵', render: renderMusic },
       { id: 'cursors', name: 'Custom Cursors', icon: '🖱️', render: renderCursorManager },
       { id: 'achievements', name: 'Achievements', icon: '🏆', render: renderAchievements }
     ];
 
-    // --- Core Window Management ---
+    // --- Core Window Manager ---
     function openApp(appId) {
       const app = apps.find(a => a.id === appId);
       if (!app) return;
@@ -344,8 +352,8 @@
       const win = document.createElement('div');
       win.id = `win-${appId}`;
       win.className = 'window';
-      win.style.left = `${100 + Math.random() * 80}px`;
-      win.style.top = `${50 + Math.random() * 80}px`;
+      win.style.left = `${80 + Math.random() * 100}px`;
+      win.style.top = `${40 + Math.random() * 80}px`;
 
       win.innerHTML = `
         <div class="window-header">
@@ -364,7 +372,7 @@
       focusWindow(win);
       updateTaskbar();
 
-      triggerAchievement('first_app', 'Explorer: Opened your first app!');
+      triggerAchievement('Opened ' + app.name, `Explorer: Launched ${app.name}`);
     }
 
     function closeWindow(appId) {
@@ -443,20 +451,23 @@
     function renderGameShare(el) {
       el.innerHTML = `
         <h3>GameShare TUESDAE</h3>
-        <p style="color:var(--text-muted)">Multiplayer local arcade portal. Host or connect to sessions.</p>
-        <button class="btn" onclick="alert('Creating session host...')">Host Game Room</button>
-        <button class="btn" style="background:#3b82f6; color:#fff" onclick="alert('Searching for nearby TUESDAE peers...')">Find Local Peer</button>
+        <p style="color:var(--text-muted)">Multiplayer local arcade portal & session host.</p>
+        <div style="display:flex; gap:10px; margin-top:10px;">
+          <button class="btn" onclick="alert('Game room session active!')">Host Game Room</button>
+          <button class="btn" style="background:#3b82f6; color:#fff" onclick="alert('Searching for TUESDAE peers...')">Find Local Peer</button>
+        </div>
       `;
     }
 
     function renderUltimateEnt(el) {
       el.innerHTML = `
-        3D Interactive Arcade Hub & Dashboard.
+        <h3>The Ultimate Entertainment System</h3>
+        <p style="color:var(--text-muted)">Entertainment dashboard & media center.</p>
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px;">
-          <div class="app-card">🕹️ Retro Emulator</div>
+          <div class="app-card">🕹️ Retro Arcade</div>
           <div class="app-card">🎬 Emerald Cinema</div>
           <div class="app-card">🎮 Cloud Stream</div>
-          <div class="app-card">🎧 HQ Spatial Audio</div>
+          <div class="app-card">🎧 Spatial Audio</div>
         </div>
       `;
     }
@@ -464,37 +475,42 @@
     function renderDash(el) {
       el.innerHTML = `
         <h3>Dash for an Amazing Experience</h3>
-        <p>Speed up system performance, auto-clean cache, and optimize 3D world parameters.</p>
-        <button class="btn" onclick="triggerAchievement('dash_boost', 'Speed Demon: Optimized OS!'); alert('System Turbo Enabled!')">Turbo Boost OS</button>
+        <p style="color:var(--text-muted)">Turbocharge performance and optimize Emerald OS.</p>
+        <button class="btn" onclick="triggerAchievement('Turbo Boost', 'Speed Demon: Boosted OS!'); alert('System Turbo Boost Activated!')">Activate Turbo Boost</button>
       `;
     }
 
     function renderHandwriter(el) {
       el.innerHTML = `
         <h3>AI Handwriter</h3>
-        <p>Convert standard input text into natural handwriting stroke paths.</p>
+        <p style="color:var(--text-muted)">Type text to simulate natural handwriting output.</p>
         <input type="text" placeholder="Type text here..." id="hw-input" />
-        <div style="font-family:'Courier New', monospace; background:#fff; color:#000; padding:15px; border-radius:6px; min-height:80px;" id="hw-output">
-          Handwriting simulation output area...
+        <div style="font-family:'Courier New', cursive, monospace; background:#fff; color:#000; padding:15px; border-radius:8px; min-height:80px;" id="hw-output">
+          Type above to simulate handwritten strokes...
         </div>
       `;
-      document.getElementById('hw-input').oninput = (e) => {
-        document.getElementById('hw-output').innerText = e.target.value || 'Handwriting simulation output area...';
-      };
+      setTimeout(() => {
+        const inp = document.getElementById('hw-input');
+        if (inp) {
+          inp.oninput = (e) => {
+            document.getElementById('hw-output').innerText = e.target.value || 'Type above to simulate handwritten strokes...';
+          };
+        }
+      }, 50);
     }
 
     function renderAppStore(el) {
       el.innerHTML = `
         <h3>Emerald App Store</h3>
-        <p style="color:var(--text-muted)">Install or manage software packages directly.</p>
+        <p style="color:var(--text-muted)">Browse and install apps to your system.</p>
         <div style="display:flex; flex-direction:column; gap:10px; margin-top:10px;">
           <div class="app-card">
             <span>🎨 Pixel Painter Pro</span>
-            <button class="btn" onclick="alert('Installed!')">Install</button>
+            <button class="btn" onclick="alert('App installed successfully!')">Install</button>
           </div>
           <div class="app-card">
             <span>🌐 Web VR Browser</span>
-            <button class="btn" onclick="alert('Installed!')">Install</button>
+            <button class="btn" onclick="alert('App installed successfully!')">Install</button>
           </div>
         </div>
       `;
@@ -502,84 +518,103 @@
 
     function renderRadio(el) {
       el.innerHTML = `
-        <h3>Live Real Internet Radio</h3>
-        <p style="color:var(--text-muted)">Listen to online streaming radio links.</p>
+        <h3>Live Radio Streams</h3>
+        <p style="color:var(--text-muted)">Select a stream link to start listening live.</p>
         <select id="radio-select">
-          <option value="https://s3.vocalware.com/g/groove.mp3">Groove Salad - Ambient/Chill</option>
-          <option value="https://ice1.somafm.com/indiepop-128-mp3">Indie Pop Rocks</option>
+          <option value="https://s3.vocalware.com/g/groove.mp3">Groove Ambient Channel</option>
+          <option value="https://ice1.somafm.com/indiepop-128-mp3">Indie Pop Live</option>
         </select>
-        <audio id="radio-player" controls style="width:100%; margin-top:10px;"></audio>
+        <audio id="radio-player" controls style="width:100%; margin-top:12px;"></audio>
       `;
-      const select = el.querySelector('#radio-select');
-      const player = el.querySelector('#radio-player');
-      select.onchange = () => {
-        player.src = select.value;
-        player.play();
-        triggerAchievement('radio_listen', 'DJ Master: Streamed real live radio!');
-      };
+      setTimeout(() => {
+        const select = document.getElementById('radio-select');
+        const player = document.getElementById('radio-player');
+        if (select && player) {
+          select.onchange = () => {
+            player.src = select.value;
+            player.play();
+            triggerAchievement('Live Radio', 'DJ Master: Played live radio!');
+          };
+        }
+      }, 50);
     }
 
     function renderMusic(el) {
       el.innerHTML = `
         <h3>Emerald Music Player</h3>
-        <p style="color:var(--text-muted)">Upload and play your custom audio files (MP3/WAV).</p>
+        <p style="color:var(--text-muted)">Upload local MP3, WAV, or audio files from your device.</p>
         <input type="file" id="music-file-input" accept="audio/*" />
-        <audio id="local-audio-player" controls style="width:100%; margin-top:10px;"></audio>
+        <audio id="local-audio-player" controls style="width:100%; margin-top:12px;"></audio>
       `;
-      const input = el.querySelector('#music-file-input');
-      const player = el.querySelector('#local-audio-player');
-      input.onchange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-          player.src = URL.createObjectURL(file);
-          player.play();
-          triggerAchievement('custom_music', 'Maestro: Loaded local audio file!');
+      setTimeout(() => {
+        const input = document.getElementById('music-file-input');
+        const player = document.getElementById('local-audio-player');
+        if (input && player) {
+          input.onchange = (e) => {
+            const file = e.target.files[0];
+            if (file) {
+              player.src = URL.createObjectURL(file);
+              player.play();
+              triggerAchievement('Custom Music', 'Maestro: Loaded custom local audio!');
+            }
+          };
         }
-      };
+      }, 50);
     }
 
     function renderCursorManager(el) {
       el.innerHTML = `
-        <h3>Custom Cursor System</h3>
-        <p style="color:var(--text-muted)">Upload a image from your library to set as desktop cursor.</p>
+        <h3>Custom Cursor Gallery</h3>
+        <p style="color:var(--text-muted)">Upload any picture from your photo library to set as cursor.</p>
         <input type="file" id="cursor-file" accept="image/*" />
-        <div style="margin-top:10px;">
+        <div style="margin-top:12px;">
           <button class="btn" id="reset-cursor">Reset to Default Cursor</button>
         </div>
       `;
-      el.querySelector('#cursor-file').onchange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-          const reader = new FileReader();
-          reader.onload = (evt) => {
-            const url = evt.target.result;
-            document.body.style.cursor = `url(${url}), auto`;
-            triggerAchievement('custom_cursor', 'Style Designer: Created custom cursor!');
+      setTimeout(() => {
+        const fileInp = document.getElementById('cursor-file');
+        const resetBtn = document.getElementById('reset-cursor');
+        if (fileInp) {
+          fileInp.onchange = (e) => {
+            const file = e.target.files[0];
+            if (file) {
+              const reader = new FileReader();
+              reader.onload = (evt) => {
+                document.body.style.cursor = `url(${evt.target.result}), auto`;
+                triggerAchievement('Custom Cursor', 'Style Icon: Applied photo cursor!');
+              };
+              reader.readAsDataURL(file);
+            }
           };
-          reader.readAsDataURL(file);
         }
-      };
-      el.querySelector('#reset-cursor').onclick = () => {
-        document.body.style.cursor = 'default';
-      };
+        if (resetBtn) {
+          resetBtn.onclick = () => {
+            document.body.style.cursor = 'default';
+          };
+        }
+      }, 50);
     }
 
     function renderAchievements(el) {
       el.innerHTML = `
-        <h3>OS Achievements</h3>
-        <p style="color:var(--text-muted)">System Unlocks and Milestones:</p>
-        <ul id="achievements-list" style="margin-left:20px; margin-top:10px;"></ul>
+        <h3>Achievements Tracker</h3>
+        <p style="color:var(--text-muted)">Unlocked system milestones:</p>
+        <ul id="achievements-list" style="margin-left:20px; margin-top:10px; display:flex; flex-direction:column; gap:6px;"></ul>
       `;
-      const list = el.querySelector('#achievements-list');
-      if (state.achievements.size === 0) {
-        list.innerHTML = '<li>No achievements unlocked yet. Explore Emerald OS!</li>';
-      } else {
-        state.achievements.forEach(ach => {
-          const li = document.createElement('li');
-          li.innerText = ach;
-          list.appendChild(li);
-        });
-      }
+      setTimeout(() => {
+        const list = document.getElementById('achievements-list');
+        if (!list) return;
+        if (state.achievements.size === 0) {
+          list.innerHTML = '<li style="color:var(--text-muted)">No achievements unlocked yet. Explore Emerald OS!</li>';
+        } else {
+          list.innerHTML = '';
+          state.achievements.forEach(ach => {
+            const li = document.createElement('li');
+            li.innerText = '🏆 ' + ach;
+            list.appendChild(li);
+          });
+        }
+      }, 50);
     }
 
     function triggerAchievement(id, title) {
@@ -592,51 +627,60 @@
       }
     }
 
-    // --- 3D Background World (Three.js) ---
+    // --- Lightweight Canvas 3D Flight Background ---
     function init3DWorld() {
-      const container = document.getElementById('world3d-container');
-      const scene = new THREE.Scene();
-      const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-      const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('world3d'), alpha: true, antialias: true });
+      const canvas = document.getElementById('world3d');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
 
-      renderer.setSize(window.innerWidth, window.innerHeight);
-
-      // Add simple geometric objects representing app nodes
-      const geometry = new THREE.TorusKnotGeometry(10, 3, 100, 16);
-      const material = new THREE.MeshBasicMaterial({ color: 0x10b981, wireframe: true });
-      const torusKnot = new THREE.Mesh(geometry, material);
-      scene.add(torusKnot);
-
-      camera.position.z = 30;
-
-      function animate() {
-        requestAnimationFrame(animate);
-        torusKnot.rotation.x += 0.005;
-        torusKnot.rotation.y += 0.005;
-        renderer.render(scene, camera);
+      function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
       }
-      animate();
+      resize();
+      window.addEventListener('resize', resize);
 
-      window.addEventListener('resize', () => {
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-      });
+      let offset = 0;
+      function render() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        const cx = canvas.width / 2;
+        const cy = canvas.height / 2;
+
+        offset += 1.5;
+        for (let i = 0; i < 40; i++) {
+          let z = (i * 30 - (offset % 30));
+          if (z <= 0) continue;
+          let k = 200 / z;
+          let r = 500 * k;
+
+          ctx.strokeStyle = `rgba(16, 185, 129, ${Math.max(0, 0.4 - z / 800)})`;
+          ctx.lineWidth = 1.5;
+          ctx.beginPath();
+          ctx.arc(cx, cy, r, 0, Math.PI * 2);
+          ctx.stroke();
+        }
+
+        requestAnimationFrame(render);
+      }
+      render();
     }
 
-    // --- Time Display ---
+    // --- Live System Clock ---
     function updateTime() {
       const now = new Date();
-      document.getElementById('system-time').innerText = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      const el = document.getElementById('system-time');
+      if (el) {
+        el.innerText = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      }
     }
 
-    // --- OS Initialization ---
-    window.onload = () => {
+    // --- Startup Initialization ---
+    window.addEventListener('DOMContentLoaded', () => {
       renderDesktopIcons();
       init3DWorld();
-      setInterval(updateTime, 1000);
       updateTime();
-    };
+      setInterval(updateTime, 1000);
+    });
   </script>
 </body>
 </html>
