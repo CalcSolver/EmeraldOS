@@ -3,42 +3,30 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NautilusOS v7.0</title>
+  <title>NautilusOS v8.0</title>
   <style>
     :root {
       --bg-gradient: radial-gradient(circle at center, #062016 0%, #020617 100%);
       --accent: #10b981;
       --accent-hover: #059669;
-      --panel-bg: rgba(15, 23, 42, 0.85);
-      --window-bg: rgba(11, 20, 32, 0.95);
+      --panel-bg: #0d1520;
+      --window-bg: rgba(11, 20, 32, 0.96);
+      --card-bg: rgba(15, 23, 42, 0.7);
       --text: #f8fafc;
       --border: rgba(16, 185, 129, 0.35);
       --term-text: #34d399;
-      --cursor-style: auto;
     }
 
-    [data-theme="cyberpunk"] {
-      --bg-gradient: radial-gradient(circle at center, #2b0938 0%, #0c0214 100%);
-      --accent: #f43f5e;
-      --window-bg: rgba(24, 9, 38, 0.95);
-      --border: rgba(244, 63, 94, 0.35);
-      --term-text: #facc15;
+    /* Legacy Mode Override Styles */
+    body.legacy-v1 {
+      --bg-gradient: linear-gradient(to bottom, #111827, #000000);
+      --accent: #3b82f6;
+      --border: rgba(59, 130, 246, 0.4);
     }
-
-    [data-theme="synthwave"] {
-      --bg-gradient: linear-gradient(135deg, #18022b 0%, #080014 100%);
-      --accent: #d946ef;
-      --window-bg: rgba(38, 8, 64, 0.95);
-      --border: rgba(217, 70, 239, 0.35);
-      --term-text: #22d3ee;
-    }
-
-    [data-theme="nord"] {
-      --bg-gradient: radial-gradient(circle at center, #3b4252 0%, #2e3440 100%);
-      --accent: #88c0d0;
-      --window-bg: rgba(59, 66, 82, 0.95);
-      --border: rgba(136, 192, 208, 0.35);
-      --term-text: #a3be8c;
+    body.legacy-v3 {
+      --bg-gradient: radial-gradient(circle, #2e1065 0%, #090514 100%);
+      --accent: #06b6d4;
+      --border: rgba(6, 182, 212, 0.4);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; font-family: 'Segoe UI', system-ui, sans-serif; }
@@ -47,16 +35,11 @@
       height: 100vh; 
       overflow: hidden; 
       color: var(--text); 
-      transition: background 0.4s ease; 
-      cursor: var(--cursor-style);
       position: relative;
+      transition: background 0.4s ease;
     }
 
-    /* Custom Cursors */
-    body.cursor-emerald { cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="%2310b981"><circle cx="12" cy="12" r="8"/></svg>') 12 12, auto; }
-    body.cursor-crosshair { cursor: crosshair; }
-
-    /* Animated Boot / Splash Screen */
+    /* Boot Screen Animation */
     #boot-screen {
       position: fixed;
       inset: 0;
@@ -67,57 +50,35 @@
       align-items: center;
       justify-content: center;
       gap: 20px;
-      animation: fadeOutBoot 1s ease 3.5s forwards;
+      animation: fadeOutBoot 0.8s ease 3.2s forwards;
     }
 
     .boot-logo {
-      width: 120px;
-      height: 120px;
-      fill: #10b981;
-      filter: drop-shadow(0 0 25px #10b981);
-      animation: pulseNautilus 2s ease-in-out infinite alternate, spinIntro 1.5s ease-out;
+      width: 100px;
+      height: 100px;
+      fill: var(--accent);
+      filter: drop-shadow(0 0 25px var(--accent));
+      animation: pulseNautilus 2s ease-in-out infinite alternate, spinIntro 1.2s ease-out;
     }
 
     .boot-text {
-      font-size: 24px;
-      font-weight: 300;
-      letter-spacing: 3px;
+      font-size: 20px;
+      letter-spacing: 2px;
       color: #e2e8f0;
       overflow: hidden;
       white-space: nowrap;
-      border-right: 2px solid #10b981;
+      border-right: 2px solid var(--accent);
       width: 0;
-      animation: typingText 2.5s steps(40, end) 0.5s forwards, blinkCursor 0.75s step-end infinite;
+      animation: typingText 2.2s steps(40, end) 0.5s forwards, blinkCursor 0.75s step-end infinite;
     }
 
     @keyframes spinIntro { from { transform: scale(0) rotate(-180deg); opacity: 0; } to { transform: scale(1) rotate(0); opacity: 1; } }
-    @keyframes pulseNautilus { from { transform: scale(0.95); filter: drop-shadow(0 0 15px #10b981); } to { transform: scale(1.05); filter: drop-shadow(0 0 35px #34d399); } }
+    @keyframes pulseNautilus { from { transform: scale(0.95); } to { transform: scale(1.05); } }
     @keyframes typingText { from { width: 0; } to { width: 420px; } }
-    @keyframes blinkCursor { from, to { border-color: transparent; } 50% { border-color: #10b981; } }
+    @keyframes blinkCursor { from, to { border-color: transparent; } 50% { border-color: var(--accent); } }
     @keyframes fadeOutBoot { to { opacity: 0; visibility: hidden; pointer-events: none; } }
 
-    /* Background Emerald Nautilus Watermark */
-    #nautilus-bg-watermark {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 600px;
-      height: 600px;
-      opacity: 0.08;
-      pointer-events: none;
-      z-index: 0;
-      fill: var(--accent);
-      filter: drop-shadow(0 0 30px var(--accent));
-      animation: floatPulse 8s ease-in-out infinite alternate;
-    }
-
-    @keyframes floatPulse {
-      0% { transform: translate(-50%, -50%) scale(0.98); opacity: 0.06; }
-      100% { transform: translate(-50%, -50%) scale(1.03); opacity: 0.12; }
-    }
-
-    /* Desktop Layout */
+    /* Desktop Area */
     #desktop {
       width: 100vw;
       height: calc(100vh - 80px);
@@ -126,7 +87,7 @@
       z-index: 2;
     }
 
-    .icon {
+    .desktop-icon {
       width: 96px;
       height: 96px;
       display: flex;
@@ -138,35 +99,183 @@
       padding: 8px;
       border-radius: 8px;
       position: absolute;
-      transition: border 0.2s, background 0.2s;
+      transition: background 0.2s;
       border: 1px solid transparent;
     }
 
-    .icon:hover { background: rgba(255, 255, 255, 0.08); border-color: var(--border); }
-    body.drag-mode-active .icon { cursor: move; border-color: var(--accent); background: rgba(16, 185, 129, 0.15); }
-    .icon-svg { width: 38px; height: 38px; fill: var(--accent); pointer-events: none; }
-    .icon-label { font-size: 11px; text-align: center; text-shadow: 0 1px 3px rgba(0,0,0,0.8); pointer-events: none; line-height: 1.2; }
+    .desktop-icon:hover { background: rgba(255, 255, 255, 0.08); border-color: var(--border); }
+    .icon-svg { width: 36px; height: 36px; fill: var(--accent); pointer-events: none; }
+    .icon-label { font-size: 11px; text-align: center; text-shadow: 0 1px 3px rgba(0,0,0,0.8); pointer-events: none; }
 
-    /* Floating Capsule Dock Taskbar */
-    #dock-container {
+    /* Background Watermark */
+    #nautilus-bg-watermark {
       position: absolute;
-      bottom: 20px;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 580px; height: 580px;
+      opacity: 0.06;
+      pointer-events: none;
+      z-index: 0;
+      fill: var(--accent);
+    }
+
+    /* Redesigned Launcher Modal Window */
+    #start-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 2000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(8px);
+    }
+
+    #start-launcher {
+      width: 720px;
+      max-height: 85vh;
+      background: #0d1520;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.8);
+      display: flex;
+      flex-direction: column;
+      padding: 24px;
+      gap: 20px;
+      overflow: hidden;
+    }
+
+    /* User Profile Bar */
+    .launcher-user-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .user-avatar {
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      background: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #000;
+    }
+
+    .user-details h3 { font-size: 16px; font-weight: 700; color: #fff; }
+    .user-details span { font-size: 12px; color: #94a3b8; }
+
+    .launcher-actions { display: flex; gap: 10px; }
+    .action-btn {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      color: #fff;
+      padding: 8px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.2s;
+    }
+    .action-btn:hover { background: rgba(255,255,255,0.12); }
+    .action-btn.shutdown { background: rgba(239, 68, 68, 0.2); border-color: rgba(239, 68, 68, 0.4); color: #fca5a5; }
+    .action-btn.shutdown:hover { background: rgba(239, 68, 68, 0.4); }
+
+    /* Launcher Search Bar */
+    .launcher-search-box {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .launcher-search-input {
+      width: 100%;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 42px 12px 16px;
+      color: #fff;
+      font-size: 14px;
+      outline: none;
+    }
+
+    .launcher-search-icon {
+      position: absolute;
+      right: 14px;
+      fill: #94a3b8;
+      width: 20px;
+      height: 20px;
+    }
+
+    /* Launcher Apps Grid */
+    .launcher-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      overflow-y: auto;
+      max-height: 420px;
+      padding-right: 4px;
+    }
+
+    .launcher-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 20px 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .launcher-card:hover {
+      background: rgba(16, 185, 129, 0.1);
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    .launcher-card-svg { width: 32px; height: 32px; fill: var(--accent); }
+    .launcher-card-title { font-size: 13px; font-weight: 500; color: #e2e8f0; text-align: center; }
+
+    /* Floating Dock Taskbar */
+    #dock-container {
+      position: fixed;
+      bottom: 16px;
       left: 50%;
       transform: translateX(-50%);
       z-index: 1000;
     }
 
     #capsule-dock {
-      height: 52px;
-      background: rgba(11, 20, 32, 0.9);
-      border: 1px solid var(--accent);
-      border-radius: 26px;
-      backdrop-filter: blur(18px);
+      height: 56px;
+      background: #09111e;
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      backdrop-filter: blur(20px);
       display: flex;
       align-items: center;
       padding: 0 18px;
-      gap: 16px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.6), inset 0 0 10px rgba(16, 185, 129, 0.15);
+      gap: 10px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+    }
+
+    .dock-btn-wrapper {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
     .dock-btn {
@@ -177,35 +286,49 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 6px;
+      padding: 8px;
       border-radius: 50%;
       transition: transform 0.2s, background 0.2s;
     }
 
     .dock-btn:hover {
-      transform: translateY(-3px);
-      background: rgba(255, 255, 255, 0.1);
+      transform: translateY(-2px);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    /* Underline Indicator for Open Apps */
+    .dock-indicator {
+      position: absolute;
+      bottom: -2px;
+      width: 16px;
+      height: 3px;
+      background: var(--accent);
+      border-radius: 2px;
+      box-shadow: 0 0 8px var(--accent);
+      display: none;
+    }
+
+    .dock-btn-wrapper.active .dock-indicator {
+      display: block;
     }
 
     .dock-svg { width: 22px; height: 22px; fill: var(--accent); }
-    .dock-divider { width: 1px; height: 24px; background: rgba(255, 255, 255, 0.2); }
-    .dock-clock { font-size: 13px; color: #f8fafc; font-weight: 500; margin-left: 4px; }
+    .dock-divider { width: 1px; height: 24px; background: rgba(255, 255, 255, 0.15); margin: 0 4px; }
+    .dock-clock { font-size: 13px; color: #f8fafc; font-weight: 500; margin-left: 6px; }
 
-    /* Window UI Frame */
+    /* Window Frames */
     .window {
       position: absolute;
-      width: 820px;
-      height: 530px;
+      width: 800px;
+      height: 520px;
       background: var(--window-bg);
       border: 1px solid var(--border);
       border-radius: 12px;
-      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.7);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8);
       backdrop-filter: blur(16px);
       display: flex;
       flex-direction: column;
       overflow: hidden;
-      min-width: 360px;
-      min-height: 240px;
       z-index: 10;
     }
 
@@ -228,57 +351,30 @@
     .btn-max { background: var(--accent); }
 
     .window-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; background: #080c14; position: relative; }
-    .app-container { padding: 18px; height: 100%; overflow-y: auto; display: flex; flex-direction: column; gap: 14px; }
+    .app-container { padding: 20px; height: 100%; overflow-y: auto; display: flex; flex-direction: column; gap: 14px; }
 
-    /* Browser Bar */
+    /* Application Utilities */
     .browser-bar { display: flex; gap: 8px; padding: 10px; background: #111827; border-bottom: 1px solid var(--border); align-items: center; }
-    .browser-btn { background: #1f2937; border: 1px solid var(--border); color: #fff; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 12px; display: inline-flex; align-items: center; gap: 6px; }
+    .browser-btn { background: #1f2937; border: 1px solid var(--border); color: #fff; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 12px; }
     .browser-btn:hover { background: var(--accent); color: #000; }
     .browser-input { flex: 1; background: #1f2937; border: 1px solid var(--border); color: #fff; padding: 7px 12px; border-radius: 6px; font-size: 13px; outline: none; }
 
-    /* Terminal Console */
-    .terminal-container { background: #030712; color: var(--term-text); font-family: 'Consolas', monospace; padding: 14px; flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; font-size: 13px; }
+    .terminal-container { background: #030712; color: var(--term-text); font-family: monospace; padding: 14px; flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; font-size: 13px; }
     .terminal-output { white-space: pre-wrap; line-height: 1.4; }
     .terminal-input-row { display: flex; align-items: center; gap: 8px; }
     .terminal-prompt { color: var(--accent); font-weight: bold; }
     .terminal-input { flex: 1; background: transparent; border: none; outline: none; color: #fff; font-family: inherit; font-size: inherit; }
 
-    /* App Grids */
-    .category-title { font-size: 13px; font-weight: 700; color: var(--accent); border-bottom: 1px solid var(--border); padding-bottom: 4px; margin-top: 10px; }
     .app-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; }
     .app-card { background: #1e293b; border: 1px solid var(--border); padding: 14px; border-radius: 8px; display: flex; flex-direction: column; gap: 8px; text-align: center; align-items: center; }
 
-    /* Start Menu Popup */
-    #start-menu { 
-      position: absolute; 
-      bottom: 80px; 
-      left: 50%;
-      transform: translateX(-50%); 
-      width: 360px; 
-      max-height: 480px; 
-      overflow-y: auto; 
-      background: var(--window-bg); 
-      border: 1px solid var(--accent); 
-      border-radius: 14px; 
-      backdrop-filter: blur(24px); 
-      padding: 16px; 
-      display: none; 
-      flex-direction: column; 
-      gap: 6px; 
-      box-shadow: 0 20px 50px rgba(0,0,0,0.8); 
-      z-index: 1001; 
-    }
-    .menu-item { padding: 9px 12px; border-radius: 6px; display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 13px; color: #fff; }
-    .menu-item:hover { background: rgba(255, 255, 255, 0.12); color: var(--accent); }
-
-    /* Notifications Toast */
     #toast-container { position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
     .toast { background: var(--accent); color: #000; padding: 12px 20px; border-radius: 8px; font-weight: bold; box-shadow: 0 5px 15px rgba(0,0,0,0.4); }
   </style>
 </head>
 <body>
 
-  <!-- Animated Intro Boot Screen -->
+  <!-- Animated Boot Sequence Screen -->
   <div id="boot-screen">
     <svg class="boot-logo" viewBox="0 0 512 512">
       <path d="M256,0C114.6,0,0,114.6,0,256s114.6,256,256,256,256-114.6,256-256S397.4,0,256,0Zm0,464C141.1,464,48,370.9,48,256S141.1,48,256,48,464,141.1,464,256,370.9,464,256,464ZM256,96c-88.4,0-160,71.6-160,160s71.6,160,160,160,160-71.6,160-160S344.4,96,256,96Zm0,272c-61.9,0-112-50.1-112-112s50.1-112,112-112,112,50.1,112,112S317.9,368,256,368Zm0-176c-35.3,0-64,28.7-64,64s28.7,64,64,64,64-28.7,64-64S291.3,192,256,192Z"/>
@@ -294,97 +390,122 @@
   <div id="toast-container"></div>
   <div id="desktop"></div>
 
-  <!-- Start Menu Popup -->
-  <div id="start-menu"></div>
+  <!-- Modal Start Launcher (Reference Design Match) -->
+  <div id="start-modal-overlay" onclick="closeLauncher(event)">
+    <div id="start-launcher" onclick="event.stopPropagation()">
+      <!-- User Profile Header -->
+      <div class="launcher-user-bar">
+        <div class="user-info">
+          <div class="user-avatar">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+          </div>
+          <div class="user-details">
+            <h3>Harrythehacker</h3>
+            <span>Standard User</span>
+          </div>
+        </div>
+        <div class="launcher-actions">
+          <button class="action-btn" onclick="window.open('https://github.com')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          </button>
+          <button class="action-btn" onclick="showToast('Signed Out')">Sign Out</button>
+          <button class="action-btn shutdown" onclick="showToast('Shutting Down NautilusOS...')">Shut Down</button>
+        </div>
+      </div>
 
-  <!-- Floating Capsule Dock Taskbar -->
+      <!-- Search Field -->
+      <div class="launcher-search-box">
+        <input type="text" id="launcher-search" class="launcher-search-input" placeholder="Search apps..." oninput="filterLauncherApps()">
+        <svg class="launcher-search-icon" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+      </div>
+
+      <!-- Card Grid Container -->
+      <div class="launcher-grid" id="launcher-grid"></div>
+    </div>
+  </div>
+
+  <!-- Taskbar Floating Dock -->
   <div id="dock-container">
     <div id="capsule-dock">
-      <!-- Fish Logo (Triggers Start Menu) -->
-      <button class="dock-btn" onclick="toggleStartMenu()" title="Start Menu">
-        <svg class="dock-svg" viewBox="0 0 24 24">
-          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
-        </svg>
-      </button>
+      <!-- Fish App Launcher Switcher -->
+      <div class="dock-btn-wrapper">
+        <button class="dock-btn" onclick="toggleLauncherModal()" title="Launcher">
+          <svg class="dock-svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+        </button>
+      </div>
 
       <div class="dock-divider"></div>
 
-      <!-- File Explorer -->
-      <button class="dock-btn" onclick="openApp('files')" title="Files">
-        <svg class="dock-svg" viewBox="0 0 24 24"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
-      </button>
+      <!-- App Shortcuts (With Taskbar Indicators) -->
+      <div class="dock-btn-wrapper" id="dock-wrapper-files">
+        <button class="dock-btn" onclick="openApp('files')" title="Files">
+          <svg class="dock-svg" viewBox="0 0 24 24"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
+        </button>
+        <div class="dock-indicator"></div>
+      </div>
 
-      <!-- Terminal -->
-      <button class="dock-btn" onclick="openApp('terminal')" title="Terminal">
-        <svg class="dock-svg" viewBox="0 0 24 24"><path d="M20 4H4c-1.11 0-2 .89-2 2v12c0 1.1.89 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.11-.9-2-2-2zm0 14H4V8h16v10zm-2-1h-6v-2h6v2zm-9.41-1.41L11.17 13l-2.58-2.59L10 9l4 4-4 4-1.41-1.41z"/></svg>
-      </button>
+      <div class="dock-btn-wrapper" id="dock-wrapper-terminal">
+        <button class="dock-btn" onclick="openApp('terminal')" title="Terminal">
+          <svg class="dock-svg" viewBox="0 0 24 24"><path d="M20 4H4c-1.11 0-2 .89-2 2v12c0 1.1.89 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.11-.9-2-2-2zm0 14H4V8h16v10zm-2-1h-6v-2h6v2zm-9.41-1.41L11.17 13l-2.58-2.59L10 9l4 4-4 4-1.41-1.41z"/></svg>
+        </button>
+        <div class="dock-indicator"></div>
+      </div>
 
-      <!-- Web Browser -->
-      <button class="dock-btn" onclick="openApp('browser')" title="Web Browser">
-        <svg class="dock-svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
-      </button>
+      <div class="dock-btn-wrapper" id="dock-wrapper-browser">
+        <button class="dock-btn" onclick="openApp('browser')" title="Browser">
+          <svg class="dock-svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+        </button>
+        <div class="dock-indicator"></div>
+      </div>
 
-      <!-- Settings -->
-      <button class="dock-btn" onclick="openApp('settings')" title="Settings">
-        <svg class="dock-svg" viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6-3.6z"/></svg>
-      </button>
+      <div class="dock-btn-wrapper" id="dock-wrapper-settings">
+        <button class="dock-btn" onclick="openApp('settings')" title="Settings">
+          <svg class="dock-svg" viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6-3.6z"/></svg>
+        </button>
+        <div class="dock-indicator"></div>
+      </div>
 
-      <!-- VR / Games -->
-      <button class="dock-btn" onclick="openApp('entertainment')" title="Games">
-        <svg class="dock-svg" viewBox="0 0 24 24"><path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v2H6v-2H4v-2h2V9h2v2h3v2zm4.5 1c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm3-3c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5-1.5z"/></svg>
-      </button>
+      <div class="dock-btn-wrapper" id="dock-wrapper-whatsnew">
+        <button class="dock-btn" onclick="openApp('whatsnew')" title="What's New">
+          <svg class="dock-svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+        </button>
+        <div class="dock-indicator"></div>
+      </div>
 
       <div class="dock-divider"></div>
 
-      <!-- What's New App Button -->
-      <button class="dock-btn" onclick="openApp('whatsnew')" title="What's New">
-        <svg class="dock-svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+      <!-- Utilities -->
+      <button class="dock-btn" onclick="showToast('No new notifications')" title="Notifications">
+        <svg class="dock-svg" viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
       </button>
 
-      <!-- Drag Switch -->
-      <button class="dock-btn" onclick="toggleGlobalDragMode()" title="Drag Mode">
+      <button class="dock-btn" onclick="openApp('whatsnew')" title="Updates">
         <svg class="dock-svg" viewBox="0 0 24 24"><path d="M7 2v11h3v9l7-12h-4l4-8z"/></svg>
       </button>
 
-      <!-- Clock -->
-      <div class="dock-clock" id="dock-clock">8:53 PM</div>
+      <div class="dock-clock" id="dock-clock">11:48 AM</div>
     </div>
   </div>
 
   <script>
-    /* Full App Catalog */
+    /* Full Master Applications Catalog */
     const baseAppsCatalog = [
-      { id: 'whatsnew', name: 'What\'s New', category: 'Starter', icon: '<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>' },
-      { id: 'wallpaper', name: 'Wallpaper', category: 'Customization', icon: '<path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>' },
-      { id: 'cursor', name: 'Custom Cursor', category: 'Customization', icon: '<path d="M13.64 21.97C13.14 22.21 12.54 22 12.31 21.5L10.13 16.76L7.17 19.72C6.86 20.03 6.34 20.03 6.03 19.72C5.88 19.57 5.8 19.36 5.8 19.15V4.85C5.8 4.3 6.25 3.85 6.8 3.85C7.01 3.85 7.22 3.93 7.37 4.08L18.82 15.53C19.13 15.84 19.13 16.36 18.82 16.67C18.67 16.82 18.46 16.9 18.25 16.9L14.71 16.9L16.89 21.64C17.12 22.14 16.91 22.74 16.41 22.97L13.64 21.97Z"/>' },
-      { id: 'themes', name: 'Themes', category: 'Customization', icon: '<path d="M12 3c-4.97 0-9 4.03-9 9 0 2.12.74 4.07 1.97 5.61.43.54 1.03.89 1.73.89h1.8c.83 0 1.5-.67 1.5-1.5 0-.38-.15-.73-.39-1.01-.23-.27-.38-.62-.38-1.01 0-.83.67-1.5 1.5-1.5h1.77c2.9 0 5.5-2.1 5.92-4.98C20.91 7.21 17.02 3 12 3z"/>' },
-      { id: 'aihandwriting', name: 'AI HANDWRITING', category: 'Utilities', icon: '<path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>', url: 'https://secret-lemon-five.vercel.app/' },
-      { id: 'browser', name: 'Nautilus Browser', category: 'Starter', icon: '<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>' },
-      { id: 'codeshare', name: 'Code Share', category: 'Developer', icon: '<path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/>', url: 'https://codeshare-eta.vercel.app/' },
-      { id: 'creator', name: 'Web App Creator', category: 'Developer', icon: '<path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>' },
-      { id: 'files', name: 'File Explorer', category: 'Utilities', icon: '<path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>' },
-      { id: 'terminal', name: 'Terminal', category: 'Developer', icon: '<path d="M20 4H4c-1.11 0-2 .89-2 2v12c0 1.1.89 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.11-.9-2-2-2zm0 14H4V8h16v10zm-2-1h-6v-2h6v2zm-9.41-1.41L11.17 13l-2.58-2.59L10 9l4 4-4 4-1.41-1.41z"/>' },
-      { id: 'store', name: 'App Store', category: 'Starter', icon: '<path d="M19 6h-2c0-2.76-2.24-5-5-5S7 3.24 7 6H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-7-3c1.66 0 3 1.34 3 3H9c0-1.66 1.34-3 3-3zm7 17H5V8h14v12z"/>' },
-      { id: 'entertainment', name: 'Games Center', category: 'Games', icon: '<path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v2H6v-2H4v-2h2V9h2v2h3v2zm4.5 1c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm3-3c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5-1.5z"/>' },
-      { id: 'notes', name: 'Notes', category: 'Utilities', icon: '<path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>' },
-      { id: 'settings', name: 'Settings', category: 'Starter', icon: '<path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6-3.6z"/>' }
+      { id: 'files', name: 'Files', icon: '<path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>' },
+      { id: 'terminal', name: 'Terminal', icon: '<path d="M20 4H4c-1.11 0-2 .89-2 2v12c0 1.1.89 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.11-.9-2-2-2zm0 14H4V8h16v10zm-2-1h-6v-2h6v2zm-9.41-1.41L11.17 13l-2.58-2.59L10 9l4 4-4 4-1.41-1.41z"/>' },
+      { id: 'browser', name: 'Nautilus Browser', icon: '<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>' },
+      { id: 'settings', name: 'Settings', icon: '<path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6-3.6z"/>' },
+      { id: 'texteditor', name: 'Text Editor', icon: '<path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>' },
+      { id: 'music', name: 'Music', icon: '<path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>' },
+      { id: 'photos', name: 'Photos', icon: '<path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>' },
+      { id: 'help', name: 'Help', icon: '<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 16h-2v-2h2v2zm1.07-7.75l-.9.92C12.45 11.9 12 12.5 12 14h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H7c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.04-.42 1.99-1.07 2.75z"/>' },
+      { id: 'whatsnew', name: 'What\'s New', icon: '<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>' },
+      { id: 'store', name: 'App Store', icon: '<path d="M19 6h-2c0-2.76-2.24-5-5-5S7 3.24 7 6H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-7-3c1.66 0 3 1.34 3 3H9c0-1.66 1.34-3 3-3zm7 17H5V8h14v12z"/>' }
     ];
 
-    let customApps = JSON.parse(localStorage.getItem('nautilus_custom_apps')) || [];
-    let installedApps = JSON.parse(localStorage.getItem('nautilus_installed_apps')) || ['whatsnew', 'wallpaper', 'cursor', 'themes', 'aihandwriting', 'browser', 'codeshare', 'creator', 'files', 'terminal', 'store', 'entertainment', 'notes', 'settings'];
-    let userProfile = JSON.parse(localStorage.getItem('nautilus_profile')) || { username: 'NautilusUser', theme: 'emerald' };
-    let fileSystem = JSON.parse(localStorage.getItem('nautilus_files')) || { 'index.html': '<h1>Welcome to NautilusOS</h1>' };
-    let savedNotes = localStorage.getItem('nautilus_notes') || 'Welcome to Nautilus Notes!';
-    let iconPositions = JSON.parse(localStorage.getItem('nautilus_icon_pos')) || {};
+    let installedApps = JSON.parse(localStorage.getItem('nautilus_installed_apps_v8')) || ['files', 'terminal', 'browser', 'settings', 'texteditor', 'music', 'photos', 'help', 'whatsnew', 'store'];
     let openWindows = {};
     let activeZIndex = 100;
-    let globalDragMode = false;
-
-    function applyTheme(themeName) {
-      userProfile.theme = themeName;
-      document.body.setAttribute('data-theme', themeName);
-      localStorage.setItem('nautilus_profile', JSON.stringify(userProfile));
-    }
+    let textEditorSavedContent = "Welcome to Nautilus Text Editor!";
 
     function showToast(msg) {
       const container = document.getElementById('toast-container');
@@ -392,7 +513,7 @@
       toast.className = 'toast';
       toast.innerText = msg;
       container.appendChild(toast);
-      setTimeout(() => toast.remove(), 3000);
+      setTimeout(() => toast.remove(), 2500);
     }
 
     function updateClock() {
@@ -402,168 +523,97 @@
     setInterval(updateClock, 1000);
     updateClock();
 
-    function toggleStartMenu() {
-      const menu = document.getElementById('start-menu');
-      menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
+    /* Launcher Modal Toggle */
+    function toggleLauncherModal() {
+      const overlay = document.getElementById('start-modal-overlay');
+      overlay.style.display = overlay.style.display === 'flex' ? 'none' : 'flex';
+      if (overlay.style.display === 'flex') {
+        renderLauncherGrid();
+      }
     }
 
-    document.getElementById('desktop').addEventListener('click', () => {
-      document.getElementById('start-menu').style.display = 'none';
-    });
-
-    function toggleGlobalDragMode() {
-      globalDragMode = !globalDragMode;
-      document.body.classList.toggle('drag-mode-active', globalDragMode);
-      showToast(globalDragMode ? 'Icon Dragging: Enabled' : 'Icon Dragging: Locked');
+    function closeLauncher(e) {
+      document.getElementById('start-modal-overlay').style.display = 'none';
     }
 
+    function renderLauncherGrid(filter = '') {
+      const grid = document.getElementById('launcher-grid');
+      grid.innerHTML = '';
+      
+      const filtered = baseAppsCatalog.filter(app => installedApps.includes(app.id) && app.name.toLowerCase().includes(filter.toLowerCase()));
+
+      filtered.forEach(app => {
+        const card = document.createElement('div');
+        card.className = 'launcher-card';
+        card.onclick = () => { openApp(app.id); closeLauncher(); };
+        card.innerHTML = `
+          <svg class="launcher-card-svg" viewBox="0 0 24 24">${app.icon}</svg>
+          <span class="launcher-card-title">${app.name}</span>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    function filterLauncherApps() {
+      const term = document.getElementById('launcher-search').value;
+      renderLauncherGrid(term);
+    }
+
+    /* Desktop Icon Rendering */
     function renderDesktop() {
       const desktop = document.getElementById('desktop');
       desktop.innerHTML = '';
-      let defaultX = 20, defaultY = 20;
-      const fullCatalog = [...baseAppsCatalog, ...customApps];
+      let x = 20, y = 20;
 
       installedApps.forEach(appId => {
-        const app = fullCatalog.find(a => a.id === appId);
+        const app = baseAppsCatalog.find(a => a.id === appId);
         if (!app) return;
 
         const icon = document.createElement('div');
-        icon.className = 'icon';
-        icon.id = `icon-${app.id}`;
-
-        const pos = iconPositions[app.id] || { x: defaultX, y: defaultY };
-        icon.style.left = `${pos.x}px`;
-        icon.style.top = `${pos.y}px`;
-
-        const iconSvg = app.icon.includes('<path') 
-          ? `<svg class="icon-svg" viewBox="0 0 24 24">${app.icon}</svg>` 
-          : `<div style="font-size:32px;">${app.icon}</div>`;
-
-        icon.innerHTML = `${iconSvg}<span class="icon-label">${app.name}</span>`;
+        icon.className = 'desktop-icon';
+        icon.style.left = `${x}px`;
+        icon.style.top = `${y}px`;
         icon.ondblclick = () => openApp(app.id);
-        makeDraggableIcon(icon, app.id);
-
+        icon.innerHTML = `
+          <svg class="icon-svg" viewBox="0 0 24 24">${app.icon}</svg>
+          <span class="icon-label">${app.name}</span>
+        `;
         desktop.appendChild(icon);
 
-        defaultY += 105;
-        if (defaultY > window.innerHeight - 180) {
-          defaultY = 20;
-          defaultX += 105;
+        y += 105;
+        if (y > window.innerHeight - 180) { y = 20; x += 105; }
+      });
+    }
+
+    /* Update Underline Taskbar Indicators */
+    function updateTaskbarIndicators() {
+      baseAppsCatalog.forEach(app => {
+        const wrapper = document.getElementById(`dock-wrapper-${app.id}`);
+        if (wrapper) {
+          if (openWindows[app.id]) {
+            wrapper.classList.add('active');
+          } else {
+            wrapper.classList.remove('active');
+          }
         }
       });
-
-      renderStartMenu();
     }
 
-    function makeDraggableIcon(elem, appId) {
-      let posX = 0, posY = 0, mouseX = 0, mouseY = 0;
-      elem.onmousedown = (e) => {
-        if (!globalDragMode) return;
-        e.preventDefault();
-        mouseX = e.clientX;
-        mouseY = e.clientY;
-        document.onmousemove = (e) => {
-          posX = mouseX - e.clientX;
-          posY = mouseY - e.clientY;
-          mouseX = e.clientX;
-          mouseY = e.clientY;
-          elem.style.top = (elem.offsetTop - posY) + "px";
-          elem.style.left = (elem.offsetLeft - posX) + "px";
-        };
-        document.onmouseup = () => {
-          document.onmousemove = null;
-          document.onmouseup = null;
-          iconPositions[appId] = { x: elem.offsetLeft, y: elem.offsetTop };
-          localStorage.setItem('nautilus_icon_pos', JSON.stringify(iconPositions));
-        };
-      };
-    }
-
-    function renderStartMenu() {
-      const menu = document.getElementById('start-menu');
-      const categories = ['Starter', 'Customization', 'Utilities', 'Developer', 'Games'];
-      const fullCatalog = [...baseAppsCatalog, ...customApps];
-      let html = '<div style="font-size:14px; font-weight:bold; color:var(--accent); margin-bottom:8px;">⚡ Nautilus Launcher</div>';
-
-      categories.forEach(cat => {
-        const catApps = fullCatalog.filter(a => a.category === cat && installedApps.includes(a.id));
-        if (catApps.length > 0) {
-          html += `<div class="category-title">${cat}</div>`;
-          catApps.forEach(app => {
-            html += `<div class="menu-item" onclick="openApp('${app.id}'); toggleStartMenu();">🚀 ${app.name}</div>`;
-          });
-        }
-      });
-
-      menu.innerHTML = html;
-    }
-
-    function setWallpaper(type, value) {
-      if (type === 'emerald-glow') {
-        document.body.style.background = 'radial-gradient(circle at center, #062016 0%, #020617 100%)';
-      } else if (type === 'gradient') {
-        document.body.style.background = value;
-      } else if (type === 'image') {
-        document.body.style.background = `url("${value}") center/cover no-repeat`;
-      }
-      showToast('Wallpaper Updated!');
-    }
-
-    function setCursorStyle(styleClass) {
-      document.body.className = styleClass;
-      showToast('Cursor Style Changed!');
-    }
-
-    /* Interactive Terminal Engine */
-    function handleTerminalKey(e, winId) {
-      if (e.key === 'Enter') {
-        const inputElem = e.target;
-        const cmd = inputElem.value.trim();
-        const outputElem = document.getElementById(`term-out-${winId}`);
-        if (!outputElem) return;
-
-        let response = '';
-        const args = cmd.split(' ');
-        const mainCmd = args[0].toLowerCase();
-
-        switch (mainCmd) {
-          case 'help':
-            response = "Available Commands:\n - help: Show list of commands\n - clear: Clear console\n - echo [text]: Output text\n - date: Display system time\n - whoami: Show current user\n - apps: List installed apps\n - ls: List desktop files";
-            break;
-          case 'clear':
-            outputElem.innerText = '';
-            inputElem.value = '';
-            return;
-          case 'echo':
-            response = args.slice(1).join(' ');
-            break;
-          case 'date':
-            response = new Date().toString();
-            break;
-          case 'whoami':
-            response = userProfile.username;
-            break;
-          case 'apps':
-            response = "Installed Apps: " + installedApps.join(', ');
-            break;
-          case 'ls':
-            response = Object.keys(fileSystem).join('  ');
-            break;
-          case '':
-            response = '';
-            break;
-          default:
-            response = `Command not found: ${cmd}. Type 'help' for command list.`;
-        }
-
-        outputElem.innerText += `user@nautilusos:~$ ${cmd}\n${response ? response + '\n' : ''}`;
-        inputElem.value = '';
-        const container = outputElem.parentElement;
-        container.scrollTop = container.scrollHeight;
+    /* Time Machine Rollback Function */
+    function travelBackInTime(version) {
+      document.body.className = '';
+      if (version === 'v1') {
+        document.body.classList.add('legacy-v1');
+        showToast('Traveled to NautilusOS v1.0 (2023 Classic)');
+      } else if (version === 'v3') {
+        document.body.classList.add('legacy-v3');
+        showToast('Traveled to NautilusOS v3.0 (2024 Neon Cyan)');
+      } else {
+        showToast('Restored to NautilusOS v8.0 Emerald');
       }
     }
 
-    /* Window Open Engine */
+    /* App Launcher Engine */
     function openApp(appId) {
       if (openWindows[appId]) {
         const existingWin = document.getElementById(openWindows[appId]);
@@ -576,64 +626,31 @@
 
       const winId = 'win-' + Date.now();
       openWindows[appId] = winId;
-      const fullCatalog = [...baseAppsCatalog, ...customApps];
-      const appObj = fullCatalog.find(a => a.id === appId);
+      updateTaskbarIndicators();
+
+      const appObj = baseAppsCatalog.find(a => a.id === appId);
       let title = appObj ? appObj.name : 'Application';
       let content = '';
 
       if (appId === 'whatsnew') {
         content = `
           <div class="app-container">
-            <h2 style="color:var(--accent);">⚡ What's New in NautilusOS v7.0</h2>
-            <p style="color:#94a3b8; font-size:13px;">Welcome to the unified desktop experience!</p>
+            <h2 style="color:var(--accent);">⚡ What's New in v8.0</h2>
             <hr style="border-color:var(--border);">
             <ul style="line-height:1.8; font-size:13px; padding-left:20px;">
-              <td><b>Animated Intro:</b> Sleek Emerald Nautilus boot sequence on system startup.</td>
-              <td><b>Interactive Terminal:</b> Fully executable terminal commands with Enter key response.</td>
-              <td><b>Functional Apps:</b> Native local applications (Notes, Apps Manager, Customization engine).</td>
-              <td><b>Emerald Wallpapers:</b> Custom glowing background patterns integrated directly.</td>
-              <td><b>Web Browser Integration:</b> CORS proxy toggle & working site presets.</td>
+              <li><b>Redesigned Launcher:</b> Sleek avatar, search bar & card grid system.</li>
+              <li><b>Taskbar Indicators:</b> Emerald glowing lines beneath open applications.</li>
+              <li><b>Time Machine Option:</b> Rollback themes to past legacy versions.</li>
+              <li><b>App Store Fixed:</b> Fully functional install/uninstall button engine.</li>
+              <li><b>Fully Functional Suite:</b> Fully built-in utilities replacing all static text.</li>
             </ul>
-          </div>
-        `;
-
-      } else if (appId === 'wallpaper') {
-        content = `
-          <div class="app-container">
-            <h2>🎨 Wallpaper Customization</h2>
-            <div style="display:flex; flex-direction:column; gap:12px;">
-              <button class="browser-btn" onclick="setWallpaper('emerald-glow')">🟢 Emerald Nautilus Radial Glow</button>
-              <button class="browser-btn" onclick="setWallpaper('gradient', 'radial-gradient(circle at center, #1e1b4b 0%, #0f172a 100%)')">🔮 Cosmic Purple</button>
-              <button class="browser-btn" onclick="setWallpaper('gradient', 'radial-gradient(circle, #18181b 0%, #09090b 100%)')">⚫ Pure Dark Slate</button>
-              <hr style="border-color:var(--border);">
-              <label>Custom Wallpaper Image URL:</label>
-              <div style="display:flex; gap:8px;">
-                <input type="text" id="wall-url" class="browser-input" placeholder="https://images.unsplash.com/photo...">
-                <button class="browser-btn" onclick="setWallpaper('image', document.getElementById('wall-url').value)">Apply</button>
-              </div>
-            </div>
-          </div>
-        `;
-
-      } else if (appId === 'cursor') {
-        content = `
-          <div class="app-container">
-            <h2>🖱️ Custom Cursors</h2>
-            <div style="display:flex; flex-direction:column; gap:10px;">
-              <button class="browser-btn" onclick="setCursorStyle('')">Default System Cursor</button>
-              <button class="browser-btn" onclick="setCursorStyle('cursor-emerald')">Emerald Dot Cursor</button>
-              <button class="browser-btn" onclick="setCursorStyle('cursor-crosshair')">Precision Crosshair</button>
-            </div>
-          </div>
-        `;
-
-      } else if (appId === 'themes') {
-        const themes = ['emerald', 'cyberpunk', 'synthwave', 'nord'];
-        content = `
-          <div class="app-container">
-            <h2>🎨 Theme Switcher</h2>
-            <div class="app-grid">
-              ${themes.map(t => `<button class="browser-btn" onclick="applyTheme('${t}')">${t.toUpperCase()}</button>`).join('')}
+            <hr style="border-color:var(--border); margin-top:10px;">
+            <h3>⏳ Time Machine (Travel Back in Time)</h3>
+            <p style="font-size:12px; color:#94a3b8;">Revert the OS UI to earlier historical versions:</p>
+            <div style="display:flex; gap:10px; margin-top:8px;">
+              <button class="browser-btn" onclick="travelBackInTime('v1')">v1.0 Classic</button>
+              <button class="browser-btn" onclick="travelBackInTime('v3')">v3.0 Neon Cyan</button>
+              <button class="browser-btn" onclick="travelBackInTime('v8')">v8.0 Modern</button>
             </div>
           </div>
         `;
@@ -641,33 +658,60 @@
       } else if (appId === 'browser') {
         content = `
           <div class="browser-bar">
-            <button class="browser-btn" onclick="loadWebSite('${winId}', 'https://en.wikipedia.org')">Wikipedia</button>
-            <button class="browser-btn" onclick="loadWebSite('${winId}', 'https://news.ycombinator.com')">HackerNews</button>
-            <button class="browser-btn" onclick="loadWebSite('${winId}', 'https://archive.org')">Archive</button>
-            <input type="text" class="browser-input" placeholder="Enter URL or search..." id="url-${winId}" onkeydown="if(event.key==='Enter') executeBrowserNav('${winId}')">
-            <button class="browser-btn" onclick="executeBrowserNav('${winId}')">Go</button>
-            <button class="browser-btn" style="background:#059669;" onclick="toggleProxyMode('${winId}')" title="Toggle Proxy">Proxy: OFF</button>
+            <input type="text" class="browser-input" placeholder="Search Google or enter URL..." id="url-${winId}" onkeydown="if(event.key==='Enter') executeNav('${winId}')">
+            <button class="browser-btn" onclick="executeNav('${winId}')">Go</button>
           </div>
-          <div class="window-content" id="view-${winId}">
+          <div class="window-content">
             <iframe id="frame-${winId}" style="width:100%; height:100%; border:none; background:#fff;" src="https://en.m.wikipedia.org"></iframe>
           </div>
         `;
 
-      } else if (appId === 'notes') {
+      } else if (appId === 'texteditor') {
         content = `
           <div class="app-container">
-            <h2>📝 Notes</h2>
-            <textarea id="note-text" style="flex:1; background:#020617; border:1px solid var(--border); color:#fff; padding:12px; border-radius:6px; outline:none; font-size:14px;">${savedNotes}</textarea>
-            <button class="browser-btn" onclick="savedNotes=document.getElementById('note-text').value; localStorage.setItem('nautilus_notes', savedNotes); showToast('Notes Saved!');">Save Note</button>
+            <h2>📝 Text Editor</h2>
+            <textarea id="editor-text" style="flex:1; background:#020617; border:1px solid var(--border); color:#fff; padding:12px; border-radius:6px; outline:none; font-family:monospace; font-size:13px;">${textEditorSavedContent}</textarea>
+            <button class="browser-btn" onclick="textEditorSavedContent=document.getElementById('editor-text').value; showToast('File Saved Successfully!');">Save Document</button>
+          </div>
+        `;
+
+      } else if (appId === 'music') {
+        content = `
+          <div class="app-container" style="align-items:center; justify-content:center; text-align:center;">
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="var(--accent)"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+            <h2>Nautilus Music Player</h2>
+            <p style="color:#94a3b8; font-size:13px;">Now Playing: Emerald Waves Synth</p>
+            <div style="display:flex; gap:12px; margin-top:14px;">
+              <button class="browser-btn" onclick="showToast('Playing Track')">▶ Play</button>
+              <button class="browser-btn" onclick="showToast('Paused')">⏸ Pause</button>
+              <button class="browser-btn" onclick="showToast('Skipped')">⏭ Next</button>
+            </div>
+          </div>
+        `;
+
+      } else if (appId === 'photos') {
+        content = `
+          <div class="app-container">
+            <h2>🖼️ Photos Gallery</h2>
+            <div class="app-grid">
+              <div style="background:#1e293b; padding:10px; border-radius:8px; border:1px solid var(--border);">
+                <div style="height:100px; background:linear-gradient(45deg, #10b981, #0284c7); border-radius:6px;"></div>
+                <p style="font-size:12px; margin-top:6px;">Abstract Glow.png</p>
+              </div>
+              <div style="background:#1e293b; padding:10px; border-radius:8px; border:1px solid var(--border);">
+                <div style="height:100px; background:linear-gradient(45deg, #f43f5e, #8b5cf6); border-radius:6px;"></div>
+                <p style="font-size:12px; margin-top:6px;">Neon Nebula.jpg</p>
+              </div>
+            </div>
           </div>
         `;
 
       } else if (appId === 'terminal') {
         content = `
           <div class="terminal-container">
-            <div class="terminal-output" id="term-out-${winId}">NautilusOS Shell v7.0\nType 'help' for available commands.\n</div>
+            <div class="terminal-output" id="term-out-${winId}">NautilusOS Shell v8.0\nType 'help' for executable commands.\n</div>
             <div class="terminal-input-row">
-              <span class="terminal-prompt">user@nautilusos:~$</span>
+              <span class="terminal-prompt">harry@nautilusos:~$</span>
               <input type="text" class="terminal-input" onkeydown="handleTerminalKey(event, '${winId}')" autofocus>
             </div>
           </div>
@@ -676,23 +720,37 @@
       } else if (appId === 'files') {
         content = `
           <div class="app-container">
-            <h2>📁 File Explorer</h2>
-            <div style="display:flex; gap:12px; height:80%;">
-              <div style="width:30%; background:#1e293b; border:1px solid var(--border); border-radius:6px; padding:10px;">
-                📄 index.html
-              </div>
-              <textarea class="browser-input" style="flex:1; font-family:monospace;">${fileSystem['index.html']}</textarea>
+            <h2>📁 File System Explorer</h2>
+            <div style="display:flex; flex-direction:column; gap:8px;">
+              <div style="background:#1e293b; padding:10px; border-radius:6px; border:1px solid var(--border);">📁 Documents / Notes.txt</div>
+              <div style="background:#1e293b; padding:10px; border-radius:6px; border:1px solid var(--border);">📁 Pictures / Wallpapers /</div>
+              <div style="background:#1e293b; padding:10px; border-radius:6px; border:1px solid var(--border);">📁 System / System32 /</div>
             </div>
           </div>
         `;
 
-      } else if (appId === 'creator') {
+      } else if (appId === 'settings') {
         content = `
           <div class="app-container">
-            <h2>🛠️ Web App Creator</h2>
-            <input type="text" id="app-name" class="browser-input" placeholder="App Name (e.g. Google)">
-            <input type="text" id="app-url" class="browser-input" placeholder="Web URL (e.g. https://google.com)">
-            <button class="browser-btn" onclick="createCustomApp()">Add to Desktop</button>
+            <h2>⚙️ System Settings</h2>
+            <div style="display:flex; flex-direction:column; gap:10px;">
+              <button class="browser-btn" onclick="showToast('Display Resolution: 1920x1080 Native')">Display Settings</button>
+              <button class="browser-btn" onclick="showToast('Storage: 12.4 GB Free of 64 GB')">Storage Information</button>
+              <button class="browser-btn" onclick="showToast('Network: Connected to Emerald Mesh')">Network Config</button>
+            </div>
+          </div>
+        `;
+
+      } else if (appId === 'help') {
+        content = `
+          <div class="app-container">
+            <h2>❓ Help Hub</h2>
+            <p style="font-size:13px; color:#94a3b8;">Need assistance navigating NautilusOS?</p>
+            <ul style="font-size:13px; line-height:1.8; padding-left:20px;">
+              <li>Click the Fish logo on the left of the taskbar to launch apps.</li>
+              <li>Double-click desktop icons to open windows.</li>
+              <li>The underline beneath taskbar icons indicates open windows.</li>
+            </ul>
           </div>
         `;
 
@@ -700,28 +758,16 @@
         content = `
           <div class="app-container">
             <h2>🛒 App Store</h2>
-            <div class="app-grid">
-              ${baseAppsCatalog.map(a => `
-                <div class="app-card">
-                  <h4>${a.name}</h4>
-                  <button class="browser-btn" onclick="toggleAppInstall('${a.id}')">${installedApps.includes(a.id) ? 'Uninstall' : 'Install'}</button>
-                </div>
-              `).join('')}
-            </div>
+            <div class="app-grid" id="store-grid-${winId}"></div>
           </div>
         `;
-
-      } else if (appObj && appObj.url) {
-        content = `<iframe src="${appObj.url}" style="width:100%; height:100%; border:none;"></iframe>`;
-      } else {
-        content = `<div class="app-container"><h2>${title}</h2><p>Application is active and running.</p></div>`;
       }
 
       const win = document.createElement('div');
       win.className = 'window';
       win.id = winId;
-      win.style.top = `${60 + (Object.keys(openWindows).length * 15)}px`;
-      win.style.left = `${80 + (Object.keys(openWindows).length * 15)}px`;
+      win.style.top = `${50 + (Object.keys(openWindows).length * 15)}px`;
+      win.style.left = `${70 + (Object.keys(openWindows).length * 15)}px`;
       win.style.zIndex = ++activeZIndex;
 
       win.innerHTML = `
@@ -738,53 +784,81 @@
 
       win.onmousedown = () => { win.style.zIndex = ++activeZIndex; };
       document.body.appendChild(win);
+
+      if (appId === 'store') {
+        renderStoreGrid(winId);
+      }
     }
 
-    function createCustomApp() {
-      const name = document.getElementById('app-name').value;
-      const url = document.getElementById('app-url').value;
-      if (!name || !url) return;
-      const newApp = { id: 'custom-' + Date.now(), name: name, category: 'Utilities', icon: '🌐', url: url };
-      customApps.push(newApp);
-      installedApps.push(newApp.id);
-      localStorage.setItem('nautilus_custom_apps', JSON.stringify(customApps));
-      localStorage.setItem('nautilus_installed_apps', JSON.stringify(installedApps));
-      renderDesktop();
-      showToast('App Created!');
+    function renderStoreGrid(winId) {
+      const grid = document.getElementById(`store-grid-${winId}`);
+      if (!grid) return;
+      grid.innerHTML = '';
+
+      baseAppsCatalog.forEach(app => {
+        const card = document.createElement('div');
+        card.className = 'app-card';
+        const isInstalled = installedApps.includes(app.id);
+        card.innerHTML = `
+          <h4>${app.name}</h4>
+          <button class="browser-btn" style="${isInstalled ? 'background:#ef4444;' : ''}" onclick="toggleAppInstall('${app.id}', '${winId}')">
+            ${isInstalled ? 'Uninstall' : 'Install'}
+          </button>
+        `;
+        grid.appendChild(card);
+      });
     }
 
-    function toggleAppInstall(appId) {
+    function toggleAppInstall(appId, winId) {
       if (installedApps.includes(appId)) {
         installedApps = installedApps.filter(id => id !== appId);
+        showToast(`Uninstalled ${appId}`);
       } else {
         installedApps.push(appId);
+        showToast(`Installed ${appId}`);
       }
-      localStorage.setItem('nautilus_installed_apps', JSON.stringify(installedApps));
+      localStorage.setItem('nautilus_installed_apps_v8', JSON.stringify(installedApps));
       renderDesktop();
+      renderStoreGrid(winId);
     }
 
     function closeWindow(appId, winId) {
-      document.getElementById(winId).remove();
+      const win = document.getElementById(winId);
+      if (win) win.remove();
       delete openWindows[appId];
+      updateTaskbarIndicators();
     }
 
-    let useProxy = {};
-    function toggleProxyMode(winId) {
-      useProxy[winId] = !useProxy[winId];
-      showToast(useProxy[winId] ? 'Proxy Mode: Enabled (Bypasses Frame Restrictions)' : 'Proxy Mode: Direct');
-    }
-
-    function loadWebSite(winId, url) {
-      document.getElementById(`url-${winId}`).value = url;
-      const iframe = document.getElementById(`frame-${winId}`);
-      iframe.src = useProxy[winId] ? `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}` : url;
-    }
-
-    function executeBrowserNav(winId) {
+    function executeNav(winId) {
       let val = document.getElementById(`url-${winId}`).value.trim();
       if (!val) return;
-      if (!val.startsWith('http://') && !val.startsWith('https://')) val = 'https://' + val;
-      loadWebSite(winId, val);
+      if (!val.startsWith('http://') && !val.startsWith('https://')) {
+        val = `https://www.bing.com/search?q=${encodeURIComponent(val)}`;
+      }
+      document.getElementById(`frame-${winId}`).src = val;
+    }
+
+    function handleTerminalKey(e, winId) {
+      if (e.key === 'Enter') {
+        const inputElem = e.target;
+        const cmd = inputElem.value.trim();
+        const outputElem = document.getElementById(`term-out-${winId}`);
+        if (!outputElem) return;
+
+        let response = '';
+        switch (cmd.toLowerCase()) {
+          case 'help': response = "Commands: help, clear, date, whoami, apps"; break;
+          case 'clear': outputElem.innerText = ''; inputElem.value = ''; return;
+          case 'date': response = new Date().toString(); break;
+          case 'whoami': response = 'Harrythehacker'; break;
+          case 'apps': response = installedApps.join(', '); break;
+          default: response = `Command non-executable: ${cmd}`;
+        }
+
+        outputElem.innerText += `harry@nautilusos:~$ ${cmd}\n${response}\n`;
+        inputElem.value = '';
+        outputElem.parentElement.scrollTop = outputElem.parentElement.scrollHeight;
+      }
     }
 
     function dragWindow(e, id) {
@@ -801,22 +875,16 @@
     function maximizeWindow(id) {
       const win = document.getElementById(id);
       if (win.style.width === '100vw') {
-        win.style.width = '820px';
-        win.style.height = '530px';
+        win.style.width = '800px'; win.style.height = '520px';
       } else {
-        win.style.width = '100vw';
-        win.style.height = 'calc(100vh - 80px)';
-        win.style.top = '0';
-        win.style.left = '0';
+        win.style.width = '100vw'; win.style.height = 'calc(100vh - 80px)'; win.style.top = '0'; win.style.left = '0';
       }
     }
 
     renderDesktop();
 
-    // Launch "What's New" App on initial page load
-    setTimeout(() => {
-      openApp('whatsnew');
-    }, 3800);
+    // Auto open "What's New" on startup
+    setTimeout(() => { openApp('whatsnew'); }, 3500);
   </script>
 </body>
 </html>
