@@ -3,423 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NautilusOS</title>
+    <title>NautilusOS Pro</title>
     <style>
         :root {
-            --bg-base: #0a0e14;
-            --bg-surface: #111823;
-            --bg-card: #182230;
-            --border-color: #243447;
+            --bg-base: #090d12;
+            --bg-surface: #121922;
+            --bg-card: #1a2432;
+            --border: #26354a;
             --accent: #00e5a3;
-            --accent-dim: rgba(0, 229, 163, 0.15);
-            --accent-hover: #00ffb7;
-            --text-main: #e2e8f0;
-            --text-sub: #8492a6;
-            --taskbar-bg: #090d12;
-            --window-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            --accent-dim: rgba(0, 229, 163, 0.12);
+            --text-main: #f1f5f9;
+            --text-sub: #94a3b8;
+            --taskbar-bg: #06090d;
         }
 
         [data-theme="light"] {
-            --bg-base: #f0f4f8;
+            --bg-base: #f1f5f9;
             --bg-surface: #ffffff;
             --bg-card: #e2e8f0;
-            --border-color: #cbd5e1;
+            --border: #cbd5e1;
             --accent: #00a876;
-            --accent-dim: rgba(0, 168, 118, 0.15);
-            --accent-hover: #008f64;
-            --text-main: #1e293b;
+            --accent-dim: rgba(0, 168, 118, 0.12);
+            --text-main: #0f172a;
             --text-sub: #64748b;
             --taskbar-bg: #e2e8f0;
-            --window-shadow: 0 10px 25px rgba(0,0,0,0.15);
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            user-select: none;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; font-family: system-ui, -apple-system, sans-serif; }
+        body { background: var(--bg-base); color: var(--text-main); height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
 
-        body {
-            background-color: var(--bg-base);
-            color: var(--text-main);
-            height: 100vh;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            background-size: cover;
-            background-position: center;
-        }
-
-        /* Desktop Grid */
-        .desktop {
-            flex: 1;
-            padding: 20px;
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
-            grid-template-rows: repeat(auto-fill, minmax(95px, 1fr));
-            grid-auto-flow: column;
-            gap: 15px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .desktop-icon {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 10px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            text-align: center;
-            height: 90px;
-        }
-
-        .desktop-icon:hover {
-            background: var(--accent-dim);
-            transform: translateY(-2px);
-        }
-
-        .desktop-icon svg {
-            width: 36px;
-            height: 36px;
-            fill: var(--accent);
-            margin-bottom: 8px;
-        }
-
-        .desktop-icon span {
-            font-size: 12px;
-            color: var(--text-main);
-            word-break: break-word;
-            line-height: 1.2;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.8);
-        }
-
-        /* Windows Frame */
-        .window {
-            position: absolute;
-            background: var(--bg-surface);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            box-shadow: var(--window-shadow);
-            display: flex;
-            flex-direction: column;
-            min-width: 400px;
-            min-height: 300px;
-            overflow: hidden;
-            z-index: 10;
-        }
-
-        .window-header {
-            background: var(--bg-surface);
-            padding: 10px 16px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-bottom: 1px solid var(--border-color);
-            cursor: move;
-        }
-
-        .window-title {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-weight: 600;
-            font-size: 14px;
-            color: var(--text-main);
-        }
-
-        .window-title svg {
-            width: 18px;
-            height: 18px;
-            fill: var(--accent);
-        }
-
-        .window-controls {
-            display: flex;
-            gap: 12px;
-            align-items: center;
-        }
-
-        .win-btn {
-            background: none;
-            border: none;
-            color: var(--text-sub);
-            font-size: 14px;
-            cursor: pointer;
-            width: 20px;
-            height: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 4px;
-        }
-
-        .win-btn:hover {
-            background: var(--accent-dim);
-            color: var(--accent);
-        }
-
-        .win-btn.close:hover {
-            background: #ff4757;
-            color: white;
-        }
-
-        .window-body {
-            flex: 1;
-            display: flex;
-            overflow: hidden;
-        }
-
-        /* Sidebar UI (Matching Screenshot Layout) */
-        .app-sidebar {
-            width: 200px;
-            background: var(--bg-surface);
-            border-right: 1px solid var(--border-color);
-            padding: 15px 10px;
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-
-        .nav-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 10px 14px;
-            border-radius: 6px;
-            color: var(--text-sub);
-            cursor: pointer;
-            font-size: 14px;
-            transition: all 0.2s;
-        }
-
-        .nav-item svg {
-            width: 18px;
-            height: 18px;
-            fill: currentColor;
-        }
-
-        .nav-item:hover, .nav-item.active {
-            background: var(--accent-dim);
-            color: var(--accent);
-            border: 1px solid var(--accent);
-        }
-
-        .app-content {
-            flex: 1;
-            padding: 24px;
-            overflow-y: auto;
-            background: var(--bg-base);
-        }
-
-        .content-header {
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .content-header svg {
-            width: 28px;
-            height: 28px;
-            fill: var(--accent);
-        }
-
-        /* Settings Card Box (Matching Image 1) */
-        .settings-section {
-            background: var(--bg-surface);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 18px;
-            margin-bottom: 20px;
-        }
-
-        .section-title {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--text-main);
-            margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .setting-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 0;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .setting-row:last-child {
-            border-bottom: none;
-        }
-
-        .setting-info h4 {
-            font-size: 14px;
-            margin-bottom: 4px;
-        }
-
-        .setting-info p {
-            font-size: 12px;
-            color: var(--text-sub);
-        }
-
-        /* Custom Toggle Switch */
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 44px;
-            height: 22px;
-        }
-
-        .switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-color: var(--bg-card);
-            border: 1px solid var(--border-color);
-            transition: .3s;
-            border-radius: 20px;
-        }
-
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 14px;
-            width: 14px;
-            left: 3px;
-            bottom: 3px;
-            background-color: var(--text-sub);
-            transition: .3s;
-            border-radius: 50%;
-        }
-
-        input:checked + .slider {
-            background-color: var(--accent);
-        }
-
-        input:checked + .slider:before {
-            transform: translateX(22px);
-            background-color: #000;
-        }
-
-        /* App Store Card Layout (Matching Image 2) */
-        .store-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 20px;
-        }
-
-        .theme-card {
-            background: var(--bg-surface);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .theme-preview {
-            height: 120px;
-            border-radius: 6px;
-            border: 1px solid var(--border-color);
-            display: flex;
-            flex-direction: column;
-            padding: 8px;
-            gap: 6px;
-        }
-
-        .theme-preview.dark-prev { background: #0b1118; }
-        .theme-preview.light-prev { background: #ffffff; }
-
-        .prev-header { height: 20px; background: rgba(0,229,163,0.2); border-radius: 4px; }
-        .prev-line { height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; width: 70%; }
-        .light-prev .prev-line { background: rgba(0,0,0,0.1); }
-
-        .btn {
-            padding: 8px 16px;
-            border-radius: 6px;
-            border: 1px solid var(--accent);
-            background: transparent;
-            color: var(--accent);
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            text-align: center;
-        }
-
-        .btn:hover {
-            background: var(--accent);
-            color: #000;
-        }
-
-        .btn.installed {
-            background: var(--accent-dim);
-            border-color: var(--border-color);
-            color: var(--text-sub);
-            cursor: default;
-        }
-
-        /* Taskbar Bottom */
-        .taskbar {
-            height: 48px;
-            background: var(--taskbar-bg);
-            border-top: 1px solid var(--border-color);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 16px;
-            z-index: 1000;
-        }
-
-        .start-btn {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 6px 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-            color: var(--accent);
-        }
-
-        .start-btn:hover {
-            background: var(--accent-dim);
-        }
-
-        .clock {
-            font-size: 13px;
-            color: var(--text-main);
-            font-weight: 500;
-        }
-
-        /* Embedded App Specific Layouts */
-        .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; padding: 10px; }
-        .calc-grid button { padding: 15px; font-size: 18px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-surface); color: var(--text-main); cursor: pointer; }
-        .calc-grid button:hover { background: var(--accent-dim); }
-        .calc-display { width: 100%; height: 50px; background: var(--bg-base); border: 1px solid var(--border-color); color: var(--accent); font-size: 24px; text-align: right; padding: 10px; box-sizing: border-box; border-radius: 6px; margin-bottom: 10px; }
-
-        .terminal { background: #05080c; color: #00e5a3; font-family: monospace; padding: 10px; height: 100%; display: flex; flex-direction: column; }
-        .term-out { flex: 1; overflow-y: auto; white-space: pre-wrap; font-size: 13px; }
-        .term-in { display: flex; gap: 8px; margin-top: 5px; }
-        .term-in input { background: transparent; border: none; color: white; outline: none; flex: 1; font-family: monospace; }
+        /* Desktop Area */
+        .desktop { flex: 1; padding: 20px; display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); grid-template-rows: repeat(auto-fill, minmax(100px, 1fr)); grid-auto-flow: column; gap: 10px; position: relative; }
         
-        .custom-file-input { display: none; }
+        .desktop-icon { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px; border-radius: 8px; cursor: pointer; transition: background 0.2s, transform 0.1s; text-align: center; }
+        .desktop-icon:hover { background: var(--accent-dim); transform: translateY(-2px); }
+        .desktop-icon svg { width: 36px; height: 36px; fill: var(--accent); margin-bottom: 6px; }
+        .desktop-icon span { font-size: 12px; font-weight: 500; text-shadow: 0 1px 3px rgba(0,0,0,0.8); }
+
+        /* Window System */
+        .window { position: absolute; background: var(--bg-surface); border: 1px solid var(--border); border-radius: 8px; box-shadow: 0 12px 40px rgba(0,0,0,0.4); display: flex; flex-direction: column; min-width: 450px; min-height: 320px; overflow: hidden; z-index: 10; }
+        .window-header { background: var(--bg-surface); padding: 10px 14px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); cursor: move; }
+        .window-title { display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 13px; }
+        .window-title svg { width: 16px; height: 16px; fill: var(--accent); }
+        .window-controls { display: flex; gap: 8px; }
+        .win-btn { background: transparent; border: none; color: var(--text-sub); width: 22px; height: 22px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .win-btn:hover { background: var(--accent-dim); color: var(--accent); }
+        .win-btn.close:hover { background: #ef4444; color: #fff; }
+        .window-body { flex: 1; display: flex; overflow: hidden; }
+
+        /* Sidebar Navigation Layout */
+        .app-sidebar { width: 180px; background: var(--bg-surface); border-right: 1px solid var(--border); padding: 12px; display: flex; flex-direction: column; gap: 4px; }
+        .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 6px; color: var(--text-sub); cursor: pointer; font-size: 13px; font-weight: 500; }
+        .nav-item:hover, .nav-item.active { background: var(--accent-dim); color: var(--accent); }
+        .app-content { flex: 1; padding: 20px; overflow-y: auto; background: var(--bg-base); }
+
+        /* UI Controls & Forms */
+        .setting-card { background: var(--bg-surface); border: 1px solid var(--border); border-radius: 8px; padding: 16px; margin-bottom: 12px; }
+        .setting-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; }
+        .switch { position: relative; width: 40px; height: 20px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px; transition: 0.2s; }
+        .slider:before { position: absolute; content: ""; height: 12px; width: 12px; left: 3px; bottom: 3px; background: var(--text-sub); border-radius: 50%; transition: 0.2s; }
+        input:checked + .slider { background: var(--accent); }
+        input:checked + .slider:before { transform: translateX(20px); background: #000; }
+
+        .btn { padding: 8px 14px; border-radius: 6px; border: 1px solid var(--accent); background: transparent; color: var(--accent); font-weight: 600; font-size: 12px; cursor: pointer; }
+        .btn:hover { background: var(--accent); color: #000; }
+
+        /* Grid Layout for App Store */
+        .grid-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; }
+        .card { background: var(--bg-surface); border: 1px solid var(--border); border-radius: 8px; padding: 14px; display: flex; flex-direction: column; gap: 8px; }
+
+        /* Bottom Taskbar */
+        .taskbar { height: 44px; background: var(--taskbar-bg); border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 12px; z-index: 1000; }
+        .start-btn { display: flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: 700; color: var(--accent); font-size: 13px; }
+        .start-btn:hover { background: var(--accent-dim); }
+        .taskbar-apps { display: flex; gap: 6px; flex: 1; margin: 0 20px; }
+        .taskbar-item { padding: 4px 10px; background: var(--bg-surface); border: 1px solid var(--border); border-radius: 4px; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 6px; }
+        .taskbar-item.active { border-color: var(--accent); color: var(--accent); }
+
+        /* Calculator App */
+        .calc-box { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; padding: 10px; max-width: 280px; margin: auto; }
+        .calc-box button { padding: 16px; font-size: 16px; font-weight: bold; background: var(--bg-surface); border: 1px solid var(--border); color: var(--text-main); border-radius: 6px; cursor: pointer; }
+        .calc-box button:hover { background: var(--accent-dim); color: var(--accent); }
+        .calc-display { grid-column: span 4; height: 45px; background: var(--bg-base); border: 1px solid var(--border); color: var(--accent); font-size: 20px; text-align: right; padding: 10px; border-radius: 6px; font-family: monospace; }
+
+        /* Terminal App */
+        .term { background: #05080c; color: #00e5a3; font-family: monospace; padding: 12px; flex: 1; display: flex; flex-direction: column; font-size: 13px; }
+        .term-logs { flex: 1; overflow-y: auto; white-space: pre-wrap; line-height: 1.4; }
+        .term-input-line { display: flex; gap: 8px; margin-top: 8px; }
+        .term-input-line input { background: transparent; border: none; color: #fff; outline: none; flex: 1; font-family: monospace; }
+
+        /* Tic Tac Toe */
+        .ttt-board { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; width: 210px; margin: 20px auto; }
+        .ttt-cell { width: 65px; height: 65px; background: var(--bg-surface); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: bold; cursor: pointer; border-radius: 6px; }
+        .ttt-cell:hover { background: var(--accent-dim); }
     </style>
 </head>
 <body>
@@ -427,389 +105,396 @@
     <!-- Desktop Workspace -->
     <div class="desktop" id="desktop"></div>
 
-    <!-- Taskbar -->
+    <!-- System Taskbar -->
     <div class="taskbar">
         <div class="start-btn" onclick="openApp('App Store')">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M4 4h6v6H4zm10 0h6v6h-6zM4 14h6v6H4zm10 0h6v6h-6z"/></svg>
+            <svg width="18" height="18" viewBox="0 0 24 24"><path fill="currentColor" d="M4 4h6v6H4zm10 0h6v6h-6zM4 14h6v6H4zm10 0h6v6h-6z"/></svg>
             NautilusOS
         </div>
-        <div class="clock" id="taskbar-clock">12:00 PM</div>
+        <div class="taskbar-apps" id="taskbar-dock"></div>
+        <div id="clock" style="font-size: 12px; font-weight: 600;">12:00 PM</div>
     </div>
 
-    <!-- Hidden Input for Custom Wallpapers/Cursors -->
-    <input type="file" id="wallpaper-upload" class="custom-file-input" accept="image/*" onchange="loadCustomWallpaper(event)">
-    <input type="file" id="cursor-upload" class="custom-file-input" accept="image/*" onchange="loadCustomCursor(event)">
-
     <script>
-        // System Settings State
+        // System State
         const state = {
             use12Hour: true,
             showSeconds: false,
-            showDesktopIcons: true,
-            theme: 'dark',
-            activeApp: null,
-            windows: {}
+            showIcons: true,
+            activeWindows: {},
+            activeStoreTab: 'themes'
         };
 
-        // Complete App Directory from Images
-        const apps = [
-            { name: "Files", icon: '<path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>' },
-            { name: "App Store", icon: '<path d="M19 4h-4c0-1.1-.9-2-2-2h-2c-1.1 0-2 .9-2 2H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-7 0h2v2h-2V4z"/>' },
-            { name: "Minecraft", icon: '<path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/>' },
-            { name: "Settings", icon: '<path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>' },
-            { name: "2048", icon: '<path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-8 14H7v-2h4v2zm0-4H7v-2h4v2zm0-4H7V7h4v2zm6 8h-4V7h4v10z"/>' },
-            { name: "Terminal", icon: '<path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-0 14H4V8h16v10zm-12-7l4 3-4 3v-6z"/>' },
-            { name: "Cloaking", icon: '<path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/>' },
-            { name: "v86 Emulator", icon: '<path d="M6 2h12a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm2 3v2h8V5H8zm0 4v2h8V9H8zm0 4v2h8v-2H8z"/>' },
-            { name: "About Nautilus", icon: '<path d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/>' },
-            { name: "Nautilus Assistant", icon: '<path d="M12 2a2 2 0 0 1 2 2v1h2a2 2 0 0 1 2 2v2a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2v2a2 2 0 0 1-2 2h-2v1a2 2 0 0 1-4 0v-1H8a2 2 0 0 1-2-2v-2a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2V7a2 2 0 0 1 2-2h2V4a2 2 0 0 1 2-2z"/>' },
-            { name: "Text Editor", icon: '<path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>' },
-            { name: "Ultraviolet", icon: '<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93z"/>' },
-            { name: "Music", icon: '<path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>' },
-            { name: "Helios Browser", icon: '<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L10 15v1c0 1.1.9 2 2 2v1.93z"/>' },
-            { name: "Photos", icon: '<path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>' },
-            { name: "VS Code", icon: '<path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/>' },
-            { name: "Tic Tac Toe", icon: '<path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>' },
-            { name: "Python Interp", icon: '<path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/>' },
-            { name: "Calculator", icon: '<path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-4 14h-2v-2h2v2zm0-4h-2v-2h2v2zm0-4h-2V7h2v2zm-4 8H9v-2h2v2zm0-4H9v-2h2v2zm0-4H9V7h2v2z"/>' },
-            { name: "Snake Game", icon: '<path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v-2h3v2zm5 0h-3v-2h3v2z"/>' }
+        // Registered OS Applications
+        const appRegistry = [
+            { id: "store", name: "App Store", icon: '<path d="M19 4h-4c0-1.1-.9-2-2-2h-2c-1.1 0-2 .9-2 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-7 0h2v2h-2V4z"/>' },
+            { id: "settings", name: "Settings", icon: '<path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6-3.6z"/>' },
+            { id: "terminal", name: "Terminal", icon: '<path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-0 14H4V8h16v10zm-12-7l4 3-4 3v-6z"/>' },
+            { id: "notes", name: "Note Pad", icon: '<path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>' },
+            { id: "calc", name: "Calculator", icon: '<path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-4 14h-2v-2h2v2zm0-4h-2v-2h2v2zm0-4h-2V7h2v2zm-4 8H9v-2h2v2zm0-4H9v-2h2v2zm0-4H9V7h2v2z"/>' },
+            { id: "tictactoe", name: "Tic Tac Toe", icon: '<path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>' }
         ];
 
-        // Initialize Desktop
+        // Render Desktop Icons
         function renderDesktop() {
             const grid = document.getElementById('desktop');
             grid.innerHTML = '';
-            if (!state.showDesktopIcons) return;
+            if (!state.showIcons) return;
 
-            apps.forEach(app => {
+            appRegistry.forEach(app => {
                 const icon = document.createElement('div');
                 icon.className = 'desktop-icon';
                 icon.onclick = () => openApp(app.name);
-                icon.innerHTML = `
-                    <svg viewBox="0 0 24 24">${app.icon}</svg>
-                    <span>${app.name}</span>
-                `;
+                icon.innerHTML = `<svg viewBox="0 0 24 24">${app.icon}</svg><span>${app.name}</span>`;
                 grid.appendChild(icon);
             });
         }
 
-        // Window Manager
+        // Open App / Window Manager
         function openApp(appName) {
-            if (state.windows[appName]) {
-                state.windows[appName].style.display = 'flex';
+            if (state.activeWindows[appName]) {
+                const win = state.activeWindows[appName];
+                win.style.display = 'flex';
+                focusWindow(win);
+                updateTaskbar();
                 return;
             }
 
+            const appData = appRegistry.find(a => a.name === appName) || { icon: '<path d="M12 2L2 7l10 5 10-5-10-5z"/>' };
             const win = document.createElement('div');
             win.className = 'window';
-            win.style.left = `${80 + Object.keys(state.windows).length * 25}px`;
-            win.style.top = `${60 + Object.keys(state.windows).length * 25}px`;
-            win.style.width = appName === 'Settings' || appName === 'App Store' ? '850px' : '600px';
-            win.style.height = '500px';
-
-            const appIcon = apps.find(a => a.name === appName)?.icon || '<path d="M12 2L2 7l10 5 10-5-10-5z"/>';
+            win.style.left = `${60 + Object.keys(state.activeWindows).length * 20}px`;
+            win.style.top = `${50 + Object.keys(state.activeWindows).length * 20}px`;
+            win.style.width = appName === 'App Store' || appName === 'Settings' ? '700px' : '480px';
+            win.style.height = '420px';
 
             win.innerHTML = `
                 <div class="window-header">
-                    <div class="window-title">
-                        <svg viewBox="0 0 24 24">${appIcon}</svg>
-                        ${appName}
-                    </div>
+                    <div class="window-title"><svg viewBox="0 0 24 24">${appData.icon}</svg>${appName}</div>
                     <div class="window-controls">
-                        <button class="win-btn" onclick="this.closest('.window').style.display='none'">—</button>
+                        <button class="win-btn" onclick="minimizeWindow('${appName}')">—</button>
                         <button class="win-btn close" onclick="closeWindow('${appName}')">✕</button>
                     </div>
                 </div>
-                <div class="window-body" id="body-${appName.replace(/\s+/g, '')}">
-                    ${renderAppContent(appName)}
-                </div>
+                <div class="window-body">${renderAppView(appName)}</div>
             `;
 
+            win.onmousedown = () => focusWindow(win);
             makeDraggable(win);
             document.body.appendChild(win);
-            state.windows[appName] = win;
+            state.activeWindows[appName] = win;
+            focusWindow(win);
+            updateTaskbar();
         }
 
-        function closeWindow(appName) {
-            if (state.windows[appName]) {
-                state.windows[appName].remove();
-                delete state.windows[appName];
+        function focusWindow(win) {
+            document.querySelectorAll('.window').forEach(w => w.style.zIndex = 10);
+            win.style.zIndex = 20;
+        }
+
+        function minimizeWindow(appName) {
+            if (state.activeWindows[appName]) {
+                state.activeWindows[appName].style.display = 'none';
+                updateTaskbar();
             }
         }
 
-        // App Content Renderer (Recreating Screenshots)
-        function renderAppContent(appName) {
-            if (appName === 'Settings') {
+        function closeWindow(appName) {
+            if (state.activeWindows[appName]) {
+                state.activeWindows[appName].remove();
+                delete state.activeWindows[appName];
+                updateTaskbar();
+            }
+        }
+
+        function updateTaskbar() {
+            const dock = document.getElementById('taskbar-dock');
+            dock.innerHTML = '';
+            Object.keys(state.activeWindows).forEach(appName => {
+                const item = document.createElement('div');
+                item.className = `taskbar-item ${state.activeWindows[appName].style.display !== 'none' ? 'active' : ''}`;
+                item.innerText = appName;
+                item.onclick = () => {
+                    const win = state.activeWindows[appName];
+                    if (win.style.display === 'none') {
+                        win.style.display = 'flex';
+                        focusWindow(win);
+                    } else {
+                        win.style.display = 'none';
+                    }
+                    updateTaskbar();
+                };
+                dock.appendChild(item);
+            });
+        }
+
+        // Render Internal App UI Content
+        function renderAppView(appName) {
+            if (appName === 'App Store') {
                 return `
                     <div class="app-sidebar">
-                        <div class="nav-item active" onclick="switchTab(this, 'sec-general')"><svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>General</div>
-                        <div class="nav-item" onclick="switchTab(this, 'sec-appearance')"><svg viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9 0 2.12.74 4.07 1.97 5.61L4.35 19.4c-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0l1.9-1.9C9.2 19.54 10.56 20 12 20c4.97 0 9-4.03 9-9s-4.03-9-9-9z"/></svg>Appearance</div>
-                        <div class="nav-item"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93z"/></svg>Proxy</div>
-                        <div class="nav-item"><svg viewBox="0 0 24 24"><path d="M4 6h16v12H4z"/></svg>System</div>
+                        <div class="nav-item active" onclick="switchStoreTab(this, 'themes')">Themes</div>
+                        <div class="nav-item" onclick="switchStoreTab(this, 'apps')">Apps</div>
+                        <div class="nav-item" onclick="switchStoreTab(this, 'games')">Games</div>
                     </div>
-                    <div class="app-content">
-                        <div class="content-header">
-                            <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
-                            General Settings
-                        </div>
-                        
-                        <div class="settings-section">
-                            <div class="section-title">Clock & Time</div>
-                            <div class="setting-row">
-                                <div class="setting-info">
-                                    <h4>12-Hour Format</h4>
-                                    <p>Use 12-hour time with AM/PM</p>
-                                </div>
-                                <label class="switch">
-                                    <input type="checkbox" checked onchange="state.use12Hour = this.checked">
-                                    <span class="slider"></span>
-                                </label>
-                            </div>
-                            <div class="setting-row">
-                                <div class="setting-info">
-                                    <h4>Show Seconds</h4>
-                                    <p>Display seconds in taskbar clock</p>
-                                </div>
-                                <label class="switch">
-                                    <input type="checkbox" onchange="state.showSeconds = this.checked">
-                                    <span class="slider"></span>
-                                </label>
-                            </div>
-                        </div>
-
-                        <div class="settings-section">
-                            <div class="section-title">Desktop</div>
-                            <div class="setting-row">
-                                <div class="setting-info">
-                                    <h4>Show Desktop Icons</h4>
-                                    <p>Display application icons on desktop</p>
-                                </div>
-                                <label class="switch">
-                                    <input type="checkbox" checked onchange="state.showDesktopIcons = this.checked; renderDesktop();">
-                                    <span class="slider"></span>
-                                </label>
-                            </div>
-                        </div>
+                    <div class="app-content" id="store-content">
+                        ${getStoreTabContent('themes')}
                     </div>
                 `;
-            } else if (appName === 'App Store') {
+            } else if (appName === 'Settings') {
                 return `
-                    <div class="app-sidebar">
-                        <div class="nav-item active"><svg viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9 0 2.12.74 4.07 1.97 5.61L4.35 19.4c-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0l1.9-1.9C9.2 19.54 10.56 20 12 20c4.97 0 9-4.03 9-9s-4.03-9-9-9z"/></svg>Themes</div>
-                        <div class="nav-item"><svg viewBox="0 0 24 24"><path d="M4 6h16v12H4z"/></svg>Apps</div>
-                        <div class="nav-item"><svg viewBox="0 0 24 24"><path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2z"/></svg>Games</div>
-                        <div class="nav-item"><svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3z"/></svg>Community</div>
-                    </div>
                     <div class="app-content">
-                        <div class="content-header">Themes</div>
-                        <p style="color: var(--text-sub); margin-bottom: 20px;">Customize your NautilusOS experience</p>
-                        
-                        <div class="store-grid">
-                            <div class="theme-card">
-                                <div class="theme-preview dark-prev">
-                                    <div class="prev-header"></div>
-                                    <div class="prev-line"></div>
-                                    <div class="prev-line" style="width: 40%"></div>
-                                </div>
-                                <h3>Dark Theme</h3>
-                                <p style="font-size: 12px; color: var(--text-sub);">The default NautilusOS theme. Sleek dark interface with teal accents.</p>
-                                <button class="btn installed" id="btn-dark">Installed (Default)</button>
+                        <h3 style="margin-bottom: 15px;">System Settings</h3>
+                        <div class="setting-card">
+                            <div class="setting-row">
+                                <div><strong>12-Hour Clock Format</strong><br><small style="color:var(--text-sub)">Use AM/PM display</small></div>
+                                <label class="switch"><input type="checkbox" ${state.use12Hour ? 'checked' : ''} onchange="state.use12Hour=this.checked"><span class="slider"></span></label>
                             </div>
-                            <div class="theme-card">
-                                <div class="theme-preview light-prev">
-                                    <div class="prev-header"></div>
-                                    <div class="prev-line"></div>
-                                    <div class="prev-line" style="width: 50%"></div>
-                                </div>
-                                <h3>Light Theme</h3>
-                                <p style="font-size: 12px; color: var(--text-sub);">A bright and clean theme perfect for daytime use.</p>
-                                <button class="btn" id="btn-light" onclick="toggleTheme('light')">Install</button>
+                            <div class="setting-row">
+                                <div><strong>Display Clock Seconds</strong><br><small style="color:var(--text-sub)">Show live seconds in taskbar</small></div>
+                                <label class="switch"><input type="checkbox" ${state.showSeconds ? 'checked' : ''} onchange="state.showSeconds=this.checked"><span class="slider"></span></label>
                             </div>
                         </div>
-
-                        <div class="content-header" style="margin-top: 30px;">Customization</div>
-                        <div class="store-grid">
-                            <div class="theme-card">
-                                <h3>Custom Wallpaper</h3>
-                                <p style="font-size: 12px; color: var(--text-sub);">Set any custom photo image as your OS wallpaper.</p>
-                                <button class="btn" onclick="document.getElementById('wallpaper-upload').click()">Upload Image</button>
-                            </div>
-                            <div class="theme-card">
-                                <h3>Custom Cursor</h3>
-                                <p style="font-size: 12px; color: var(--text-sub);">Upload a custom image/icon to use as your cursor.</p>
-                                <button class="btn" onclick="document.getElementById('cursor-upload').click()">Upload Cursor</button>
+                        <div class="setting-card">
+                            <div class="setting-row">
+                                <div><strong>Show Desktop Icons</strong><br><small style="color:var(--text-sub)">Toggle icon grid on workspace</small></div>
+                                <label class="switch"><input type="checkbox" ${state.showIcons ? 'checked' : ''} onchange="state.showIcons=this.checked; renderDesktop();"><span class="slider"></span></label>
                             </div>
                         </div>
                     </div>
                 `;
             } else if (appName === 'Calculator') {
                 return `
-                    <div style="padding:10px; width:100%;">
-                        <input type="text" class="calc-display" id="calc-screen" readonly value="0">
-                        <div class="calc-grid">
+                    <div style="margin: auto;">
+                        <div class="calc-display" id="calc-out">0</div>
+                        <div class="calc-box">
                             <button onclick="calcClear()">C</button>
-                            <button onclick="calcPush('/')">/</button>
-                            <button onclick="calcPush('*')">*</button>
-                            <button onclick="calcPush('-')">-</button>
-                            <button onclick="calcPush('7')">7</button>
-                            <button onclick="calcPush('8')">8</button>
-                            <button onclick="calcPush('9')">9</button>
-                            <button onclick="calcPush('+')">+</button>
-                            <button onclick="calcPush('4')">4</button>
-                            <button onclick="calcPush('5')">5</button>
-                            <button onclick="calcPush('6')">6</button>
-                            <button onclick="calcEval()">=</button>
-                            <button onclick="calcPush('1')">1</button>
-                            <button onclick="calcPush('2')">2</button>
-                            <button onclick="calcPush('3')">3</button>
-                            <button onclick="calcPush('0')">0</button>
+                            <button onclick="calcIn('/')">/</button>
+                            <button onclick="calcIn('*')">*</button>
+                            <button onclick="calcIn('-')">-</button>
+                            <button onclick="calcIn('7')">7</button><button onclick="calcIn('8')">8</button><button onclick="calcIn('9')">9</button>
+                            <button onclick="calcIn('+')">+</button>
+                            <button onclick="calcIn('4')">4</button><button onclick="calcIn('5')">5</button><button onclick="calcIn('6')">6</button>
+                            <button onclick="calcRun()">=</button>
+                            <button onclick="calcIn('1')">1</button><button onclick="calcIn('2')">2</button><button onclick="calcIn('3')">3</button>
+                            <button onclick="calcIn('0')">0</button>
                         </div>
                     </div>
                 `;
             } else if (appName === 'Terminal') {
                 return `
-                    <div class="terminal">
-                        <div class="term-out" id="term-output">NautilusOS Terminal v1.5\nType 'help' for available commands.\n</div>
-                        <div class="term-in">
+                    <div class="term">
+                        <div class="term-logs" id="term-logs">NautilusOS Shell v2.0\nType 'help' to see valid commands.\n</div>
+                        <div class="term-input-line">
                             <span>user@nautilus:~$</span>
-                            <input type="text" onkeydown="handleTerm(event, this)">
+                            <input type="text" onkeydown="runTerminal(event, this)">
                         </div>
                     </div>
                 `;
-            } else {
+            } else if (appName === 'Note Pad') {
+                const saved = localStorage.getItem('nautilus_notes') || '';
                 return `
-                    <div style="padding: 20px; text-align: center; width: 100%;">
-                        <h2 style="color: var(--accent); margin-bottom: 10px;">${appName}</h2>
-                        <p style="color: var(--text-sub);">App container running smoothly inside NautilusOS environment.</p>
+                    <div style="display:flex; flex-direction:column; width:100%; height:100%;">
+                        <textarea style="flex:1; background:var(--bg-base); color:var(--text-main); border:none; padding:12px; outline:none; resize:none; font-family:monospace;" oninput="localStorage.setItem('nautilus_notes', this.value)" placeholder="Start typing notes... (Auto-saved)"/>${saved}</textarea>
+                    </div>
+                `;
+            } else if (appName === 'Tic Tac Toe') {
+                return `
+                    <div style="text-align:center; margin:auto;">
+                        <div id="ttt-status" style="margin-bottom:10px; font-weight:bold; color:var(--accent);">Your Turn (X)</div>
+                        <div class="ttt-board">
+                            ${[0,1,2,3,4,5,6,7,8].map(i => `<div class="ttt-cell" id="ttt-${i}" onclick="playTTT(${i})"></div>`).join('')}
+                        </div>
+                        <button class="btn" onclick="resetTTT()">Reset Match</button>
+                    </div>
+                `;
+            }
+            return `<div style="padding:20px;">App loaded successfully inside desktop workspace.</div>`;
+        }
+
+        // App Store Internal Logic
+        function switchStoreTab(el, tabName) {
+            document.querySelectorAll('.app-sidebar .nav-item').forEach(i => i.classList.remove('active'));
+            el.classList.add('active');
+            document.getElementById('store-content').innerHTML = getStoreTabContent(tabName);
+        }
+
+        function getStoreTabContent(tab) {
+            if (tab === 'themes') {
+                return `
+                    <h3 style="margin-bottom:12px;">Themes</h3>
+                    <div class="grid-cards">
+                        <div class="card">
+                            <h4>Dark Teal (Default)</h4>
+                            <p style="font-size:12px; color:var(--text-sub)">Sleek cyber teal aesthetic.</p>
+                            <button class="btn" onclick="document.documentElement.setAttribute('data-theme', 'dark')">Apply Theme</button>
+                        </div>
+                        <div class="card">
+                            <h4>Light Slate</h4>
+                            <p style="font-size:12px; color:var(--text-sub)">Clean day-mode interface.</p>
+                            <button class="btn" onclick="document.documentElement.setAttribute('data-theme', 'light')">Apply Theme</button>
+                        </div>
+                    </div>
+                `;
+            } else if (tab === 'apps') {
+                return `
+                    <h3 style="margin-bottom:12px;">Available Utilities</h3>
+                    <div class="grid-cards">
+                        <div class="card">
+                            <h4>Calculator</h4>
+                            <p style="font-size:12px; color:var(--text-sub)">Standard arithmetic evaluator.</p>
+                            <button class="btn" onclick="openApp('Calculator')">Launch</button>
+                        </div>
+                        <div class="card">
+                            <h4>Note Pad</h4>
+                            <p style="font-size:12px; color:var(--text-sub)">Persistent text pad with autosave.</p>
+                            <button class="btn" onclick="openApp('Note Pad')">Launch</button>
+                        </div>
+                        <div class="card">
+                            <h4>Terminal</h4>
+                            <p style="font-size:12px; color:var(--text-sub)">Command line interface.</p>
+                            <button class="btn" onclick="openApp('Terminal')">Launch</button>
+                        </div>
+                    </div>
+                `;
+            } else if (tab === 'games') {
+                return `
+                    <h3 style="margin-bottom:12px;">Pre-installed Games</h3>
+                    <div class="grid-cards">
+                        <div class="card">
+                            <h4>Tic Tac Toe</h4>
+                            <p style="font-size:12px; color:var(--text-sub)">Play vs AI bot.</p>
+                            <button class="btn" onclick="openApp('Tic Tac Toe')">Play Now</button>
+                        </div>
                     </div>
                 `;
             }
         }
 
-        // Custom Customization Handlers
-        function loadCustomWallpaper(e) {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(evt) {
-                    document.body.style.backgroundImage = `url('${evt.target.result}')`;
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-
-        function loadCustomCursor(e) {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(evt) {
-                    document.body.style.cursor = `url('${evt.target.result}'), auto`;
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-
-        function toggleTheme(themeName) {
-            document.documentElement.setAttribute('data-theme', themeName);
-            const lightBtn = document.getElementById('btn-light');
-            if (lightBtn) {
-                lightBtn.innerText = "Installed";
-                lightBtn.classList.add('installed');
-            }
-        }
-
-        // Calculator Execution
-        let calcVal = "";
-        function calcPush(val) {
-            calcVal += val;
-            document.getElementById('calc-screen').value = calcVal;
-        }
-        function calcClear() {
-            calcVal = "";
-            document.getElementById('calc-screen').value = "0";
-        }
-        function calcEval() {
-            try {
-                calcVal = eval(calcVal).toString();
-                document.getElementById('calc-screen').value = calcVal;
-            } catch {
-                document.getElementById('calc-screen').value = "Error";
-                calcVal = "";
-            }
-        }
-
-        // Terminal Execution
-        function handleTerm(e, input) {
+        // Terminal Mechanics
+        function runTerminal(e, input) {
             if (e.key === 'Enter') {
-                const out = document.getElementById('term-output');
-                const cmd = input.value.trim();
-                out.innerText += `\nuser@nautilus:~$ ${cmd}`;
+                const logs = document.getElementById('term-logs');
+                const cmd = input.value.trim().toLowerCase();
+                logs.innerText += `\nuser@nautilus:~$ ${input.value}`;
+                
                 if (cmd === 'help') {
-                    out.innerText += `\nAvailable commands: help, clear, theme, ver, echo`;
+                    logs.innerText += `\nCommands: help, clear, apps, theme [dark/light], echo [text]`;
                 } else if (cmd === 'clear') {
-                    out.innerText = '';
-                } else if (cmd === 'ver') {
-                    out.innerText += `\nNautilusOS v1.5`;
+                    logs.innerText = '';
+                } else if (cmd === 'apps') {
+                    logs.innerText += `\nAvailable: ${appRegistry.map(a => a.name).join(', ')}`;
+                } else if (cmd.startsWith('theme ')) {
+                    const mode = cmd.split(' ')[1];
+                    if (mode === 'dark' || mode === 'light') {
+                        document.documentElement.setAttribute('data-theme', mode);
+                        logs.innerText += `\nTheme set to ${mode}`;
+                    } else {
+                        logs.innerText += `\nInvalid theme name. Use 'dark' or 'light'.`;
+                    }
+                } else if (cmd.startsWith('echo ')) {
+                    logs.innerText += `\n${input.value.substring(5)}`;
                 } else {
-                    out.innerText += `\nCommand not recognized: ${cmd}`;
+                    logs.innerText += `\nUnknown command. Type 'help' for options.`;
                 }
+                
                 input.value = '';
+                logs.scrollTop = logs.scrollHeight;
             }
         }
 
-        // Window Dragging Functionality
-        function makeDraggable(elmnt) {
-            let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-            const header = elmnt.querySelector('.window-header');
-            if (header) {
-                header.onmousedown = dragMouseDown;
-            }
-
-            function dragMouseDown(e) {
-                e.preventDefault();
-                pos3 = e.clientX;
-                pos4 = e.clientY;
-                document.onmouseup = closeDragElement;
-                document.onmousemove = elementDrag;
-            }
-
-            function elementDrag(e) {
-                e.preventDefault();
-                pos1 = pos3 - e.clientX;
-                pos2 = pos4 - e.clientY;
-                pos3 = e.clientX;
-                pos4 = e.clientY;
-                elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
-                elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
-            }
-
-            function closeDragElement() {
-                document.onmouseup = null;
-                document.onmousemove = null;
-            }
+        // Calculator Logic
+        let calcBuffer = "";
+        function calcIn(v) { calcBuffer += v; document.getElementById('calc-out').innerText = calcBuffer; }
+        function calcClear() { calcBuffer = ""; document.getElementById('calc-out').innerText = "0"; }
+        function calcRun() {
+            try { calcBuffer = eval(calcBuffer).toString(); document.getElementById('calc-out').innerText = calcBuffer; } 
+            catch { document.getElementById('calc-out').innerText = "Error"; calcBuffer = ""; }
         }
 
-        // Clock Update Cycle
-        setInterval(() => {
-            const clockEl = document.getElementById('taskbar-clock');
-            if (!clockEl) return;
-            const now = new Date();
-            let hours = now.getHours();
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            const seconds = String(now.getSeconds()).padStart(2, '0');
+        // Tic Tac Toe Game Logic
+        let tttState = Array(9).fill(null);
+        let tttActive = true;
+
+        function playTTT(idx) {
+            if (!tttActive || tttState[idx]) return;
+            tttState[idx] = 'X';
+            document.getElementById(`ttt-${idx}`).innerText = 'X';
+            if (checkTTTWin('X')) {
+                document.getElementById('ttt-status').innerText = 'You Won!';
+                tttActive = false;
+                return;
+            }
+            if (tttState.every(cell => cell !== null)) {
+                document.getElementById('ttt-status').innerText = "It's a Draw!";
+                tttActive = false;
+                return;
+            }
             
-            let timeStr = "";
+            // Bot Move
+            document.getElementById('ttt-status').innerText = 'Bot Thinking...';
+            setTimeout(() => {
+                let emptyIndices = tttState.map((val, index) => val === null ? index : null).filter(val => val !== null);
+                let botChoice = emptyIndices[Math.floor(Math.random() * emptyIndices.length)];
+                tttState[botChoice] = 'O';
+                document.getElementById(`ttt-${botChoice}`).innerText = 'O';
+                if (checkTTTWin('O')) {
+                    document.getElementById('ttt-status').innerText = 'Bot Won!';
+                    tttActive = false;
+                } else {
+                    document.getElementById('ttt-status').innerText = 'Your Turn (X)';
+                }
+            }, 300);
+        }
+
+        function checkTTTWin(p) {
+            const wins = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+            return wins.some(w => w.every(i => tttState[i] === p));
+        }
+
+        function resetTTT() {
+            tttState = Array(9).fill(null);
+            tttActive = true;
+            document.getElementById('ttt-status').innerText = 'Your Turn (X)';
+            for (let i = 0; i < 9; i++) document.getElementById(`ttt-${i}`).innerText = '';
+        }
+
+        // Window Drag Engine
+        function makeDraggable(elmnt) {
+            let p1 = 0, p2 = 0, p3 = 0, p4 = 0;
+            const header = elmnt.querySelector('.window-header');
+            if (header) header.onmousedown = (e) => {
+                e.preventDefault();
+                p3 = e.clientX; p4 = e.clientY;
+                document.onmouseup = () => { document.onmouseup = null; document.onmousemove = null; };
+                document.onmousemove = (e) => {
+                    e.preventDefault();
+                    p1 = p3 - e.clientX; p2 = p4 - e.clientY;
+                    p3 = e.clientX; p4 = e.clientY;
+                    elmnt.style.top = (elmnt.offsetTop - p2) + "px";
+                    elmnt.style.left = (elmnt.offsetLeft - p1) + "px";
+                };
+            };
+        }
+
+        // Clock Engine
+        setInterval(() => {
+            const now = new Date();
+            let h = now.getHours();
+            const m = String(now.getMinutes()).padStart(2, '0');
+            const s = String(now.getSeconds()).padStart(2, '0');
+            let str = "";
             if (state.use12Hour) {
-                const ampm = hours >= 12 ? 'PM' : 'AM';
-                hours = hours % 12 || 12;
-                timeStr = `${hours}:${minutes}${state.showSeconds ? ':' + seconds : ''} ${ampm}`;
+                const ampm = h >= 12 ? 'PM' : 'AM';
+                h = h % 12 || 12;
+                str = `${h}:${m}${state.showSeconds ? ':' + s : ''} ${ampm}`;
             } else {
-                timeStr = `${String(hours).padStart(2, '0')}:${minutes}${state.showSeconds ? ':' + seconds : ''}`;
+                str = `${String(h).padStart(2, '0')}:${m}${state.showSeconds ? ':' + s : ''}`;
             }
-            clockEl.innerText = timeStr;
+            document.getElementById('clock').innerText = str;
         }, 1000);
 
-        // Initial Boot
+        // Boot OS
         renderDesktop();
     </script>
 </body>
