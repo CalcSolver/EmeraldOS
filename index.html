@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NautilusOS v10.0 Pro</title>
+  <title>NautilusOS v10.0 Pro - Emerald Edition</title>
   <style>
     :root {
       --bg-gradient: radial-gradient(circle at center, #062016 0%, #020617 100%);
@@ -27,7 +27,6 @@
       --accent: #6366f1;
       --border: rgba(99, 102, 241, 0.4);
     }
-    body.custom-cursor { cursor: crosshair !important; }
 
     * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; font-family: 'Segoe UI', system-ui, sans-serif; }
     
@@ -128,12 +127,43 @@
 
     /* Taskbar Dock */
     #dock-container { position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); z-index: 10000; }
-    #capsule-dock { height: 56px; background: #09111e; border: 1px solid var(--border); border-radius: 28px; backdrop-filter: blur(20px); display: flex; align-items: center; padding: 0 18px; gap: 10px; }
-    .dock-btn { background: transparent; border: none; color: var(--accent); cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 8px; border-radius: 50%; }
+    #capsule-dock { height: 56px; background: #09111e; border: 1px solid var(--border); border-radius: 28px; backdrop-filter: blur(20px); display: flex; align-items: center; padding: 0 18px; gap: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
+    .dock-title { font-size: 13px; font-weight: 700; color: var(--accent); letter-spacing: 0.5px; padding-right: 6px; }
+    
+    /* Dock Buttons & Active Indicators */
+    .dock-btn { 
+      background: transparent; 
+      border: none; 
+      color: var(--accent); 
+      cursor: pointer; 
+      display: flex; 
+      flex-direction: column;
+      align-items: center; 
+      justify-content: center; 
+      padding: 6px 8px; 
+      border-radius: 12px; 
+      position: relative;
+    }
     .dock-btn:hover { background: rgba(255, 255, 255, 0.08); }
     .dock-svg { width: 22px; height: 22px; fill: var(--accent); }
     .dock-divider { width: 1px; height: 24px; background: rgba(255, 255, 255, 0.15); margin: 0 4px; }
     .dock-clock { font-size: 13px; color: #f8fafc; font-weight: 500; }
+
+    /* Active Running App Line Indicator */
+    .dock-btn::after {
+      content: '';
+      position: absolute;
+      bottom: 2px;
+      width: 0px;
+      height: 3px;
+      background: var(--accent);
+      border-radius: 2px;
+      box-shadow: 0 0 8px var(--accent);
+      transition: width 0.3s ease;
+    }
+    .dock-btn.active::after {
+      width: 16px;
+    }
 
     /* Windows */
     .window {
@@ -167,11 +197,11 @@
 
   <div id="boot-screen">
     <svg class="boot-logo" viewBox="0 0 512 512"><path d="M256,0C114.6,0,0,114.6,0,256s114.6,256,256,256,256-114.6,256-256S397.4,0,256,0Zm0,464C141.1,464,48,370.9,48,256S141.1,48,256,48,464,141.1,464,256,370.9,464,256,464Z"/></svg>
-    <div class="boot-text">Loading NautilusOS v10.0 Pro...</div>
+    <div class="boot-text">Loading Nautilus OS v10.0 Pro...</div>
   </div>
 
   <div id="js-menu-bar" onmousedown="dragJSMenu(event)">
-    <span class="js-menu-title">⚡ JS Quick Menu</span>
+    <span class="js-menu-title">⚡ Quick Menu</span>
     <button class="js-btn" onclick="openApp('emeraldworld')">Emerald World 3D</button>
     <button class="js-btn" onclick="openApp('store')">App Store</button>
     <button class="js-btn" onclick="triggerMatrixEffect()">Matrix</button>
@@ -191,14 +221,17 @@
     </div>
   </div>
 
+  <!-- Taskbar Dock with Emerald OS Title & App Lines -->
   <div id="dock-container">
     <div id="capsule-dock">
+      <span class="dock-title">Emerald OS</span>
+      <div class="dock-divider"></div>
       <button class="dock-btn" onclick="toggleLauncherModal()"><svg class="dock-svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg></button>
       <div class="dock-divider"></div>
-      <button class="dock-btn" onclick="openApp('emeraldworld')"><svg class="dock-svg" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zm0 9L2 6v11l10 5 10-5V6l-10 5z"/></svg></button>
-      <button class="dock-btn" onclick="openApp('store')"><svg class="dock-svg" viewBox="0 0 24 24"><path d="M19 6h-2c0-2.76-2.24-5-5-5S7 3.24 7 6H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2z"/></svg></button>
-      <button class="dock-btn" onclick="openApp('photos')"><svg class="dock-svg" viewBox="0 0 24 24"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2z"/></svg></button>
-      <button class="dock-btn" onclick="openApp('tasks')"><svg class="dock-svg" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></button>
+      <button class="dock-btn" id="dock-btn-emeraldworld" onclick="openApp('emeraldworld')"><svg class="dock-svg" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zm0 9L2 6v11l10 5 10-5V6l-10 5z"/></svg></button>
+      <button class="dock-btn" id="dock-btn-store" onclick="openApp('store')"><svg class="dock-svg" viewBox="0 0 24 24"><path d="M19 6h-2c0-2.76-2.24-5-5-5S7 3.24 7 6H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2z"/></svg></button>
+      <button class="dock-btn" id="dock-btn-photos" onclick="openApp('photos')"><svg class="dock-svg" viewBox="0 0 24 24"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2z"/></svg></button>
+      <button class="dock-btn" id="dock-btn-tasks" onclick="openApp('tasks')"><svg class="dock-svg" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></button>
       <div class="dock-divider"></div>
       <div class="dock-clock" id="dock-clock">12:00 PM</div>
     </div>
@@ -218,13 +251,10 @@
       { id: 'snake', name: 'Retro Snake', cat: 'media', icon: '<path d="M7 18h2V6H7v12zm4 0h2V6h-2v12zm4 0h2V6h-2v12z"/>' },
       { id: 'tictactoe', name: 'TicTacToe', cat: 'media', icon: '<path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/>' },
       { id: 'calculator', name: 'Calculator', cat: 'prod', icon: '<path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/>' },
-      { id: 'music', name: 'Spotify Music', cat: 'media', icon: '<path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>' },
-      { id: 'browser', name: 'Browser', cat: 'util', icon: '<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/>' },
-      { id: 'settings', name: 'Settings', cat: 'util', icon: '<path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58z"/>' },
-      { id: 'memegen', name: 'Meme Generator', cat: 'acmemes', icon: '<path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2z"/>' }
+      { id: 'settings', name: 'Settings', cat: 'util', icon: '<path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58z"/>' }
     ];
 
-    let installedApps = ['emeraldworld', 'store', 'tasks', 'terminal', 'codepad', 'paint', 'photos', 'snake', 'tictactoe', 'calculator', 'music', 'settings', 'memegen'];
+    let installedApps = ['emeraldworld', 'store', 'tasks', 'terminal', 'codepad', 'paint', 'photos', 'snake', 'tictactoe', 'calculator', 'settings'];
     let openWindows = {};
     let activeZIndex = 100;
     let taskList = [{ text: 'Explore Emerald World 3D', done: true }, { text: 'Set Custom Photo Wallpaper', done: false }];
@@ -243,6 +273,14 @@
     }
     setInterval(updateClock, 1000);
     updateClock();
+
+    function updateDockIndicators() {
+      document.querySelectorAll('.dock-btn').forEach(btn => btn.classList.remove('active'));
+      Object.keys(openWindows).forEach(appId => {
+        const btn = document.getElementById(`dock-btn-${appId}`);
+        if (btn) btn.classList.add('active');
+      });
+    }
 
     function toggleLauncherModal() {
       const overlay = document.getElementById('start-modal-overlay');
@@ -301,16 +339,18 @@
 
       const winId = 'win-' + Date.now();
       openWindows[appId] = winId;
+      updateDockIndicators();
+
       const appObj = baseAppsCatalog.find(a => a.id === appId) || { name: 'App' };
       let content = '';
 
       if (appId === 'emeraldworld') {
         content = `
           <div style="width:100%; height:100%; position:relative; overflow:hidden;" id="ew-container-${winId}">
-            <canvas id="ew-canvas-${winId}" style="width:100%; height:100%; display:block;"></canvas>
-            <div style="position:absolute; top:20px; left:20px; background:rgba(0,0,0,0.7); padding:12px; border-radius:8px; border:1px solid var(--accent); max-width:300px;">
+            <canvas id="ew-canvas-${winId}" style="width:100%; height:100%; display:block; background:#020617;"></canvas>
+            <div style="position:absolute; top:20px; left:20px; background:rgba(2,6,23,0.85); padding:12px; border-radius:8px; border:1px solid var(--accent); max-width:320px; pointer-events:none;">
               <h3 style="color:var(--accent);">Emerald World 3D</h3>
-              <p style="font-size:12px; color:#cbd5e1; margin-top:4px;">Scroll UP / DOWN anywhere to navigate through the 3D Emerald Grid space.</p>
+              <p style="font-size:12px; color:#cbd5e1; margin-top:4px;">Matrix perspective grid active! Scroll UP or DOWN anywhere on the viewport to fly through the emerald digital abyss.</p>
             </div>
           </div>`;
 
@@ -337,7 +377,7 @@
       } else if (appId === 'terminal') {
         content = `
           <div style="background:#020617; color:var(--term-text); font-family:monospace; padding:12px; height:100%; display:flex; flex-direction:column;">
-            <div id="term-out-${winId}" style="flex:1; overflow-y:auto; line-height:1.5;">Welcome to Nautilus Shell v10.0<br>Type 'help' for available commands.</div>
+            <div id="term-out-${winId}" style="flex:1; overflow-y:auto; line-height:1.5;">Welcome to Nautilus Shell v10.0 Pro<br>Type 'help' for available commands.</div>
             <div style="display:flex; gap:6px; margin-top:8px;">
               <span>$</span>
               <input type="text" id="term-in-${winId}" style="background:transparent; border:none; outline:none; color:inherit; width:100%; font-family:monospace;" onkeydown="if(event.key==='Enter') runTermCmd('${winId}')">
@@ -348,7 +388,7 @@
         content = `
           <div class="app-container" style="height:100%;">
             <h2>💻 JS CodePad Studio</h2>
-            <textarea id="code-in-${winId}" class="browser-input" style="height:180px; font-family:monospace; resize:none;">console.log("Hello from Nautilus CodePad!");</textarea>
+            <textarea id="code-in-${winId}" class="browser-input" style="height:180px; font-family:monospace; resize:none;">console.log("Hello from Emerald OS!");</textarea>
             <button class="browser-btn" onclick="runPadCode('${winId}')">▶ Run Code</button>
             <div id="code-out-${winId}" style="background:#020617; border:1px solid var(--border); padding:10px; border-radius:6px; font-family:monospace; font-size:12px; min-height:80px; color:#34d399;">Console output...</div>
           </div>`;
@@ -456,54 +496,87 @@
       if (appId === 'tasks') renderTaskList(winId);
       if (appId === 'paint') initPaint(winId);
       if (appId === 'tictactoe') resetTTT(winId);
-      if (appId === 'store') renderStore(winId);
     }
 
-    function closeWindow(appId, winId) { document.getElementById(winId)?.remove(); delete openWindows[appId]; }
+    function closeWindow(appId, winId) { 
+      document.getElementById(winId)?.remove(); 
+      delete openWindows[appId]; 
+      updateDockIndicators();
+    }
+    
     function maximizeWindow(id) { const win = document.getElementById(id); win.style.width = win.style.width === '100vw' ? '780px' : '100vw'; win.style.height = win.style.height === 'calc(100vh - 80px)' ? '520px' : 'calc(100vh - 80px)'; }
     function dragWindow(e, id) { const win = document.getElementById(id); let shiftX = e.clientX - win.getBoundingClientRect().left; let shiftY = e.clientY - win.getBoundingClientRect().top; document.onmousemove = (e) => { win.style.left = (e.clientX - shiftX) + 'px'; win.style.top = (e.clientY - shiftY) + 'px'; }; document.onmouseup = () => document.onmousemove = null; }
 
-    /* Emerald World 3D Scroll Canvas Engine */
+    /* Fixed 3D Emerald Grid & Matrix Tunnel Engine */
     function initEmeraldWorld3D(winId) {
       setTimeout(() => {
         const canvas = document.getElementById(`ew-canvas-${winId}`);
         if (!canvas) return;
         const ctx = canvas.getContext('2d');
-        canvas.width = canvas.parentElement.clientWidth;
-        canvas.height = canvas.parentElement.clientHeight;
+        
+        const resizeCanvas = () => {
+          if (canvas.parentElement) {
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = canvas.parentElement.clientHeight;
+          }
+        };
+        resizeCanvas();
 
         let zOffset = 0;
+        let speed = 2;
+        const matrixChars = '0123456789ABCDEF⚡ EmeraldOS';
+
         canvas.addEventListener('wheel', (e) => {
           e.preventDefault();
-          zOffset += e.deltaY * 0.5;
+          zOffset += e.deltaY * 0.8;
         });
 
         function render() {
-          ctx.fillStyle = '#020617';
+          if (!document.getElementById(`ew-canvas-${winId}`)) return;
+
+          ctx.fillStyle = 'rgba(2, 6, 23, 0.25)';
           ctx.fillRect(0, 0, canvas.width, canvas.height);
 
           const cx = canvas.width / 2;
           const cy = canvas.height / 2;
+          zOffset += speed;
 
-          for (let i = 0; i < 200; i++) {
-            let x = (Math.sin(i * 99) * 2000);
-            let y = (Math.cos(i * 33) * 2000);
-            let z = (i * 40 - zOffset) % 2000;
-            if (z <= 0) z += 2000;
+          // Render 3D Perspective Grid
+          for (let z = 100; z < 1200; z += 60) {
+            let actualZ = (z - (zOffset % 60));
+            if (actualZ <= 0) continue;
+            
+            let k = 350 / actualZ;
+            let size = 1800 * k;
+            
+            ctx.strokeStyle = `rgba(16, 185, 129, ${Math.max(0, 1 - actualZ / 1200)})`;
+            ctx.lineWidth = 1;
+            ctx.strokeRect(cx - size / 2, cy - size / 2, size, size);
+          }
 
-            let k = 300 / z;
+          // Render Floating Matrix Particles inside 3D Tunnel
+          for (let i = 0; i < 150; i++) {
+            let x = (Math.sin(i * 127.3) * 1200);
+            let y = (Math.cos(i * 43.1) * 1200);
+            let z = (i * 15 - zOffset) % 1200;
+            if (z <= 0) z += 1200;
+
+            let k = 350 / z;
             let px = x * k + cx;
             let py = y * k + cy;
-            let size = Math.max(1, (1 - z / 2000) * 12);
 
             if (px > 0 && px < canvas.width && py > 0 && py < canvas.height) {
-              ctx.fillStyle = i % 2 === 0 ? '#10b981' : '#34d399';
-              ctx.beginPath();
-              ctx.arc(px, py, size, 0, Math.PI * 2);
-              ctx.fill();
+              let char = matrixChars[i % matrixChars.length];
+              let opacity = Math.max(0, 1 - z / 1200);
+              let fontSize = Math.max(8, Math.floor(24 * k));
+              
+              ctx.font = `${fontSize}px monospace`;
+              ctx.fillStyle = i % 3 === 0 ? `rgba(52, 211, 153, ${opacity})` : `rgba(16, 185, 129, ${opacity})`;
+              ctx.fillText(char, px, py);
             }
           }
-          if (document.getElementById(`ew-canvas-${winId}`)) requestAnimationFrame(render);
+
+          requestAnimationFrame(render);
         }
         render();
       }, 100);
@@ -516,7 +589,7 @@
       container.innerHTML = '';
       taskList.forEach((t, i) => {
         const item = document.createElement('div');
-        item.style.cssText = 'background:#1e293b; padding:10px; border-radius:6px; display:flex; justify-shadow:space-between; align-items:center;';
+        item.style.cssText = 'background:#1e293b; padding:10px; border-radius:6px; display:flex; justify-content:space-between; align-items:center;';
         item.innerHTML = `
           <span style="${t.done ? 'text-decoration:line-through; color:#64748b;' : ''}">${t.text}</span>
           <button class="browser-btn" onclick="toggleTask(${i}, '${winId}')">${t.done ? 'Undo' : 'Done'}</button>`;
@@ -581,7 +654,7 @@
     function calcNum(winId, val) { const d = document.getElementById(`calc-disp-${winId}`); if (d.value === '0') d.value = ''; d.value += val; }
     function calcEval(winId) { const d = document.getElementById(`calc-disp-${winId}`); try { d.value = eval(d.value); } catch(e) { d.value = 'Error'; } }
 
-    /* Terminal Runner */
+    /* Terminal Command Runner */
     function runTermCmd(winId) {
       const inp = document.getElementById(`term-in-${winId}`);
       const out = document.getElementById(`term-out-${winId}`);
@@ -589,82 +662,60 @@
       out.innerHTML += `<br>$ ${inp.value}`;
       if (cmd === 'help') out.innerHTML += '<br>Commands: help, ls, clear, date, matrix';
       else if (cmd === 'ls') out.innerHTML += '<br>emerald_world.3d photos.lib system_config.sys';
-      else if (cmd === 'clear') out.innerHTML = '';
-      else if (cmd === 'date') out.innerHTML += `<br>${new Date().toString()}`;
-      else if (cmd === 'matrix') triggerMatrixEffect();
-      else out.innerHTML += `<br>Command not found: ${cmd}`;
+      else if (cmd === 'clear') { out.innerHTML = ''; }
+      else if (cmd === 'date') { out.innerHTML += `<br>${new Date().toString()}`; }
+      else if (cmd === 'matrix') { triggerMatrixEffect(); out.innerHTML += '<br>Matrix visualizer triggered.'; }
+      else { out.innerHTML += `<br>Command not recognized: '${cmd}'`; }
       inp.value = '';
+      out.scrollTop = out.scrollHeight;
     }
 
-    /* JS CodePad Runner */
+    /* CodePad Sandbox Runner */
     function runPadCode(winId) {
       const code = document.getElementById(`code-in-${winId}`).value;
       const out = document.getElementById(`code-out-${winId}`);
       try {
         let logs = [];
-        const customConsole = { log: (...args) => logs.push(args.join(' ')) };
-        new Function('console', code)(customConsole);
-        out.innerText = logs.join('\n') || 'Executed successfully with no output.';
-      } catch(err) { out.innerText = 'Runtime Error: ' + err.message; }
-    }
-
-    /* TicTacToe Engine */
-    let tttState = Array(9).fill(null);
-    function resetTTT(winId) {
-      tttState = Array(9).fill(null);
-      const board = document.getElementById(`ttt-board-${winId}`);
-      if (!board) return;
-      board.innerHTML = '';
-      for (let i = 0; i < 9; i++) {
-        const btn = document.createElement('button');
-        btn.className = 'browser-btn'; btn.style.height = '60px'; btn.style.fontSize = '20px';
-        btn.onclick = () => playTTT(i, winId);
-        board.appendChild(btn);
-      }
-    }
-    function playTTT(i, winId) {
-      if (tttState[i]) return;
-      tttState[i] = 'X';
-      const board = document.getElementById(`ttt-board-${winId}`);
-      board.children[i].innerText = 'X';
-      let empty = tttState.map((v, idx) => v === null ? idx : null).filter(v => v !== null);
-      if (empty.length > 0) {
-        let aiChoice = empty[Math.floor(Math.random() * empty.length)];
-        tttState[aiChoice] = 'O';
-        board.children[aiChoice].innerText = 'O';
+        const originalLog = console.log;
+        console.log = (...args) => logs.push(args.join(' '));
+        eval(code);
+        console.log = originalLog;
+        out.innerText = logs.join('\n') || 'Executed successfully with no log output.';
+      } catch (err) {
+        out.innerText = 'Error: ' + err.message;
       }
     }
 
-    /* App Store Engine */
-    function renderStore(winId) {
-      const grid = document.getElementById(`store-grid-${winId}`);
-      if (!grid) return;
-      grid.innerHTML = '';
-      baseAppsCatalog.forEach(app => {
-        const card = document.createElement('div');
-        card.className = 'app-card';
-        card.innerHTML = `<h4>${app.name}</h4><button class="browser-btn" onclick="openApp('${app.id}')">Launch App</button>`;
-        grid.appendChild(card);
-      });
-    }
-
-    /* Canvas Matrix Background Effect */
+    /* Matrix Screen Visualizer Effect */
     function triggerMatrixEffect() {
+      showToast('Matrix Overlay Activated!');
       const canvas = document.getElementById('fx-canvas');
       const ctx = canvas.getContext('2d');
-      canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-      const drops = Array(Math.floor(canvas.width / 20)).fill(1);
-      setInterval(() => {
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.05)'; ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = '#10b981'; ctx.font = '15px monospace';
-        drops.forEach((y, i) => {
-          ctx.fillText(Math.random() > 0.5 ? '1' : '0', i * 20, y * 20);
-          if (y * 20 > canvas.height && Math.random() > 0.975) drops[i] = 0;
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      const chars = '0123456789ABCDEF';
+      const fontSize = 14;
+      const columns = Math.floor(canvas.width / fontSize);
+      const drops = Array(columns).fill(1);
+
+      function drawMatrix() {
+        ctx.fillStyle = 'rgba(2, 6, 23, 0.05)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = '#10b981';
+        ctx.font = fontSize + 'px monospace';
+
+        for (let i = 0; i < drops.length; i++) {
+          const text = chars[Math.floor(Math.random() * chars.length)];
+          ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+          if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
           drops[i]++;
-        });
-      }, 33);
+        }
+      }
+      setInterval(drawMatrix, 33);
     }
 
+    // Initialize Desktop View
     renderDesktop();
   </script>
 </body>
