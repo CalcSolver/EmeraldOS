@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NautilusOS v10.0 Pro - Emerald Edition</title>
+  <title>Emerald OS</title>
   <style>
     :root {
       --bg-gradient: radial-gradient(circle at center, #062016 0%, #020617 100%);
@@ -53,7 +53,7 @@
       align-items: center;
       justify-content: center;
       gap: 20px;
-      animation: fadeOutBoot 0.6s ease 2.2s forwards;
+      animation: fadeOutBoot 0.6s ease 1.8s forwards;
     }
     .boot-logo { width: 80px; height: 80px; fill: var(--accent); filter: drop-shadow(0 0 20px var(--accent)); }
     .boot-text { font-size: 18px; letter-spacing: 2px; color: #e2e8f0; }
@@ -87,13 +87,13 @@
       border-radius: 8px;
       transition: all 0.2s;
       border: 1px solid transparent;
-      background: rgba(0,0,0,0.2);
+      background: rgba(0,0,0,0.25);
     }
     .desktop-icon:hover { background: rgba(255, 255, 255, 0.1); border-color: var(--border); transform: scale(1.05); }
     .icon-svg { width: 34px; height: 34px; fill: var(--accent); pointer-events: none; }
     .icon-label { font-size: 11px; text-align: center; text-shadow: 0 1px 3px rgba(0,0,0,0.9); pointer-events: none; word-break: break-word; }
 
-    /* Draggable Floating JS Bar */
+    /* Floating Quick Bar */
     #js-menu-bar {
       position: fixed;
       top: 20px;
@@ -130,7 +130,6 @@
     #capsule-dock { height: 56px; background: #09111e; border: 1px solid var(--border); border-radius: 28px; backdrop-filter: blur(20px); display: flex; align-items: center; padding: 0 18px; gap: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
     .dock-title { font-size: 13px; font-weight: 700; color: var(--accent); letter-spacing: 0.5px; padding-right: 6px; }
     
-    /* Dock Buttons & Active Indicators */
     .dock-btn { 
       background: transparent; 
       border: none; 
@@ -149,7 +148,7 @@
     .dock-divider { width: 1px; height: 24px; background: rgba(255, 255, 255, 0.15); margin: 0 4px; }
     .dock-clock { font-size: 13px; color: #f8fafc; font-weight: 500; }
 
-    /* Active Running App Line Indicator */
+    /* Active Line Indicator Under App */
     .dock-btn::after {
       content: '';
       position: absolute;
@@ -167,7 +166,7 @@
 
     /* Windows */
     .window {
-      position: absolute; width: 780px; height: 520px; max-width: 95vw; max-height: 85vh; background: var(--window-bg); border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8); backdrop-filter: blur(16px); display: flex; flex-direction: column; overflow: hidden; z-index: 10;
+      position: absolute; width: 800px; height: 540px; max-width: 95vw; max-height: 85vh; background: var(--window-bg); border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8); backdrop-filter: blur(16px); display: flex; flex-direction: column; overflow: hidden; z-index: 10;
     }
     .window-header { height: 38px; background: rgba(0, 0, 0, 0.4); display: flex; align-items: center; justify-content: space-between; padding: 0 12px; cursor: move; border-bottom: 1px solid var(--border); }
     .window-title { font-size: 13px; font-weight: 600; }
@@ -180,12 +179,12 @@
     .window-content { flex: 1; display: flex; flex-direction: column; overflow: auto; background: #080c14; position: relative; }
     .app-container { padding: 20px; height: 100%; overflow-y: auto; display: flex; flex-direction: column; gap: 14px; }
 
-    .browser-btn { background: #1f2937; border: 1px solid var(--border); color: #fff; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 12px; }
+    .browser-btn { background: #1f2937; border: 1px solid var(--border); color: #fff; padding: 8px 14px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; }
     .browser-btn:hover { background: var(--accent); color: #000; }
     .browser-input { background: #1f2937; border: 1px solid var(--border); color: #fff; padding: 8px 12px; border-radius: 6px; font-size: 13px; outline: none; }
 
-    .app-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; }
-    .app-card { background: #1e293b; border: 1px solid var(--border); padding: 14px; border-radius: 10px; display: flex; flex-direction: column; gap: 8px; text-align: center; align-items: center; justify-content: space-between; }
+    .app-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 14px; }
+    .app-card { background: #1e293b; border: 1px solid var(--border); padding: 16px; border-radius: 10px; display: flex; flex-direction: column; gap: 10px; text-align: center; align-items: center; justify-content: space-between; }
 
     #toast-container { position: fixed; top: 20px; right: 20px; z-index: 99999; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
     .toast { background: var(--accent); color: #000; padding: 12px 20px; border-radius: 8px; font-weight: bold; }
@@ -197,11 +196,11 @@
 
   <div id="boot-screen">
     <svg class="boot-logo" viewBox="0 0 512 512"><path d="M256,0C114.6,0,0,114.6,0,256s114.6,256,256,256,256-114.6,256-256S397.4,0,256,0Zm0,464C141.1,464,48,370.9,48,256S141.1,48,256,48,464,141.1,464,256,370.9,464,256,464Z"/></svg>
-    <div class="boot-text">Loading Nautilus OS v10.0 Pro...</div>
+    <div class="boot-text">Loading Emerald OS...</div>
   </div>
 
   <div id="js-menu-bar" onmousedown="dragJSMenu(event)">
-    <span class="js-menu-title">⚡ Quick Menu</span>
+    <span class="js-menu-title">⚡ Emerald Bar</span>
     <button class="js-btn" onclick="openApp('emeraldworld')">Emerald World 3D</button>
     <button class="js-btn" onclick="openApp('store')">App Store</button>
     <button class="js-btn" onclick="triggerMatrixEffect()">Matrix</button>
@@ -213,15 +212,15 @@
   <div id="start-modal-overlay" onclick="closeLauncher(event)">
     <div id="start-launcher" onclick="event.stopPropagation()">
       <div style="display:flex; justify-content:space-between; align-items:center;">
-        <h3>Harrythehacker</h3>
-        <button class="browser-btn" onclick="showToast('Signed Out')">Sign Out</button>
+        <h3>Emerald OS User</h3>
+        <button class="browser-btn" onclick="showToast('User Session Active')">Status: Online</button>
       </div>
-      <input type="text" id="launcher-search" class="browser-input" placeholder="Search apps..." oninput="filterLauncherApps()">
+      <input type="text" id="launcher-search" class="browser-input" placeholder="Search installed apps..." oninput="filterLauncherApps()">
       <div class="launcher-grid" id="launcher-grid"></div>
     </div>
   </div>
 
-  <!-- Taskbar Dock with Emerald OS Title & App Lines -->
+  <!-- Dock with Emerald OS Title & App Indicators -->
   <div id="dock-container">
     <div id="capsule-dock">
       <span class="dock-title">Emerald OS</span>
@@ -232,6 +231,7 @@
       <button class="dock-btn" id="dock-btn-store" onclick="openApp('store')"><svg class="dock-svg" viewBox="0 0 24 24"><path d="M19 6h-2c0-2.76-2.24-5-5-5S7 3.24 7 6H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2z"/></svg></button>
       <button class="dock-btn" id="dock-btn-photos" onclick="openApp('photos')"><svg class="dock-svg" viewBox="0 0 24 24"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2z"/></svg></button>
       <button class="dock-btn" id="dock-btn-tasks" onclick="openApp('tasks')"><svg class="dock-svg" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></button>
+      <button class="dock-btn" id="dock-btn-settings" onclick="openApp('settings')"><svg class="dock-svg" viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58z"/></svg></button>
       <div class="dock-divider"></div>
       <div class="dock-clock" id="dock-clock">12:00 PM</div>
     </div>
@@ -241,23 +241,22 @@
 
   <script>
     const baseAppsCatalog = [
-      { id: 'emeraldworld', name: 'Emerald World 3D', cat: 'media', icon: '<path d="M12 2L2 7l10 5 10-5-10-5zm0 9L2 6v11l10 5 10-5V6l-10 5z"/>' },
-      { id: 'store', name: 'App Store', cat: 'util', icon: '<path d="M19 6h-2c0-2.76-2.24-5-5-5S7 3.24 7 6H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2z"/>' },
-      { id: 'tasks', name: 'Task Board', cat: 'prod', icon: '<path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>' },
-      { id: 'terminal', name: 'Terminal', cat: 'util', icon: '<path d="M20 4H4c-1.11 0-2 .89-2 2v12c0 1.1.89 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.11-.9-2-2-2z"/>' },
-      { id: 'codepad', name: 'JS CodePad', cat: 'prod', icon: '<path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/>' },
-      { id: 'paint', name: 'Paint Lab', cat: 'prod', icon: '<path d="M12 3c-4.97 0-9 4.03-9 9 0 2.12.74 4.07 1.97 5.61.43.54 1.03.89 1.7.89h1.83c.83 0 1.5-.67 1.5-1.5 0-.39-.15-.74-.39-1.01-.23-.26-.37-.61-.37-1 0-.83.67-1.5 1.5-1.5H15c2.76 0 5-2.24 5-5 0-4.42-3.58-8-8-8z"/>' },
-      { id: 'photos', name: 'Photos', cat: 'media', icon: '<path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2z"/>' },
-      { id: 'snake', name: 'Retro Snake', cat: 'media', icon: '<path d="M7 18h2V6H7v12zm4 0h2V6h-2v12zm4 0h2V6h-2v12z"/>' },
-      { id: 'tictactoe', name: 'TicTacToe', cat: 'media', icon: '<path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/>' },
-      { id: 'calculator', name: 'Calculator', cat: 'prod', icon: '<path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/>' },
-      { id: 'settings', name: 'Settings', cat: 'util', icon: '<path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58z"/>' }
+      { id: 'emeraldworld', name: 'Emerald World 3D', cat: 'Media', desc: 'Interactive 3D Perspective Matrix Grid & App Navigator', icon: '<path d="M12 2L2 7l10 5 10-5-10-5zm0 9L2 6v11l10 5 10-5V6l-10 5z"/>' },
+      { id: 'store', name: 'App Store', cat: 'System', desc: 'Browse, install, and update Emerald OS apps', icon: '<path d="M19 6h-2c0-2.76-2.24-5-5-5S7 3.24 7 6H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2z"/>' },
+      { id: 'tasks', name: 'Task Board', cat: 'Productivity', desc: 'Track your personal goals and system tasks', icon: '<path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>' },
+      { id: 'terminal', name: 'Terminal', cat: 'Utilities', desc: 'Emerald Shell CLI tool environment', icon: '<path d="M20 4H4c-1.11 0-2 .89-2 2v12c0 1.1.89 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.11-.9-2-2-2z"/>' },
+      { id: 'codepad', name: 'JS CodePad', cat: 'Developer', desc: 'JavaScript Code Editor and live Console execution sandbox', icon: '<path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/>' },
+      { id: 'paint', name: 'Paint Lab', cat: 'Graphics', desc: 'Digital drawing and canvas suite', icon: '<path d="M12 3c-4.97 0-9 4.03-9 9 0 2.12.74 4.07 1.97 5.61.43.54 1.03.89 1.7.89h1.83c.83 0 1.5-.67 1.5-1.5 0-.39-.15-.74-.39-1.01-.23-.26-.37-.61-.37-1 0-.83.67-1.5 1.5-1.5H15c2.76 0 5-2.24 5-5 0-4.42-3.58-8-8-8z"/>' },
+      { id: 'photos', name: 'Photos', cat: 'Media', desc: 'View local images and configure custom wallpapers', icon: '<path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2z"/>' },
+      { id: 'tictactoe', name: 'TicTacToe', cat: 'Gaming', desc: 'Play TicTacToe against the Emerald AI', icon: '<path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/>' },
+      { id: 'calculator', name: 'Calculator', cat: 'Utilities', desc: 'Standard mathematical calculator', icon: '<path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/>' },
+      { id: 'settings', name: 'Settings', cat: 'System', desc: 'Configure OS themes, options, and system reset', icon: '<path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58z"/>' }
     ];
 
-    let installedApps = ['emeraldworld', 'store', 'tasks', 'terminal', 'codepad', 'paint', 'photos', 'snake', 'tictactoe', 'calculator', 'settings'];
+    let installedApps = ['emeraldworld', 'store', 'tasks', 'terminal', 'codepad', 'paint', 'photos', 'tictactoe', 'calculator', 'settings'];
     let openWindows = {};
     let activeZIndex = 100;
-    let taskList = [{ text: 'Explore Emerald World 3D', done: true }, { text: 'Set Custom Photo Wallpaper', done: false }];
+    let taskList = [{ text: 'Fly through Emerald World 3D', done: true }, { text: 'Install apps from App Store', done: false }];
 
     function showToast(msg) {
       const container = document.getElementById('toast-container');
@@ -330,7 +329,7 @@
       document.onmouseup = () => document.onmousemove = null;
     }
 
-    /* Master App Launcher Engine */
+    /* Master Window Engine */
     function openApp(appId) {
       if (openWindows[appId]) {
         const existing = document.getElementById(openWindows[appId]);
@@ -347,10 +346,49 @@
       if (appId === 'emeraldworld') {
         content = `
           <div style="width:100%; height:100%; position:relative; overflow:hidden;" id="ew-container-${winId}">
-            <canvas id="ew-canvas-${winId}" style="width:100%; height:100%; display:block; background:#020617;"></canvas>
-            <div style="position:absolute; top:20px; left:20px; background:rgba(2,6,23,0.85); padding:12px; border-radius:8px; border:1px solid var(--accent); max-width:320px; pointer-events:none;">
-              <h3 style="color:var(--accent);">Emerald World 3D</h3>
-              <p style="font-size:12px; color:#cbd5e1; margin-top:4px;">Matrix perspective grid active! Scroll UP or DOWN anywhere on the viewport to fly through the emerald digital abyss.</p>
+            <canvas id="ew-canvas-${winId}" style="width:100%; height:100%; display:block; background:#020617; cursor:pointer;"></canvas>
+            <div style="position:absolute; top:20px; left:20px; background:rgba(2,6,23,0.85); padding:12px 16px; border-radius:8px; border:1px solid var(--accent); max-width:340px; pointer-events:none;">
+              <h3 style="color:var(--accent);">Emerald World 3D Workspace</h3>
+              <p style="font-size:12px; color:#cbd5e1; margin-top:4px;">Fly through space using mouse-wheel scrolling! Click any 3D floating app icon directly inside the canvas world to launch it.</p>
+            </div>
+          </div>`;
+
+      } else if (appId === 'store') {
+        content = `
+          <div class="app-container">
+            <h2>🛒 Emerald App Store</h2>
+            <p style="font-size:13px; color:#94a3b8;">Discover, install, and open native Emerald OS applications.</p>
+            <div class="app-grid" id="store-grid-${winId}"></div>
+          </div>`;
+
+      } else if (appId === 'settings') {
+        content = `
+          <div class="app-container">
+            <h2>⚙️ System Settings</h2>
+            
+            <div style="background:#1e293b; border:1px solid var(--border); padding:16px; border-radius:10px; display:flex; flex-direction:column; gap:12px;">
+              <h3>🎨 Theme Customisation</h3>
+              <div style="display:flex; gap:10px;">
+                <button class="browser-btn" onclick="document.body.className='theme-cyber'">Cyberpunk</button>
+                <button class="browser-btn" onclick="document.body.className='theme-midnight'">Midnight Blue</button>
+                <button class="browser-btn" onclick="document.body.className=''">Emerald Default</button>
+              </div>
+            </div>
+
+            <div style="background:#1e293b; border:1px solid var(--border); padding:16px; border-radius:10px; display:flex; flex-direction:column; gap:12px;">
+              <h3>🖼️ Custom Background URL</h3>
+              <div style="display:flex; gap:10px;">
+                <input type="text" id="bg-url-${winId}" class="browser-input" placeholder="https://image-url..." style="flex:1;">
+                <button class="browser-btn" onclick="setBgUrl('${winId}')">Apply Wallpaper</button>
+              </div>
+            </div>
+
+            <div style="background:#1e293b; border:1px solid var(--border); padding:16px; border-radius:10px; display:flex; flex-direction:column; gap:12px;">
+              <h3>⚡ System Management</h3>
+              <div style="display:flex; gap:10px;">
+                <button class="browser-btn" onclick="triggerMatrixEffect()">Trigger Matrix Rain</button>
+                <button class="browser-btn" onclick="location.reload()" style="background:#ef4444; color:#fff;">Reboot Emerald OS</button>
+              </div>
             </div>
           </div>`;
 
@@ -369,15 +407,15 @@
         content = `
           <div class="app-container">
             <h2>🖼️ Photos Library</h2>
-            <p style="font-size:12px; color:#94a3b8;">Select images from your computer and click "Set as Wallpaper" on any photo.</p>
-            <button class="browser-btn" onclick="uploadLocalPhotos('${winId}')">📂 Select Local Photos</button>
+            <p style="font-size:12px; color:#94a3b8;">Select local photos from your computer and set them as wallpaper.</p>
+            <button class="browser-btn" onclick="uploadLocalPhotos('${winId}')">📂 Browse Local Images</button>
             <div class="app-grid" id="photo-grid-${winId}" style="margin-top:10px;"></div>
           </div>`;
 
       } else if (appId === 'terminal') {
         content = `
           <div style="background:#020617; color:var(--term-text); font-family:monospace; padding:12px; height:100%; display:flex; flex-direction:column;">
-            <div id="term-out-${winId}" style="flex:1; overflow-y:auto; line-height:1.5;">Welcome to Nautilus Shell v10.0 Pro<br>Type 'help' for available commands.</div>
+            <div id="term-out-${winId}" style="flex:1; overflow-y:auto; line-height:1.5;">Welcome to Emerald Shell CLI v10.0 Pro<br>Type 'help' for available commands.</div>
             <div style="display:flex; gap:6px; margin-top:8px;">
               <span>$</span>
               <input type="text" id="term-in-${winId}" style="background:transparent; border:none; outline:none; color:inherit; width:100%; font-family:monospace;" onkeydown="if(event.key==='Enter') runTermCmd('${winId}')">
@@ -400,15 +438,7 @@
               <input type="color" id="paint-color-${winId}" value="#10b981">
               <button class="browser-btn" onclick="clearCanvas('${winId}')">Clear Canvas</button>
             </div>
-            <canvas id="paint-canvas-${winId}" width="680" height="340" style="background:#fff; border-radius:8px; cursor:crosshair; margin-top:10px;"></canvas>
-          </div>`;
-
-      } else if (appId === 'snake') {
-        content = `
-          <div class="app-container" style="align-items:center; text-align:center;">
-            <h2>🐍 Retro Snake Game</h2>
-            <canvas id="snake-canvas-${winId}" width="300" height="300" style="background:#000; border:1px solid var(--border); border-radius:8px;"></canvas>
-            <button class="browser-btn" onclick="startSnakeGame('${winId}')" style="margin-top:8px;">Start New Game</button>
+            <canvas id="paint-canvas-${winId}" width="700" height="360" style="background:#fff; border-radius:8px; cursor:crosshair; margin-top:10px;"></canvas>
           </div>`;
 
       } else if (appId === 'tictactoe') {
@@ -442,32 +472,6 @@
               <button class="browser-btn" onclick="calcNum('${winId}','+')">+</button>
             </div>
           </div>`;
-
-      } else if (appId === 'store') {
-        content = `
-          <div class="app-container">
-            <h2>🛒 Nautilus App Store</h2>
-            <div class="app-grid" id="store-grid-${winId}"></div>
-          </div>`;
-
-      } else if (appId === 'settings') {
-        content = `
-          <div class="app-container">
-            <h2>⚙️ System Settings</h2>
-            <h3>🎨 Customisation</h3>
-            <div style="display:flex; gap:10px; margin-top:6px;">
-              <button class="browser-btn" onclick="document.body.className='theme-cyber'">Cyber Theme</button>
-              <button class="browser-btn" onclick="document.body.className='theme-midnight'">Midnight Theme</button>
-              <button class="browser-btn" onclick="document.body.className=''">Emerald Theme</button>
-            </div>
-          </div>`;
-
-      } else {
-        content = `
-          <div class="app-container">
-            <h2>${appObj.name}</h2>
-            <p>Application active in sandbox environment.</p>
-          </div>`;
       }
 
       const win = document.createElement('div');
@@ -491,8 +495,9 @@
       win.onmousedown = () => { win.style.zIndex = ++activeZIndex; };
       document.body.appendChild(win);
 
-      // App Initializers
+      // Specific app initializers
       if (appId === 'emeraldworld') initEmeraldWorld3D(winId);
+      if (appId === 'store') renderStoreGrid(winId);
       if (appId === 'tasks') renderTaskList(winId);
       if (appId === 'paint') initPaint(winId);
       if (appId === 'tictactoe') resetTTT(winId);
@@ -504,10 +509,10 @@
       updateDockIndicators();
     }
     
-    function maximizeWindow(id) { const win = document.getElementById(id); win.style.width = win.style.width === '100vw' ? '780px' : '100vw'; win.style.height = win.style.height === 'calc(100vh - 80px)' ? '520px' : 'calc(100vh - 80px)'; }
+    function maximizeWindow(id) { const win = document.getElementById(id); win.style.width = win.style.width === '100vw' ? '800px' : '100vw'; win.style.height = win.style.height === 'calc(100vh - 80px)' ? '540px' : 'calc(100vh - 80px)'; }
     function dragWindow(e, id) { const win = document.getElementById(id); let shiftX = e.clientX - win.getBoundingClientRect().left; let shiftY = e.clientY - win.getBoundingClientRect().top; document.onmousemove = (e) => { win.style.left = (e.clientX - shiftX) + 'px'; win.style.top = (e.clientY - shiftY) + 'px'; }; document.onmouseup = () => document.onmousemove = null; }
 
-    /* Fixed 3D Emerald Grid & Matrix Tunnel Engine */
+    /* Interactive 3D World App Engine */
     function initEmeraldWorld3D(winId) {
       setTimeout(() => {
         const canvas = document.getElementById(`ew-canvas-${winId}`);
@@ -523,25 +528,38 @@
         resizeCanvas();
 
         let zOffset = 0;
-        let speed = 2;
-        const matrixChars = '0123456789ABCDEF⚡ EmeraldOS';
+        let speed = 1.5;
+        let renderedAppNodes = [];
 
         canvas.addEventListener('wheel', (e) => {
           e.preventDefault();
           zOffset += e.deltaY * 0.8;
         });
 
+        canvas.addEventListener('click', (e) => {
+          const rect = canvas.getBoundingClientRect();
+          const mx = e.clientX - rect.left;
+          const my = e.clientY - rect.top;
+
+          renderedAppNodes.forEach(node => {
+            if (mx >= node.x - 35 && mx <= node.x + 35 && my >= node.y - 35 && my <= node.y + 35) {
+              openApp(node.id);
+            }
+          });
+        });
+
         function render() {
           if (!document.getElementById(`ew-canvas-${winId}`)) return;
 
-          ctx.fillStyle = 'rgba(2, 6, 23, 0.25)';
+          ctx.fillStyle = 'rgba(2, 6, 23, 0.3)';
           ctx.fillRect(0, 0, canvas.width, canvas.height);
 
           const cx = canvas.width / 2;
           const cy = canvas.height / 2;
           zOffset += speed;
+          renderedAppNodes = [];
 
-          // Render 3D Perspective Grid
+          // Grid Tunnel Perspective
           for (let z = 100; z < 1200; z += 60) {
             let actualZ = (z - (zOffset % 60));
             if (actualZ <= 0) continue;
@@ -554,27 +572,45 @@
             ctx.strokeRect(cx - size / 2, cy - size / 2, size, size);
           }
 
-          // Render Floating Matrix Particles inside 3D Tunnel
-          for (let i = 0; i < 150; i++) {
-            let x = (Math.sin(i * 127.3) * 1200);
-            let y = (Math.cos(i * 43.1) * 1200);
-            let z = (i * 15 - zOffset) % 1200;
-            if (z <= 0) z += 1200;
+          // Render Floating 3D Apps inside canvas space
+          baseAppsCatalog.forEach((app, idx) => {
+            if (!installedApps.includes(app.id)) return;
+
+            let angle = idx * 0.8;
+            let radius = 250;
+            let x = Math.sin(angle) * radius;
+            let y = Math.cos(angle) * (radius * 0.6);
+            let z = ((idx * 120) - zOffset) % 1000;
+            if (z <= 50) z += 1000;
 
             let k = 350 / z;
             let px = x * k + cx;
             let py = y * k + cy;
+            let scale = Math.max(0.4, k * 1.5);
 
-            if (px > 0 && px < canvas.width && py > 0 && py < canvas.height) {
-              let char = matrixChars[i % matrixChars.length];
-              let opacity = Math.max(0, 1 - z / 1200);
-              let fontSize = Math.max(8, Math.floor(24 * k));
-              
-              ctx.font = `${fontSize}px monospace`;
-              ctx.fillStyle = i % 3 === 0 ? `rgba(52, 211, 153, ${opacity})` : `rgba(16, 185, 129, ${opacity})`;
-              ctx.fillText(char, px, py);
+            if (px > 50 && px < canvas.width - 50 && py > 50 && py < canvas.height - 50) {
+              renderedAppNodes.push({ id: app.id, x: px, y: py });
+
+              ctx.save();
+              ctx.translate(px, py);
+              ctx.scale(scale, scale);
+
+              ctx.fillStyle = 'rgba(15, 23, 42, 0.85)';
+              ctx.strokeStyle = '#10b981';
+              ctx.lineWidth = 2;
+              ctx.beginPath();
+              ctx.arc(0, 0, 30, 0, Math.PI * 2);
+              ctx.fill();
+              ctx.stroke();
+
+              ctx.fillStyle = '#10b981';
+              ctx.font = 'bold 12px Segoe UI';
+              ctx.textAlign = 'center';
+              ctx.fillText(app.name, 0, 48);
+
+              ctx.restore();
             }
-          }
+          });
 
           requestAnimationFrame(render);
         }
@@ -582,7 +618,46 @@
       }, 100);
     }
 
-    /* Tasks App Engine */
+    /* App Store Engine */
+    function renderStoreGrid(winId) {
+      const grid = document.getElementById(`store-grid-${winId}`);
+      if (!grid) return;
+      grid.innerHTML = '';
+      baseAppsCatalog.forEach(app => {
+        const installed = installedApps.includes(app.id);
+        const card = document.createElement('div');
+        card.className = 'app-card';
+        card.innerHTML = `
+          <svg class="icon-svg" viewBox="0 0 24 24">${app.icon}</svg>
+          <strong>${app.name}</strong>
+          <span style="font-size:11px; color:#94a3b8;">${app.desc}</span>
+          <button class="browser-btn" onclick="toggleInstallApp('${app.id}', '${winId}')" style="width:100%;">
+            ${installed ? 'Launch App' : 'Install App'}
+          </button>`;
+        grid.appendChild(card);
+      });
+    }
+
+    function toggleInstallApp(appId, winId) {
+      if (!installedApps.includes(appId)) {
+        installedApps.push(appId);
+        showToast('App Installed!');
+        renderDesktop();
+      }
+      openApp(appId);
+      renderStoreGrid(winId);
+    }
+
+    /* Settings Helpers */
+    function setBgUrl(winId) {
+      const url = document.getElementById(`bg-url-${winId}`).value;
+      if (url) {
+        document.body.style.backgroundImage = `url(${url})`;
+        showToast('Background URL Applied!');
+      }
+    }
+
+    /* Tasks Engine */
     function renderTaskList(winId) {
       const container = document.getElementById(`task-list-${winId}`);
       if (!container) return;
@@ -602,7 +677,7 @@
     }
     function toggleTask(i, winId) { taskList[i].done = !taskList[i].done; renderTaskList(winId); }
 
-    /* Photos Access & Wallpaper Engine */
+    /* Photos Access Engine */
     function uploadLocalPhotos(winId) {
       const input = document.createElement('input');
       input.type = 'file'; input.multiple = true; input.accept = 'image/*';
@@ -616,7 +691,7 @@
             card.className = 'app-card';
             card.innerHTML = `
               <img src="${ev.target.result}" style="width:100%; height:100px; object-fit:cover; border-radius:6px;">
-              <button class="browser-btn" onclick="setAsWallpaper('${ev.target.result}')">Set as Wallpaper</button>`;
+              <button class="browser-btn" onclick="setAsWallpaper('${ev.target.result}')">Set Wallpaper</button>`;
             grid.appendChild(card);
           };
           reader.readAsDataURL(file);
@@ -626,7 +701,7 @@
     }
     function setAsWallpaper(src) {
       document.body.style.backgroundImage = `url(${src})`;
-      showToast('Desktop Wallpaper Updated!');
+      showToast('Wallpaper Updated!');
     }
 
     /* Paint Engine */
@@ -650,6 +725,51 @@
     }
     function clearCanvas(winId) { const canvas = document.getElementById(`paint-canvas-${winId}`); canvas.getContext('2d').clearRect(0,0,canvas.width,canvas.height); }
 
+    /* TicTacToe Engine */
+    let tttBoard = Array(9).fill('');
+    function resetTTT(winId) {
+      tttBoard = Array(9).fill('');
+      const board = document.getElementById(`ttt-board-${winId}`);
+      if (!board) return;
+      board.innerHTML = '';
+      for (let i = 0; i < 9; i++) {
+        const btn = document.createElement('button');
+        btn.className = 'browser-btn';
+        btn.style.height = '60px'; btn.style.fontSize = '20px';
+        btn.onclick = () => makeTTTMove(i, winId);
+        board.appendChild(btn);
+      }
+    }
+    function makeTTTMove(i, winId) {
+      if (tttBoard[i]) return;
+      tttBoard[i] = 'X';
+      updateTTTBoard(winId);
+      if (!checkTTTWin()) {
+        let empty = tttBoard.map((v, idx) => v === '' ? idx : null).filter(v => v !== null);
+        if (empty.length > 0) {
+          let aiChoice = empty[Math.floor(Math.random() * empty.length)];
+          tttBoard[aiChoice] = 'O';
+          updateTTTBoard(winId);
+        }
+      }
+    }
+    function updateTTTBoard(winId) {
+      const board = document.getElementById(`ttt-board-${winId}`);
+      if (!board) return;
+      Array.from(board.children).forEach((btn, idx) => {
+        btn.innerText = tttBoard[idx];
+      });
+    }
+    function checkTTTWin() {
+      const wins = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+      for (let w of wins) {
+        if (tttBoard[w[0]] && tttBoard[w[0]] === tttBoard[w[1]] && tttBoard[w[0]] === tttBoard[w[2]]) {
+          showToast(`${tttBoard[w[0]]} Wins!`); return true;
+        }
+      }
+      return false;
+    }
+
     /* Calculator Helpers */
     function calcNum(winId, val) { const d = document.getElementById(`calc-disp-${winId}`); if (d.value === '0') d.value = ''; d.value += val; }
     function calcEval(winId) { const d = document.getElementById(`calc-disp-${winId}`); try { d.value = eval(d.value); } catch(e) { d.value = 'Error'; } }
@@ -661,7 +781,7 @@
       const cmd = inp.value.trim().toLowerCase();
       out.innerHTML += `<br>$ ${inp.value}`;
       if (cmd === 'help') out.innerHTML += '<br>Commands: help, ls, clear, date, matrix';
-      else if (cmd === 'ls') out.innerHTML += '<br>emerald_world.3d photos.lib system_config.sys';
+      else if (cmd === 'ls') out.innerHTML += '<br>emerald_world.3d system_settings.sys photos.lib';
       else if (cmd === 'clear') { out.innerHTML = ''; }
       else if (cmd === 'date') { out.innerHTML += `<br>${new Date().toString()}`; }
       else if (cmd === 'matrix') { triggerMatrixEffect(); out.innerHTML += '<br>Matrix visualizer triggered.'; }
