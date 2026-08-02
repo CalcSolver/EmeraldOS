@@ -3,145 +3,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NautilusOS Pro</title>
+    <title>Emerald OS</title>
     <style>
         :root {
-            --bg-base: #090d12;
-            --bg-surface: #121922;
-            --bg-card: #1a2432;
-            --border: #26354a;
-            --accent: #00e5a3;
-            --accent-dim: rgba(0, 229, 163, 0.12);
-            --text-main: #f1f5f9;
-            --text-sub: #94a3b8;
-            --taskbar-bg: #06090d;
+            --bg-base: #060c0a;
+            --bg-surface: #0c1814;
+            --bg-card: #12241e;
+            --border: #1a382e;
+            --accent: #00f097;
+            --accent-dim: rgba(0, 240, 151, 0.15);
+            --accent-glow: rgba(0, 240, 151, 0.35);
+            --text-main: #ecfdf5;
+            --text-sub: #6ee7b7;
+            --taskbar-bg: rgba(6, 12, 10, 0.85);
+            --danger: #ff4757;
         }
 
-        [data-theme="light"] {
-            --bg-base: #f1f5f9;
-            --bg-surface: #ffffff;
-            --bg-card: #e2e8f0;
-            --border: #cbd5e1;
-            --accent: #00a876;
-            --accent-dim: rgba(0, 168, 118, 0.12);
-            --text-main: #0f172a;
-            --text-sub: #64748b;
-            --taskbar-bg: #e2e8f0;
-        }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; font-family: system-ui, -apple-system, sans-serif; }
+        * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
         body { background: var(--bg-base); color: var(--text-main); height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
 
-        /* Desktop Area */
-        .desktop { flex: 1; padding: 20px; display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); grid-template-rows: repeat(auto-fill, minmax(100px, 1fr)); grid-auto-flow: column; gap: 10px; position: relative; }
-        
-        .desktop-icon { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px; border-radius: 8px; cursor: pointer; transition: background 0.2s, transform 0.1s; text-align: center; }
-        .desktop-icon:hover { background: var(--accent-dim); transform: translateY(-2px); }
-        .desktop-icon svg { width: 36px; height: 36px; fill: var(--accent); margin-bottom: 6px; }
-        .desktop-icon span { font-size: 12px; font-weight: 500; text-shadow: 0 1px 3px rgba(0,0,0,0.8); }
+        /* Desktop Grid */
+        .desktop { flex: 1; padding: 24px; display: grid; grid-template-columns: repeat(auto-fill, minmax(95px, 1fr)); grid-template-rows: repeat(auto-fill, minmax(100px, 1fr)); grid-auto-flow: column; gap: 12px; position: relative; }
+        .desktop-icon { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 12px; border-radius: 10px; cursor: pointer; transition: all 0.2s ease; text-align: center; border: 1px solid transparent; }
+        .desktop-icon:hover { background: var(--accent-dim); border-color: var(--border); transform: translateY(-2px); box-shadow: 0 4px 12px var(--accent-glow); }
+        .desktop-icon svg { width: 38px; height: 38px; fill: var(--accent); margin-bottom: 8px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5)); }
+        .desktop-icon span { font-size: 12px; font-weight: 600; text-shadow: 0 1px 3px rgba(0,0,0,0.9); letter-spacing: 0.3px; }
 
-        /* Window System */
-        .window { position: absolute; background: var(--bg-surface); border: 1px solid var(--border); border-radius: 8px; box-shadow: 0 12px 40px rgba(0,0,0,0.4); display: flex; flex-direction: column; min-width: 450px; min-height: 320px; overflow: hidden; z-index: 10; }
-        .window-header { background: var(--bg-surface); padding: 10px 14px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); cursor: move; }
-        .window-title { display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 13px; }
-        .window-title svg { width: 16px; height: 16px; fill: var(--accent); }
+        /* Windows Frame */
+        .window { position: absolute; background: var(--bg-surface); border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 16px 40px rgba(0,0,0,0.6), 0 0 1px var(--accent); display: flex; flex-direction: column; min-width: 500px; min-height: 380px; overflow: hidden; z-index: 10; backdrop-filter: blur(10px); }
+        .window-header { background: rgba(12, 24, 20, 0.9); padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); cursor: move; }
+        .window-title { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 13px; color: var(--accent); letter-spacing: 0.5px; }
+        .window-title svg { width: 18px; height: 18px; fill: var(--accent); }
         .window-controls { display: flex; gap: 8px; }
-        .win-btn { background: transparent; border: none; color: var(--text-sub); width: 22px; height: 22px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-        .win-btn:hover { background: var(--accent-dim); color: var(--accent); }
-        .win-btn.close:hover { background: #ef4444; color: #fff; }
+        .win-btn { background: var(--bg-card); border: 1px solid var(--border); color: var(--text-main); width: 26px; height: 26px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 12px; transition: 0.2s; }
+        .win-btn:hover { background: var(--accent-dim); color: var(--accent); border-color: var(--accent); }
+        .win-btn.close:hover { background: var(--danger); color: #fff; border-color: var(--danger); }
         .window-body { flex: 1; display: flex; overflow: hidden; }
 
-        /* Sidebar Navigation Layout */
-        .app-sidebar { width: 180px; background: var(--bg-surface); border-right: 1px solid var(--border); padding: 12px; display: flex; flex-direction: column; gap: 4px; }
-        .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 6px; color: var(--text-sub); cursor: pointer; font-size: 13px; font-weight: 500; }
-        .nav-item:hover, .nav-item.active { background: var(--accent-dim); color: var(--accent); }
-        .app-content { flex: 1; padding: 20px; overflow-y: auto; background: var(--bg-base); }
+        /* Sidebar UI */
+        .app-sidebar { width: 200px; background: rgba(6, 12, 10, 0.5); border-right: 1px solid var(--border); padding: 14px 10px; display: flex; flex-direction: column; gap: 6px; }
+        .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 8px; color: var(--text-sub); cursor: pointer; font-size: 13px; font-weight: 600; transition: all 0.2s; }
+        .nav-item:hover, .nav-item.active { background: var(--accent-dim); color: var(--accent); border: 1px solid var(--border); }
+        .app-content { flex: 1; padding: 24px; overflow-y: auto; background: var(--bg-base); }
 
-        /* UI Controls & Forms */
-        .setting-card { background: var(--bg-surface); border: 1px solid var(--border); border-radius: 8px; padding: 16px; margin-bottom: 12px; }
-        .setting-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; }
-        .switch { position: relative; width: 40px; height: 20px; }
-        .switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px; transition: 0.2s; }
-        .slider:before { position: absolute; content: ""; height: 12px; width: 12px; left: 3px; bottom: 3px; background: var(--text-sub); border-radius: 50%; transition: 0.2s; }
-        input:checked + .slider { background: var(--accent); }
-        input:checked + .slider:before { transform: translateX(20px); background: #000; }
+        /* Taskbar */
+        .taskbar { height: 50px; background: var(--taskbar-bg); border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 16px; z-index: 1000; backdrop-filter: blur(12px); }
+        .start-btn { display: flex; align-items: center; gap: 10px; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: 800; color: #000; background: var(--accent); box-shadow: 0 0 12px var(--accent-glow); transition: 0.2s; }
+        .start-btn:hover { transform: scale(1.03); }
+        .taskbar-dock { display: flex; gap: 8px; flex: 1; margin: 0 20px; overflow-x: auto; }
+        .dock-item { padding: 6px 14px; background: var(--bg-surface); border: 1px solid var(--border); border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; color: var(--text-sub); transition: 0.2s; }
+        .dock-item:hover, .dock-item.active { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
 
-        .btn { padding: 8px 14px; border-radius: 6px; border: 1px solid var(--accent); background: transparent; color: var(--accent); font-weight: 600; font-size: 12px; cursor: pointer; }
-        .btn:hover { background: var(--accent); color: #000; }
+        /* Custom JavaScript Console/Menu App */
+        .js-console { background: #030705; color: var(--accent); font-family: 'Consolas', 'Fira Code', monospace; padding: 14px; flex: 1; display: flex; flex-direction: column; font-size: 13px; }
+        .console-logs { flex: 1; overflow-y: auto; white-space: pre-wrap; line-height: 1.5; padding-bottom: 10px; }
+        .console-input { display: flex; gap: 10px; border-top: 1px solid var(--border); padding-top: 10px; }
+        .console-input input { background: transparent; border: none; color: var(--text-main); outline: none; flex: 1; font-family: monospace; font-size: 13px; }
 
-        /* Grid Layout for App Store */
-        .grid-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; }
-        .card { background: var(--bg-surface); border: 1px solid var(--border); border-radius: 8px; padding: 14px; display: flex; flex-direction: column; gap: 8px; }
-
-        /* Bottom Taskbar */
-        .taskbar { height: 44px; background: var(--taskbar-bg); border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 12px; z-index: 1000; }
-        .start-btn { display: flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: 700; color: var(--accent); font-size: 13px; }
-        .start-btn:hover { background: var(--accent-dim); }
-        .taskbar-apps { display: flex; gap: 6px; flex: 1; margin: 0 20px; }
-        .taskbar-item { padding: 4px 10px; background: var(--bg-surface); border: 1px solid var(--border); border-radius: 4px; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 6px; }
-        .taskbar-item.active { border-color: var(--accent); color: var(--accent); }
-
-        /* Calculator App */
-        .calc-box { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; padding: 10px; max-width: 280px; margin: auto; }
-        .calc-box button { padding: 16px; font-size: 16px; font-weight: bold; background: var(--bg-surface); border: 1px solid var(--border); color: var(--text-main); border-radius: 6px; cursor: pointer; }
-        .calc-box button:hover { background: var(--accent-dim); color: var(--accent); }
-        .calc-display { grid-column: span 4; height: 45px; background: var(--bg-base); border: 1px solid var(--border); color: var(--accent); font-size: 20px; text-align: right; padding: 10px; border-radius: 6px; font-family: monospace; }
-
-        /* Terminal App */
-        .term { background: #05080c; color: #00e5a3; font-family: monospace; padding: 12px; flex: 1; display: flex; flex-direction: column; font-size: 13px; }
-        .term-logs { flex: 1; overflow-y: auto; white-space: pre-wrap; line-height: 1.4; }
-        .term-input-line { display: flex; gap: 8px; margin-top: 8px; }
-        .term-input-line input { background: transparent; border: none; color: #fff; outline: none; flex: 1; font-family: monospace; }
-
-        /* Tic Tac Toe */
-        .ttt-board { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; width: 210px; margin: 20px auto; }
-        .ttt-cell { width: 65px; height: 65px; background: var(--bg-surface); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: bold; cursor: pointer; border-radius: 6px; }
-        .ttt-cell:hover { background: var(--accent-dim); }
+        /* Buttons & Cards */
+        .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
+        .card { background: var(--bg-surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+        .btn { padding: 8px 16px; border-radius: 6px; border: 1px solid var(--accent); background: transparent; color: var(--accent); font-weight: 700; font-size: 12px; cursor: pointer; transition: 0.2s; }
+        .btn:hover { background: var(--accent); color: #000; box-shadow: 0 0 10px var(--accent-glow); }
     </style>
 </head>
 <body>
 
-    <!-- Desktop Workspace -->
+    <!-- Emerald OS Workspace -->
     <div class="desktop" id="desktop"></div>
 
-    <!-- System Taskbar -->
+    <!-- Active Taskbar -->
     <div class="taskbar">
         <div class="start-btn" onclick="openApp('App Store')">
-            <svg width="18" height="18" viewBox="0 0 24 24"><path fill="currentColor" d="M4 4h6v6H4zm10 0h6v6h-6zM4 14h6v6H4zm10 0h6v6h-6z"/></svg>
-            NautilusOS
+            <svg width="18" height="18" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2L2 7l10 5 10-5-10-5zm0 9L2 6v11l10 5 10-5V6l-10 5z"/></svg>
+            Emerald
         </div>
-        <div class="taskbar-apps" id="taskbar-dock"></div>
-        <div id="clock" style="font-size: 12px; font-weight: 600;">12:00 PM</div>
+        <div class="taskbar-dock" id="taskbar-dock"></div>
+        <div id="clock" style="font-size: 13px; font-weight: 700; color: var(--accent);">12:00 PM</div>
     </div>
 
     <script>
         // System State
         const state = {
             use12Hour: true,
-            showSeconds: false,
-            showIcons: true,
-            activeWindows: {},
-            activeStoreTab: 'themes'
+            showSeconds: true,
+            activeWindows: {}
         };
 
-        // Registered OS Applications
-        const appRegistry = [
+        // Core App Registry for Emerald OS
+        const apps = [
             { id: "store", name: "App Store", icon: '<path d="M19 4h-4c0-1.1-.9-2-2-2h-2c-1.1 0-2 .9-2 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-7 0h2v2h-2V4z"/>' },
+            { id: "jsmenu", name: "JS Menu Console", icon: '<path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/>' },
             { id: "settings", name: "Settings", icon: '<path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6-3.6z"/>' },
-            { id: "terminal", name: "Terminal", icon: '<path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-0 14H4V8h16v10zm-12-7l4 3-4 3v-6z"/>' },
-            { id: "notes", name: "Note Pad", icon: '<path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>' },
-            { id: "calc", name: "Calculator", icon: '<path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-4 14h-2v-2h2v2zm0-4h-2v-2h2v2zm0-4h-2V7h2v2zm-4 8H9v-2h2v2zm0-4H9v-2h2v2zm0-4H9V7h2v2z"/>' },
-            { id: "tictactoe", name: "Tic Tac Toe", icon: '<path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>' }
+            { id: "files", name: "Emerald Files", icon: '<path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>' },
+            { id: "calc", name: "Calculator", icon: '<path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-4 14h-2v-2h2v2zm0-4h-2v-2h2v2zm0-4h-2V7h2v2zm-4 8H9v-2h2v2zm0-4H9v-2h2v2zm0-4H9V7h2v2z"/>' }
         ];
 
-        // Render Desktop Icons
+        // Desktop Grid Rendering
         function renderDesktop() {
             const grid = document.getElementById('desktop');
             grid.innerHTML = '';
-            if (!state.showIcons) return;
-
-            appRegistry.forEach(app => {
+            apps.forEach(app => {
                 const icon = document.createElement('div');
                 icon.className = 'desktop-icon';
                 icon.onclick = () => openApp(app.name);
@@ -150,7 +112,7 @@
             });
         }
 
-        // Open App / Window Manager
+        // Window & Dock System
         function openApp(appName) {
             if (state.activeWindows[appName]) {
                 const win = state.activeWindows[appName];
@@ -160,19 +122,19 @@
                 return;
             }
 
-            const appData = appRegistry.find(a => a.name === appName) || { icon: '<path d="M12 2L2 7l10 5 10-5-10-5z"/>' };
+            const appData = apps.find(a => a.name === appName) || { icon: '<path d="M12 2L2 7l10 5 10-5-10-5z"/>' };
             const win = document.createElement('div');
             win.className = 'window';
-            win.style.left = `${60 + Object.keys(state.activeWindows).length * 20}px`;
-            win.style.top = `${50 + Object.keys(state.activeWindows).length * 20}px`;
-            win.style.width = appName === 'App Store' || appName === 'Settings' ? '700px' : '480px';
+            win.style.left = `${80 + Object.keys(state.activeWindows).length * 25}px`;
+            win.style.top = `${60 + Object.keys(state.activeWindows).length * 25}px`;
+            win.style.width = appName === 'App Store' ? '750px' : '550px';
             win.style.height = '420px';
 
             win.innerHTML = `
                 <div class="window-header">
                     <div class="window-title"><svg viewBox="0 0 24 24">${appData.icon}</svg>${appName}</div>
                     <div class="window-controls">
-                        <button class="win-btn" onclick="minimizeWindow('${appName}')">—</button>
+                        <button class="win-btn" onclick="toggleMinimize('${appName}')">—</button>
                         <button class="win-btn close" onclick="closeWindow('${appName}')">✕</button>
                     </div>
                 </div>
@@ -192,9 +154,11 @@
             win.style.zIndex = 20;
         }
 
-        function minimizeWindow(appName) {
-            if (state.activeWindows[appName]) {
-                state.activeWindows[appName].style.display = 'none';
+        function toggleMinimize(appName) {
+            const win = state.activeWindows[appName];
+            if (win) {
+                win.style.display = win.style.display === 'none' ? 'flex' : 'none';
+                if (win.style.display === 'flex') focusWindow(win);
                 updateTaskbar();
             }
         }
@@ -212,254 +176,99 @@
             dock.innerHTML = '';
             Object.keys(state.activeWindows).forEach(appName => {
                 const item = document.createElement('div');
-                item.className = `taskbar-item ${state.activeWindows[appName].style.display !== 'none' ? 'active' : ''}`;
+                const win = state.activeWindows[appName];
+                item.className = `dock-item ${win.style.display !== 'none' ? 'active' : ''}`;
                 item.innerText = appName;
-                item.onclick = () => {
-                    const win = state.activeWindows[appName];
-                    if (win.style.display === 'none') {
-                        win.style.display = 'flex';
-                        focusWindow(win);
-                    } else {
-                        win.style.display = 'none';
-                    }
-                    updateTaskbar();
-                };
+                item.onclick = () => toggleMinimize(appName);
                 dock.appendChild(item);
             });
         }
 
-        // Render Internal App UI Content
+        // Internal App Renderer
         function renderAppView(appName) {
-            if (appName === 'App Store') {
+            if (appName === 'JS Menu Console') {
+                return `
+                    <div class="js-console">
+                        <div class="console-logs" id="js-logs">Emerald OS Live JS Engine\nType Javascript commands below or run system routines.\nTry: 'Emerald.version', 'Emerald.theme("light")', or 'console.log("Hello Emerald")'\n</div>
+                        <div class="console-input">
+                            <span>&gt;</span>
+                            <input type="text" placeholder="Execute JavaScript code..." onkeydown="evalJS(event, this)">
+                        </div>
+                    </div>
+                `;
+            } else if (appName === 'App Store') {
                 return `
                     <div class="app-sidebar">
-                        <div class="nav-item active" onclick="switchStoreTab(this, 'themes')">Themes</div>
-                        <div class="nav-item" onclick="switchStoreTab(this, 'apps')">Apps</div>
-                        <div class="nav-item" onclick="switchStoreTab(this, 'games')">Games</div>
+                        <div class="nav-item active" onclick="switchStoreTab(this, 'all')">All Emerald Apps</div>
+                        <div class="nav-item" onclick="switchStoreTab(this, 'tools')">Developer Tools</div>
                     </div>
-                    <div class="app-content" id="store-content">
-                        ${getStoreTabContent('themes')}
+                    <div class="app-content" id="store-view">
+                        ${renderStoreCategory('all')}
                     </div>
                 `;
             } else if (appName === 'Settings') {
                 return `
                     <div class="app-content">
-                        <h3 style="margin-bottom: 15px;">System Settings</h3>
-                        <div class="setting-card">
-                            <div class="setting-row">
-                                <div><strong>12-Hour Clock Format</strong><br><small style="color:var(--text-sub)">Use AM/PM display</small></div>
-                                <label class="switch"><input type="checkbox" ${state.use12Hour ? 'checked' : ''} onchange="state.use12Hour=this.checked"><span class="slider"></span></label>
-                            </div>
-                            <div class="setting-row">
-                                <div><strong>Display Clock Seconds</strong><br><small style="color:var(--text-sub)">Show live seconds in taskbar</small></div>
-                                <label class="switch"><input type="checkbox" ${state.showSeconds ? 'checked' : ''} onchange="state.showSeconds=this.checked"><span class="slider"></span></label>
-                            </div>
-                        </div>
-                        <div class="setting-card">
-                            <div class="setting-row">
-                                <div><strong>Show Desktop Icons</strong><br><small style="color:var(--text-sub)">Toggle icon grid on workspace</small></div>
-                                <label class="switch"><input type="checkbox" ${state.showIcons ? 'checked' : ''} onchange="state.showIcons=this.checked; renderDesktop();"><span class="slider"></span></label>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            } else if (appName === 'Calculator') {
-                return `
-                    <div style="margin: auto;">
-                        <div class="calc-display" id="calc-out">0</div>
-                        <div class="calc-box">
-                            <button onclick="calcClear()">C</button>
-                            <button onclick="calcIn('/')">/</button>
-                            <button onclick="calcIn('*')">*</button>
-                            <button onclick="calcIn('-')">-</button>
-                            <button onclick="calcIn('7')">7</button><button onclick="calcIn('8')">8</button><button onclick="calcIn('9')">9</button>
-                            <button onclick="calcIn('+')">+</button>
-                            <button onclick="calcIn('4')">4</button><button onclick="calcIn('5')">5</button><button onclick="calcIn('6')">6</button>
-                            <button onclick="calcRun()">=</button>
-                            <button onclick="calcIn('1')">1</button><button onclick="calcIn('2')">2</button><button onclick="calcIn('3')">3</button>
-                            <button onclick="calcIn('0')">0</button>
-                        </div>
-                    </div>
-                `;
-            } else if (appName === 'Terminal') {
-                return `
-                    <div class="term">
-                        <div class="term-logs" id="term-logs">NautilusOS Shell v2.0\nType 'help' to see valid commands.\n</div>
-                        <div class="term-input-line">
-                            <span>user@nautilus:~$</span>
-                            <input type="text" onkeydown="runTerminal(event, this)">
-                        </div>
-                    </div>
-                `;
-            } else if (appName === 'Note Pad') {
-                const saved = localStorage.getItem('nautilus_notes') || '';
-                return `
-                    <div style="display:flex; flex-direction:column; width:100%; height:100%;">
-                        <textarea style="flex:1; background:var(--bg-base); color:var(--text-main); border:none; padding:12px; outline:none; resize:none; font-family:monospace;" oninput="localStorage.setItem('nautilus_notes', this.value)" placeholder="Start typing notes... (Auto-saved)"/>${saved}</textarea>
-                    </div>
-                `;
-            } else if (appName === 'Tic Tac Toe') {
-                return `
-                    <div style="text-align:center; margin:auto;">
-                        <div id="ttt-status" style="margin-bottom:10px; font-weight:bold; color:var(--accent);">Your Turn (X)</div>
-                        <div class="ttt-board">
-                            ${[0,1,2,3,4,5,6,7,8].map(i => `<div class="ttt-cell" id="ttt-${i}" onclick="playTTT(${i})"></div>`).join('')}
-                        </div>
-                        <button class="btn" onclick="resetTTT()">Reset Match</button>
+                        <h2 style="color:var(--accent); margin-bottom:15px;">Emerald Configuration</h2>
+                        <p style="color:var(--text-sub);">Custom settings engine for Emerald OS build 1.0.</p>
                     </div>
                 `;
             }
-            return `<div style="padding:20px;">App loaded successfully inside desktop workspace.</div>`;
+            return `<div style="padding:20px; color:var(--text-sub);">${appName} core modules initialized smoothly.</div>`;
         }
 
-        // App Store Internal Logic
-        function switchStoreTab(el, tabName) {
+        // Store Switching
+        function switchStoreTab(el, cat) {
             document.querySelectorAll('.app-sidebar .nav-item').forEach(i => i.classList.remove('active'));
             el.classList.add('active');
-            document.getElementById('store-content').innerHTML = getStoreTabContent(tabName);
+            document.getElementById('store-view').innerHTML = renderStoreCategory(cat);
         }
 
-        function getStoreTabContent(tab) {
-            if (tab === 'themes') {
-                return `
-                    <h3 style="margin-bottom:12px;">Themes</h3>
-                    <div class="grid-cards">
-                        <div class="card">
-                            <h4>Dark Teal (Default)</h4>
-                            <p style="font-size:12px; color:var(--text-sub)">Sleek cyber teal aesthetic.</p>
-                            <button class="btn" onclick="document.documentElement.setAttribute('data-theme', 'dark')">Apply Theme</button>
-                        </div>
-                        <div class="card">
-                            <h4>Light Slate</h4>
-                            <p style="font-size:12px; color:var(--text-sub)">Clean day-mode interface.</p>
-                            <button class="btn" onclick="document.documentElement.setAttribute('data-theme', 'light')">Apply Theme</button>
-                        </div>
+        function renderStoreCategory(cat) {
+            return `
+                <div class="card-grid">
+                    <div class="card">
+                        <h4>JS Menu Console</h4>
+                        <p style="font-size:12px; color:var(--text-sub)">Direct JavaScript access and system API console.</p>
+                        <button class="btn" onclick="openApp('JS Menu Console')">Launch</button>
                     </div>
-                `;
-            } else if (tab === 'apps') {
-                return `
-                    <h3 style="margin-bottom:12px;">Available Utilities</h3>
-                    <div class="grid-cards">
-                        <div class="card">
-                            <h4>Calculator</h4>
-                            <p style="font-size:12px; color:var(--text-sub)">Standard arithmetic evaluator.</p>
-                            <button class="btn" onclick="openApp('Calculator')">Launch</button>
-                        </div>
-                        <div class="card">
-                            <h4>Note Pad</h4>
-                            <p style="font-size:12px; color:var(--text-sub)">Persistent text pad with autosave.</p>
-                            <button class="btn" onclick="openApp('Note Pad')">Launch</button>
-                        </div>
-                        <div class="card">
-                            <h4>Terminal</h4>
-                            <p style="font-size:12px; color:var(--text-sub)">Command line interface.</p>
-                            <button class="btn" onclick="openApp('Terminal')">Launch</button>
-                        </div>
+                    <div class="card">
+                        <h4>Emerald Files</h4>
+                        <p style="font-size:12px; color:var(--text-sub)">Local storage file browser system.</p>
+                        <button class="btn" onclick="openApp('Emerald Files')">Launch</button>
                     </div>
-                `;
-            } else if (tab === 'games') {
-                return `
-                    <h3 style="margin-bottom:12px;">Pre-installed Games</h3>
-                    <div class="grid-cards">
-                        <div class="card">
-                            <h4>Tic Tac Toe</h4>
-                            <p style="font-size:12px; color:var(--text-sub)">Play vs AI bot.</p>
-                            <button class="btn" onclick="openApp('Tic Tac Toe')">Play Now</button>
-                        </div>
-                    </div>
-                `;
-            }
+                </div>
+            `;
         }
 
-        // Terminal Mechanics
-        function runTerminal(e, input) {
+        // Live JavaScript Executer (The JS Menu System)
+        function evalJS(e, input) {
             if (e.key === 'Enter') {
-                const logs = document.getElementById('term-logs');
-                const cmd = input.value.trim().toLowerCase();
-                logs.innerText += `\nuser@nautilus:~$ ${input.value}`;
-                
-                if (cmd === 'help') {
-                    logs.innerText += `\nCommands: help, clear, apps, theme [dark/light], echo [text]`;
-                } else if (cmd === 'clear') {
-                    logs.innerText = '';
-                } else if (cmd === 'apps') {
-                    logs.innerText += `\nAvailable: ${appRegistry.map(a => a.name).join(', ')}`;
-                } else if (cmd.startsWith('theme ')) {
-                    const mode = cmd.split(' ')[1];
-                    if (mode === 'dark' || mode === 'light') {
-                        document.documentElement.setAttribute('data-theme', mode);
-                        logs.innerText += `\nTheme set to ${mode}`;
-                    } else {
-                        logs.innerText += `\nInvalid theme name. Use 'dark' or 'light'.`;
-                    }
-                } else if (cmd.startsWith('echo ')) {
-                    logs.innerText += `\n${input.value.substring(5)}`;
-                } else {
-                    logs.innerText += `\nUnknown command. Type 'help' for options.`;
+                const logs = document.getElementById('js-logs');
+                const code = input.value;
+                logs.innerText += `\n> ${code}`;
+                try {
+                    const result = eval(code);
+                    logs.innerText += `\n< ${result}`;
+                } catch (err) {
+                    logs.innerText += `\n[Error] ${err.message}`;
                 }
-                
                 input.value = '';
                 logs.scrollTop = logs.scrollHeight;
             }
         }
 
-        // Calculator Logic
-        let calcBuffer = "";
-        function calcIn(v) { calcBuffer += v; document.getElementById('calc-out').innerText = calcBuffer; }
-        function calcClear() { calcBuffer = ""; document.getElementById('calc-out').innerText = "0"; }
-        function calcRun() {
-            try { calcBuffer = eval(calcBuffer).toString(); document.getElementById('calc-out').innerText = calcBuffer; } 
-            catch { document.getElementById('calc-out').innerText = "Error"; calcBuffer = ""; }
-        }
+        // Global Emerald API exposed to the JS Menu
+        window.Emerald = {
+            version: "Emerald OS v1.0.0 (Custom Build)",
+            theme: (mode) => {
+                document.documentElement.setAttribute('data-theme', mode);
+                return `Theme set to ${mode}`;
+            },
+            apps: () => apps.map(a => a.name)
+        };
 
-        // Tic Tac Toe Game Logic
-        let tttState = Array(9).fill(null);
-        let tttActive = true;
-
-        function playTTT(idx) {
-            if (!tttActive || tttState[idx]) return;
-            tttState[idx] = 'X';
-            document.getElementById(`ttt-${idx}`).innerText = 'X';
-            if (checkTTTWin('X')) {
-                document.getElementById('ttt-status').innerText = 'You Won!';
-                tttActive = false;
-                return;
-            }
-            if (tttState.every(cell => cell !== null)) {
-                document.getElementById('ttt-status').innerText = "It's a Draw!";
-                tttActive = false;
-                return;
-            }
-            
-            // Bot Move
-            document.getElementById('ttt-status').innerText = 'Bot Thinking...';
-            setTimeout(() => {
-                let emptyIndices = tttState.map((val, index) => val === null ? index : null).filter(val => val !== null);
-                let botChoice = emptyIndices[Math.floor(Math.random() * emptyIndices.length)];
-                tttState[botChoice] = 'O';
-                document.getElementById(`ttt-${botChoice}`).innerText = 'O';
-                if (checkTTTWin('O')) {
-                    document.getElementById('ttt-status').innerText = 'Bot Won!';
-                    tttActive = false;
-                } else {
-                    document.getElementById('ttt-status').innerText = 'Your Turn (X)';
-                }
-            }, 300);
-        }
-
-        function checkTTTWin(p) {
-            const wins = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
-            return wins.some(w => w.every(i => tttState[i] === p));
-        }
-
-        function resetTTT() {
-            tttState = Array(9).fill(null);
-            tttActive = true;
-            document.getElementById('ttt-status').innerText = 'Your Turn (X)';
-            for (let i = 0; i < 9; i++) document.getElementById(`ttt-${i}`).innerText = '';
-        }
-
-        // Window Drag Engine
+        // Window Dragger
         function makeDraggable(elmnt) {
             let p1 = 0, p2 = 0, p3 = 0, p4 = 0;
             const header = elmnt.querySelector('.window-header');
@@ -477,24 +286,17 @@
             };
         }
 
-        // Clock Engine
+        // Taskbar Clock Cycle
         setInterval(() => {
             const now = new Date();
             let h = now.getHours();
             const m = String(now.getMinutes()).padStart(2, '0');
             const s = String(now.getSeconds()).padStart(2, '0');
-            let str = "";
-            if (state.use12Hour) {
-                const ampm = h >= 12 ? 'PM' : 'AM';
-                h = h % 12 || 12;
-                str = `${h}:${m}${state.showSeconds ? ':' + s : ''} ${ampm}`;
-            } else {
-                str = `${String(h).padStart(2, '0')}:${m}${state.showSeconds ? ':' + s : ''}`;
-            }
-            document.getElementById('clock').innerText = str;
+            const ampm = h >= 12 ? 'PM' : 'AM';
+            h = h % 12 || 12;
+            document.getElementById('clock').innerText = `${h}:${m}:${s} ${ampm}`;
         }, 1000);
 
-        // Boot OS
         renderDesktop();
     </script>
 </body>
