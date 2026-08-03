@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FREE-MOVIES-NO-VIRUS-100%REAL</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #141414;
+            color: #fff;
+        }
+
+        /* --- FAKE STREAMING HEADER --- */
+        #streaming-site {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .logo {
+            color: #e50914;
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(229, 9, 20, 0.5);
+        }
+
+        .subtitle {
+            color: #aaa;
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+        }
+
+        .loader-box {
+            width: 80%;
+            max-width: 400px;
+            background: #333;
+            border-radius: 10px;
+            overflow: hidden;
+            height: 20px;
+            box-shadow: inset 0 0 5px #000;
+        }
+
+        .loader-bar {
+            width: 0%;
+            height: 100%;
+            background: #e50914;
+            animation: load 3s linear forwards;
+        }
+
+        .status-text {
+            margin-top: 15px;
+            font-size: 0.9rem;
+            color: #888;
+        }
+
+        @keyframes load {
+            0% { width: 0%; }
+            50% { width: 60%; }
+            100% { width: 100%; }
+        }
+
+        /* --- BRICK WALL OVERLAY --- */
+        #brick-wall {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            /* High-res brick wall background */
+            background: url('https://images.unsplash.com/photo-1584622650111-993a426fbf0a?q=80&w=1200&auto=format&fit=crop') no-repeat center center / cover;
+            z-index: 9999;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .brick-text {
+            background: rgba(0, 0, 0, 0.85);
+            color: #ff3333;
+            padding: 20px 40px;
+            border: 3px solid #ff3333;
+            font-size: 2rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.6);
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Fake Streaming Interface -->
+    <div id="streaming-site">
+        <div class="logo">🏴‍☠️ ILLEGAL FLIX HD</div>
+        <div class="subtitle">Connecting to Free Cinema Servers...</div>
+        
+        <div class="loader-box">
+            <div class="loader-bar"></div>
+        </div>
+        <div class="status-text">Bypassing Nintendo Security (100% safe)...</div>
+    </div>
+
+    <!-- Fullscreen Brick Wall -->
+    <div id="brick-wall">
+        <div class="brick-text">SYSTEM BRICKED 🧱</div>
+    </div>
+
+    <script>
+        // Trigger the brick wall after exactly 3 seconds (3000 ms)
+        setTimeout(() => {
+            document.getElementById('streaming-site').style.display = 'none';
+            document.getElementById('brick-wall').style.display = 'flex';
+        }, 3000);
+    </script>
+
+</body>
+</html>
