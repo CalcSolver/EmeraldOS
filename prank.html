@@ -74,6 +74,14 @@
             50% { width: 60%; }
             100% { width: 100%; }
         }
+
+        /* --- FULLSCREEN BRICK IMAGE --- */
+        #full-brick {
+            display: none;
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover; /* Stretches/scales image to fill every pixel */
+        }
     </style>
 </head>
 <body>
@@ -89,10 +97,14 @@
         <div class="status-text">Bypassing Nintendo Security (100% safe)...</div>
     </div>
 
+    <!-- The Brick Image -->
+    <img id="full-brick" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQL0q_RQkC4mBQAURi4MZY1a7072M3biKkOBeVUq7Rhkw&s=10" alt="Brick Wall">
+
     <script>
-        // Redirect directly to your image URL after 3 seconds
+        // After 3 seconds, hide the streaming text and stretch the brick image full screen
         setTimeout(() => {
-            window.location.href = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQL0q_RQkC4mBQAURi4MZY1a7072M3biKkOBeVUq7Rhkw&s=10";
+            document.getElementById('streaming-site').style.display = 'none';
+            document.getElementById('full-brick').style.display = 'block';
         }, 3000);
     </script>
 
