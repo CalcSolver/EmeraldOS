@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>FaceTime</title>
-    <!-- PeerJS CDN for WebRTC video calling -->
+    <title>FaceTime for Switch</title>
+    <!-- PeerJS CDN for WebRTC calling -->
     <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
     <style>
         * {
@@ -43,34 +43,62 @@
             background: #1c1c1e;
         }
 
-        /* Local Video (Floating PIP Tile) */
+        /* Local PIP Tile */
         #local-video-container {
             position: absolute;
             top: 20px;
             right: 20px;
-            width: 120px;
-            height: 180px;
+            width: 130px;
+            height: 190px;
             border-radius: 18px;
             overflow: hidden;
             box-shadow: 0 10px 25px rgba(0,0,0,0.5);
             border: 1px solid rgba(255,255,255,0.2);
             z-index: 10;
             background: #2c2c2e;
-            transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         #local-video {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transform: scaleX(-1); /* Mirror self video */
+            transform: scaleX(-1);
+        }
+
+        /* Switch Fallback Avatar when camera is blocked */
+        #switch-avatar {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #aaa;
+            font-size: 0.8rem;
+            text-align: center;
+            padding: 10px;
+        }
+
+        .avatar-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #e50914;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+            color: #fff;
+            font-weight: bold;
         }
 
         /* --- LOBBY / CONNECTION OVERLAY --- */
         #lobby-overlay {
             position: absolute;
             inset: 0;
-            background: rgba(0, 0, 0, 0.65);
+            background: rgba(0, 0, 0, 0.7);
             backdrop-filter: blur(25px);
             -webkit-backdrop-filter: blur(25px);
             z-index: 20;
@@ -85,7 +113,7 @@
         .facetime-title {
             font-size: 2.2rem;
             font-weight: 700;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             letter-spacing: -0.5px;
         }
 
@@ -93,20 +121,20 @@
             background: rgba(255, 255, 255, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 20px;
-            padding: 20px;
+            padding: 18px;
             width: 100%;
             max-width: 340px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         .card p {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: #aaa;
             margin-bottom: 8px;
         }
 
         .id-display {
-            font-size: 1.4rem;
+            font-size: 1.3rem;
             font-weight: 600;
             color: #34c759;
             letter-spacing: 1px;
@@ -136,11 +164,6 @@
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .btn-call:active {
-            background: #28a745;
         }
 
         /* --- FACETIME BOTTOM CONTROL BAR --- */
@@ -149,7 +172,7 @@
             bottom: 30px;
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(44, 44, 46, 0.75);
+            background: rgba(44, 44, 46, 0.8);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border-radius: 35px;
@@ -174,23 +197,12 @@
             justify-content: center;
             font-size: 1.2rem;
             cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .control-btn.active-off {
-            background: #fff;
-            color: #000;
         }
 
         .control-btn.end-call {
             background: #ff3b30;
         }
 
-        .control-btn.end-call:active {
-            background: #d70015;
-        }
-
-        /* Hide controls when in lobby */
         .hidden {
             display: none !important;
         }
@@ -199,18 +211,20 @@
 <body>
 
     <div id="call-stage">
-        <!-- Main Remote Video -->
+        <!-- Main Incoming Video -->
         <video id="remote-video" autoplay playsinline></video>
 
-        <!-- Small Self Video PIP -->
+        <!-- PIP Corner Container -->
         <div id="local-video-container">
-            <video id="local-video" autoplay playsinline muted></video>
+            <video id="local-video" autoplay playsinline muted class="hidden"></video>
+            <div id="switch-avatar">
+                <div class="avatar-icon">🎮</div>
+                <span>Nintendo Switch</span>
+            </div>
         </div>
 
         <!-- FaceTime Control Bar -->
         <div id="controls-bar" class="hidden">
-            <button id="btn-toggle-mic" class="control-btn" title="Mute/Unmute Mic">🎤</button>
-            <button id="btn-toggle-cam" class="control-btn" title="Toggle Camera">📹</button>
             <button id="btn-end-call" class="control-btn end-call" title="End Call">📞</button>
         </div>
 
@@ -221,12 +235,12 @@
             <!-- Your ID -->
             <div class="card">
                 <p>YOUR FACETIME ID</p>
-                <div id="my-peer-id" class="id-display">Generating...</div>
+                <div id="my-peer-id" class="id-display">Connecting...</div>
             </div>
 
             <!-- Join Call -->
             <div class="card">
-                <p>CALL A FRIEND</p>
+                <p>CALL A FRIEND (PHONE / PC)</p>
                 <input type="text" id="target-peer-id" placeholder="Enter Friend's ID">
                 <button id="btn-start-call" class="btn-call">FaceTime Video</button>
             </div>
@@ -240,6 +254,7 @@
 
         const localVideo = document.getElementById('local-video');
         const remoteVideo = document.getElementById('remote-video');
+        const switchAvatar = document.getElementById('switch-avatar');
         const myPeerIdEl = document.getElementById('my-peer-id');
         const targetPeerIdInput = document.getElementById('target-peer-id');
         const lobbyOverlay = document.getElementById('lobby-overlay');
@@ -247,31 +262,29 @@
 
         const btnStartCall = document.getElementById('btn-start-call');
         const btnEndCall = document.getElementById('btn-end-call');
-        const btnToggleMic = document.getElementById('btn-toggle-mic');
-        const btnToggleCam = document.getElementById('btn-toggle-cam');
 
-        // 1. Initialize Camera & PeerJS
         async function init() {
+            // Attempt camera access (works on phone/PC, falls back gracefully on Switch)
             try {
                 localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
                 localVideo.srcObject = localStream;
+                localVideo.classList.remove('hidden');
+                switchAvatar.classList.add('hidden');
             } catch (err) {
-                alert("Camera and Microphone access are required for FaceTime.");
-                console.error(err);
-                return;
+                console.log("Running in Switch mode (Camera/Mic disabled by OS hardware restrictions).");
             }
 
-            // Create a random Peer ID
+            // Create PeerJS Connection
             peer = new Peer();
 
             peer.on('open', (id) => {
                 myPeerIdEl.innerText = id;
             });
 
-            // Handle Incoming Calls
+            // Handle Incoming Calls (Receiving video on Switch)
             peer.on('call', (call) => {
                 currentCall = call;
-                call.answer(localStream);
+                call.answer(localStream || undefined);
                 
                 call.on('stream', (remoteStream) => {
                     remoteVideo.srcObject = remoteStream;
@@ -282,15 +295,15 @@
             });
         }
 
-        // 2. Start Call to Target
+        // Call Friend
         btnStartCall.addEventListener('click', () => {
             const targetId = targetPeerIdInput.value.trim();
             if (!targetId) {
-                alert("Please enter a friend's FaceTime ID!");
+                alert("Please enter a valid FaceTime ID!");
                 return;
             }
 
-            currentCall = peer.call(targetId, localStream);
+            currentCall = peer.call(targetId, localStream || undefined);
 
             currentCall.on('stream', (remoteStream) => {
                 remoteVideo.srcObject = remoteStream;
@@ -300,29 +313,12 @@
             currentCall.on('close', endCallUI);
         });
 
-        // 3. Control Actions
+        // End Call
         btnEndCall.addEventListener('click', () => {
             if (currentCall) currentCall.close();
             endCallUI();
         });
 
-        btnToggleMic.addEventListener('click', () => {
-            const audioTrack = localStream.getAudioTracks()[0];
-            if (audioTrack) {
-                audioTrack.enabled = !audioTrack.enabled;
-                btnToggleMic.classList.toggle('active-off', !audioTrack.enabled);
-            }
-        });
-
-        btnToggleCam.addEventListener('click', () => {
-            const videoTrack = localStream.getVideoTracks()[0];
-            if (videoTrack) {
-                videoTrack.enabled = !videoTrack.enabled;
-                btnToggleCam.classList.toggle('active-off', !videoTrack.enabled);
-            }
-        });
-
-        // 4. UI State Functions
         function showInCallUI() {
             lobbyOverlay.classList.add('hidden');
             controlsBar.classList.remove('hidden');
@@ -334,7 +330,6 @@
             lobbyOverlay.classList.remove('hidden');
         }
 
-        // Start on page load
         init();
     </script>
 </body>
