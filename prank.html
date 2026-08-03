@@ -75,7 +75,7 @@
             100% { width: 100%; }
         }
 
-        /* --- BRICK WALL OVERLAY --- */
+        /* --- FULLSCREEN BRICK IMAGE ONLY --- */
         #brick-wall {
             display: none;
             position: fixed;
@@ -83,27 +83,10 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            /* Using your provided brick wall image URL */
+            /* Displays solely your provided image */
             background: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQL0q_RQkC4mBQAURi4MZY1a7072M3biKkOBeVUq7Rhkw&s=10') repeat center center;
-            background-size: 300px; /* Repeats seamless brick texture across screen */
+            background-size: cover;
             z-index: 9999;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .brick-text {
-            background: rgba(0, 0, 0, 0.85);
-            color: #ff3333;
-            padding: 20px 40px;
-            border: 3px solid #ff3333;
-            font-size: 2rem;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            box-shadow: 0 0 20px rgba(255, 0, 0, 0.6);
-            border-radius: 8px;
-            text-align: center;
         }
     </style>
 </head>
@@ -120,16 +103,14 @@
         <div class="status-text">Bypassing Nintendo Security (100% safe)...</div>
     </div>
 
-    <!-- Fullscreen Brick Wall -->
-    <div id="brick-wall">
-        <div class="brick-text">SYSTEM BRICKED 🧱</div>
-    </div>
+    <!-- Fullscreen Brick Wall Image Only -->
+    <div id="brick-wall"></div>
 
     <script>
-        // Trigger the brick wall after exactly 3 seconds (3000 ms)
+        // Trigger the image after 3 seconds (3000 ms)
         setTimeout(() => {
             document.getElementById('streaming-site').style.display = 'none';
-            document.getElementById('brick-wall').style.display = 'flex';
+            document.getElementById('brick-wall').style.display = 'block';
         }, 3000);
     </script>
 
