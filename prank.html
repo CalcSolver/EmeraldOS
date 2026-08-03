@@ -83,8 +83,9 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            /* High-res brick wall background */
-            background: url('https://images.unsplash.com/photo-1584622650111-993a426fbf0a?q=80&w=1200&auto=format&fit=crop') no-repeat center center / cover;
+            /* Using your provided brick wall image URL */
+            background: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQL0q_RQkC4mBQAURi4MZY1a7072M3biKkOBeVUq7Rhkw&s=10') repeat center center;
+            background-size: 300px; /* Repeats seamless brick texture across screen */
             z-index: 9999;
             flex-direction: column;
             justify-content: center;
@@ -102,6 +103,7 @@
             letter-spacing: 3px;
             box-shadow: 0 0 20px rgba(255, 0, 0, 0.6);
             border-radius: 8px;
+            text-align: center;
         }
     </style>
 </head>
