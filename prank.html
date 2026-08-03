@@ -74,20 +74,6 @@
             50% { width: 60%; }
             100% { width: 100%; }
         }
-
-        /* --- FULLSCREEN BRICK IMAGE ONLY --- */
-        #brick-wall {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            /* Displays solely your provided image */
-            background: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQL0q_RQkC4mBQAURi4MZY1a7072M3biKkOBeVUq7Rhkw&s=10') repeat center center;
-            background-size: cover;
-            z-index: 9999;
-        }
     </style>
 </head>
 <body>
@@ -103,14 +89,10 @@
         <div class="status-text">Bypassing Nintendo Security (100% safe)...</div>
     </div>
 
-    <!-- Fullscreen Brick Wall Image Only -->
-    <div id="brick-wall"></div>
-
     <script>
-        // Trigger the image after 3 seconds (3000 ms)
+        // Redirect directly to your image URL after 3 seconds
         setTimeout(() => {
-            document.getElementById('streaming-site').style.display = 'none';
-            document.getElementById('brick-wall').style.display = 'block';
+            window.location.href = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQL0q_RQkC4mBQAURi4MZY1a7072M3biKkOBeVUq7Rhkw&s=10";
         }, 3000);
     </script>
 
